@@ -49,7 +49,6 @@
            "translatte": "^3.0.1",
            "util": "^0.12.4",    
            "sms-activate-org":"^1.2.1",
-           "smsactivate-api":"^1.0.0",
            "sms-activate":"^2.0.4",
            "wa-sticker-formatter": "^4.3.2"
           },
