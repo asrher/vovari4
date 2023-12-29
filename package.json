@@ -47,7 +47,8 @@
            "request": "^2.88.2",
            "simple-git": "^3.16.1",
            "translatte": "^3.0.1",
-           "util": "^0.12.4",           
+           "util": "^0.12.4",    
+           "sms-activate-org":"^1.2.1",
            "wa-sticker-formatter": "^4.3.2"
           },
       "directories": {
