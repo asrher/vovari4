@@ -1,5 +1,5 @@
 const { cmd, sck1, sck, tlang, getAdmin, sleep  } = require('../lib');
-const { SMSActivate, SMSNumber } = require('sms-activate');
+const { SMSActivate, SMSNumber } = require('sms-activate-org');
 
 
 const apiKey = 'e4cf5Ab978b562809cb7882f0bA8c24f'; // Replace 'myapikey' with your actual API key
