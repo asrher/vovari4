@@ -1,0 +1,53 @@
+const { cmd } = require('../lib')
+const Config = require('../config')
+const axios = require('axios');
+
+//=====================================================================
+
+cmd({
+pattern: "ناروتو",
+desc: "",
+use: '',
+category: "",
+filename: __filename,
+  },
+async(Void, citel,text) =>
+{
+    let res=await axios.get("https://raw.githubusercontent.com/mask-sir/api.mask-ser/main/Naruto.json")
+    let url =  res.data.result[Math.floor(Math.random() * res.data.result.length)];
+    return await Void.sendMessage(citel.chat,{video :{url : url }}, { quoted: citel })
+})
+
+//=====================================================================--------------------
+
+cmd({
+pattern: "مسلسل",
+desc: "",
+use: '',
+category: "",
+filename: __filename,
+  },
+async(Void, citel,text) =>
+{
+let res=await axios.get("https://raw.githubusercontent.com/asrher/BGM/main/edits.json?token=GHSAT0AAAAAACDV5HNIKKMJSYI7BITJRRWAZETACIA")
+let url =  res.data.result[Math.floor(Math.random() * res.data.result.length)];
+return await Void.sendMessage(citel.chat,{video :{url : url }}, { quoted: citel })
+})
+
+//=====================================================================--------------------
+
+cmd({
+pattern: "ايديت",
+desc: "",
+use: '',
+category: "",
+filename: __filename,
+  },
+async(Void, citel,text) =>
+{
+    let res=await axios.get("https://raw.githubusercontent.com/mask-sir/api.mask-ser/main/AnimeVideos.json")
+    let url =  res.data.result[Math.floor(Math.random() * res.data.result.length)];
+    return await Void.sendMessage(citel.chat,{video :{url : url }}, { quoted: citel })
+})
+
+//=====================================================================--------------------

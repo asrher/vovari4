@@ -1,0 +1,146 @@
+const { sck, cmd } = require('../lib')
+const Config = require('../config')
+const fetch = require('node-fetch');
+
+//=====================================================================
+
+/*cmd({
+pattern: "جرجير",
+desc: "سولف مع الذكاء الاصطناعي",
+use: '',
+category: "spi",
+filename: __filename,
+  },
+async(Void, citel,text) => 
+{
+    let zerogroup = (await sck.findOne({
+        id: citel.chat,
+    })) || (await new sck({
+            id: citel.chat,
+        })
+        .save());
+    let mongoschemas = zerogroup.chatt || "false";
+    if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
+if (!Config.OPENAI_API_KEY || Config.OPENAI_API_KEY=='' ||  !Config.OPENAI_API_KEY.startsWith('sk') ) return citel.reply('انتهى api')
+if (!text) return citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `); 
+
+const response = await fetch("https://api.openai.com/v1/chat/completions", {
+method: "POST",
+headers: {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${Config.OPENAI_API_KEY}`,
+},
+body: JSON.stringify({
+  model: "gpt-3.5-turbo", // Specify the desired model here
+  messages: [{ role: "system", content: "You" }, { role: "user", content: text }],
+}),
+});
+
+const data = await response.json();
+console.log("GPT REPONCE : ",data); 
+if (!data.choices || data.choices.length === 0) {citel.reply("انتهى api"); }
+return await  citel.reply(data.choices[0].message.content)
+
+
+
+
+/*
+const { Configuration, OpenAIApi } = require("openai");
+    const configuration = new Configuration
+            ({
+                       apiKey:Config.OPENAI_API_KEY ,
+            });
+
+    const openai = new OpenAIApi(configuration);
+    const completion = await openai.createCompletion({
+        model: "text-davinci-002",
+        prompt: text,
+        temperature: 0.5,
+        max_tokens: 200,
+        top_p: 1.0,
+        frequency_penalty: 0.5,
+        presence_penalty: 0.0,
+        stop: ['"""'],
+    });
+    citel.reply(completion.data.choices[0].text);
+/////her *
+}
+)
+*/
+//=====================================================================
+
+cmd({
+pattern: "جرجير",
+desc: "سولف مع الذكاء الاصطناعي",
+use: '',
+category: "spi",
+filename: __filename,
+  },
+async (Void, citel, text) => {
+  let zerogroup = (await sck.findOne({
+    id: citel.chat,
+})) || (await new sck({
+        id: citel.chat,
+    })
+    .save());
+let mongoschemas = zerogroup.chatt || "false";
+if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
+
+  if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
+  const apiUrl = `https://vihangayt.me/tools/chatgpt4?q=${encodeURIComponent(text)}`;
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    if (result.status && result.data) {
+      await citel.reply(`${result.data}`);
+    } else {
+      await citel.reply("مافي جواب.");
+    }
+  } catch (error) {
+    console.error("حصل خطأ");
+    await citel.reply("حصل خطأ");
+  }
+});
+
+//=====================================================================
+
+cmd({
+pattern: "سوي",
+desc: "انشاء صور بالذكاء الإصطناعي",
+use: '',
+category: "spi",
+filename: __filename,
+  },
+  async (Void, citel, text) => {
+    let zerogroup = (await sck.findOne({
+        id: citel.chat,
+    })) || (await new sck({
+            id: citel.chat,
+        })
+        .save());
+    let mongoschemas = zerogroup.chatt || "false";
+    if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
+    const customText = text.split(" ").join(" ").trim(); // Join words with spaces
+    if (!customText) {
+      return await citel.reply(".سوي كريستيانو رونالدو يأكل جرجير");
+    }
+    try {
+      const apiUrl = `https://vihangayt.me/tools/photoleap?q=${encodeURIComponent(customText)}`;
+      
+      // Make a request to the API
+      const response = await fetch(apiUrl);
+      const result = await response.json();
+      
+      // Check if the API request was successful
+      if (result.status) {
+        const imageUrl = result.data;
+        return await Void.sendMessage(citel.chat, { image: { url: imageUrl }, caption: "تمم" }, { quoted: citel });
+      } else {
+        return await citel.reply("حدث خطأ أثناء جلب الصورة");
+      }
+    } catch (e) {
+      console.error(e);
+      return await citel.reply("حدث خطأ");
+    }
+  });
+  //=====================================================================
