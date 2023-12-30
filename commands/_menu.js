@@ -14,7 +14,7 @@ async (Void, citel, text) => {
   const log0 = Buffer.from("YOUR_THUMBNAIL_IMAGE_DATA", "base64"); // Replace 'YOUR_THUMBNAIL_IMAGE_DATA' with the actual image data in base64 format
 
   try {
-    await conn.sendMessage(citel.chat, {
+    await Void.sendMessage(citel.chat, {
       text: "I'm a Whatsapp channel URL",
       contextInfo: {
         externalAdReply: {
