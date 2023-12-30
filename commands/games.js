@@ -1,4 +1,3 @@
-
 const { cmd, getAdmin, tlang } = require("../lib/");
 const eco = require('siraj-bank')
 //=====================================================================
@@ -52,7 +51,7 @@ filename: __filename,
      if (
        Object.values(this.game).find(
          (room) =>
-           room.id.startsWith("tictactoe") &&
+           room.id.startsWith("اكس او") &&
            [room.game.playerX, room.game.playerO].includes(citel.sender)
        )
      )
@@ -94,7 +93,7 @@ ${arr.slice(6).join("  ")}
        });
      } else {
        room = {
-         id: "tictactoe-" + +new Date(),
+         id: "اكس او-" + +new Date(),
          x: citel.chat,
          o: "",
          game: new TicTacToe(citel.sender, "o"),
@@ -121,7 +120,7 @@ cmd(
        room.id &&
        room.game &&
        room.state &&
-       room.id.startsWith("tictactoe") &&
+       room.id.startsWith("اكس او") &&
        [room.game.playerX, room.game.playerO].includes(citel.sender) &&
        room.state == "PLAYING"
    );
@@ -131,7 +130,7 @@ cmd(
      let isWin = !1;
      let isTie = !1;
      let isSurrender = !1;
-     if (!/^([1-9]|(me)?give_up|surr?ender|استسلم|skip)$/i.test(citel.text)) return;
+     if (!/^([1-9]|(me)?استسلم)$/i.test(citel.text)) return;
      isSurrender = !/^[1-9]$/.test(citel.text);
      if (citel.sender !== room.game.currentTurn) {
        if (!isSurrender) return !0;
