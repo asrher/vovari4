@@ -52,77 +52,88 @@ async function getChapterPdf(url) {
     }
 }
 
-// Process the command
+// ... (imports and function definitions remain the same)
+
+// Command for searching manga
 cmd({
-    pattern: "nor",
-    desc: "Fetch data from 3asq",
-    category: "utility",
-    handler: async (Void, citel, match) => {
-        try {
-            let [inputCommand, rest] = match;
-            let [feature, inputs] = rest.split("|");
-            
-            let lister = [
-                "search",
-                "chapter",
-                "pdf"
-            ];
+pattern: "nor", 
+  desc: "Search manga on 3asq",
+  category: "utility",
+  handler: async (Void, citel, match) => {
+    try {
+      let [, query] = match;
 
-            if (!lister.includes(feature)) {
-                return citel.reply("*Example:*\n.3asq search|vpn\n\n*Choose from available types:*\n" + lister.map((v, index) => "  ○ " + v).join("\n"));
-            }
-
-            switch (feature) {
-                case "search":
-                    if (!inputs) return citel.reply("Input query link\nExample: .3asq search|vpn");
-                    try {
-                        let res = await search3asq(inputs);
-                        let teks = res.map((item, index) => {
-                            return `- *Name:* ${item.name}\n- *Link:* ${item.link}`;
-                        }).filter(v => v).join("\n\n________________________\n\n");
-                        return citel.reply(teks);
-                    } catch (e) {
-                        console.error(e);
-                        return citel.reply("An error occurred while searching.");
-                    }
-                    break;
-
-                case "chapter":
-                    if (!inputs) return citel.reply("Input query link\nExample: .3asq chapter|group");
-                    try {
-                        let res = await getAllChapters(inputs);
-                        let teks = res.map((item, index) => {
-                            return `- *Title:* ${item.title}\n- *Link:* ${item.link}`;
-                        }).filter(v => v).join("\n\n________________________\n\n");
-                        return citel.reply(teks);
-                    } catch (e) {
-                        console.error(e);
-                        return citel.reply("An error occurred while fetching chapters.");
-                    }
-                    break;
-
-                case "pdf":
-                    if (!inputs) return citel.reply("Input query link\nExample: .3asq pdf|group");
-                    try {
-                        let data = await getChapterPdf(inputs);
-                        // Send the generated PDF file as a reply
-                        if (data) {
-                            await Void.sendMessage(citel.chat, { document: data }, { quoted: citel });
-                        } else {
-                            return citel.reply("Failed to generate PDF.");
-                        }
-                    } catch (e) {
-                        console.error(e);
-                        return citel.reply("An error occurred while generating PDF.");
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        } catch (error) {
-            console.error(error);
-            return citel.reply("An error occurred.");
-        }
+      if (!query) return citel.reply("Input query link\nExample: .search vpn");
+      try {
+        let res = await search3asq(query);
+        let teks = res
+          .map((item) => `- *Name:* ${item.name}\n- *Link:* ${item.link}`)
+          .filter((v) => v)
+          .join("\n\n________________________\n\n");
+        return citel.reply(teks);
+      } catch (e) {
+        console.error(e);
+        return citel.reply("An error occurred while searching.");
+      }
+    } catch (error) {
+      console.error(error);
+      return citel.reply("An error occurred.");
     }
+  },
+});
+
+// Command for retrieving chapters
+cmd({
+pattern: "norr",
+desc: "Get chapters from 3asq",
+  category: "utility",
+  handler: async (Void, citel, match) => {
+    try {
+      let [, query] = match;
+
+      if (!query) return citel.reply("Input query link\nExample: .chapter group");
+      try {
+        let res = await getAllChapters(query);
+        let teks = res
+          .map((item) => `- *Title:* ${item.title}\n- *Link:* ${item.link}`)
+          .filter((v) => v)
+          .join("\n\n________________________\n\n");
+        return citel.reply(teks);
+      } catch (e) {
+        console.error(e);
+        return citel.reply("An error occurred while fetching chapters.");
+      }
+    } catch (error) {
+      console.error(error);
+      return citel.reply("An error occurred.");
+    }
+  },
+});
+
+// Command for generating PDFs
+cmd({
+pattern: "norrr",
+  desc: "Generate PDF from 3asq",
+  category: "utility",
+  handler: async (Void, citel, match) => {
+    try {
+      let [, query] = match;
+
+      if (!query) return citel.reply("Input query link\nExample: .pdf group");
+      try {
+        let data = await getChapterPdf(query);
+        if (data) {
+          await Void.sendMessage(citel.chat, { document: data }, { quoted: citel });
+        } else {
+          return citel.reply("Failed to generate PDF.");
+        }
+      } catch (e) {
+        console.error(e);
+        return citel.reply("An error occurred while generating PDF.");
+      }
+    } catch (error) {
+      console.error(error);
+      return citel.reply("An error occurred.");
+    }
+  },
 });
