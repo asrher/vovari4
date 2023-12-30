@@ -60,27 +60,43 @@ cmd({
     citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
     citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
 
-    cmd({
-      on: "text",
-      fromMe: false,
-    }, async (Void, citel, replyMessage) => {
-      const chosenNumber = parseInt(replyMessage);
+cmd({
+  on: "text",
+  fromMe: false,
+}, async (Void, citel, message) => {
+  if (!deathGame.isGameActive) return;
+
+  const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
+  const sender = citel.sender;
+  
+  if (submittedWord === deathGame.chosenWord) {
+    if (!deathGame.players.includes(sender)) {
+      citel.reply(`You're not part of the game. Send ".join" to participate.`);
+      return;
+    }
+
+    if (deathGame.eliminatedPlayers.includes(sender)) {
+      citel.reply(`You've already been eliminated.`);
+      return;
+    }
+
+    const playerNumber = deathGame.players.indexOf(sender) + 1;
+    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
+
+    citel.onReplyMessage(citel.chatId, async (reply) => {
+      const chosenNumber = parseInt(reply.body);
       if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
-        const playerToRemoveIndex = deathGame.players.findIndex(player => player.number === chosenNumber);
-        if (playerToRemoveIndex !== -1) {
-          deathGame.players.splice(playerToRemoveIndex, 1);
-          citel.reply(`Player ${chosenNumber} has been eliminated.`);
-        } else {
-          citel.reply(`Invalid player number. Enter a valid number (1 - ${deathGame.players.length}):`);
-        }
+        const eliminatedPlayerIndex = chosenNumber - 1;
+        const eliminatedPlayer = deathGame.players[eliminatedPlayerIndex];
+
+        deathGame.eliminatedPlayers.push(eliminatedPlayer);
+        deathGame.players.splice(eliminatedPlayerIndex, 1);
+
+        citel.reply(`Player ${chosenNumber} (@${eliminatedPlayer}) has been eliminated.`);
       } else {
         citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
       }
     });
-  }
-
-  deathGame.currentPlayerIndex++;
-  if (deathGame.currentPlayerIndex >= deathGame.players.length) {
-    deathGame.currentPlayerIndex = 0; // Reset back to the first player
   }
 });
