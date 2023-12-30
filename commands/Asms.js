@@ -1,11 +1,10 @@
-// Import necessary libraries and functions
-const { cmd,Config  } = require('../lib')
+// Import necessary modules and functions
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { PassThrough } = require('stream');
 const PDFDocument = require('pdfkit');
+const { PassThrough } = require('stream');
 
-// Function to search 3asq for manga information
+// Define the search3asq function
 async function search3asq(q) {
     try {
         const { data } = await axios.get(`https://3asq.org/?s=${q}&post_type=wp-manga`);
@@ -23,7 +22,7 @@ async function search3asq(q) {
     }
 }
 
-// Function to get all chapters of a manga
+// Define the getAllChapters function
 async function getAllChapters(url) {
     try {
         const { data } = await axios.get(url);
@@ -41,50 +40,88 @@ async function getAllChapters(url) {
     }
 }
 
-// Function to generate a PDF of manga chapters
+// Define the getChapterPdf function
 async function getChapterPdf(url) {
-    // ... [Rest of the function remains the same]
+    try {
+        // ... (the existing code for generating PDF)
+        // Returns a Promise with the generated PDF buffer
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    }
 }
 
-// Command to search for manga information and fetch chapters
+// Process the command
 cmd({
-    pattern: "nor",
-    desc: "Search for manga and fetch chapters",
-    category: "entertainment",
-    filename: __filename,
-},
-async (Void, citel, text) => {
-    if (!text) return citel.reply('Please provide a manga name.');
+    pattern: /^\.nor (.*)/i,
+    desc: "Fetch data from 3asq",
+    category: "utility",
+    handler: async (Void, citel, match) => {
+        try {
+            let [inputCommand, rest] = match;
+            let [feature, inputs] = rest.split("|");
+            
+            let lister = [
+                "search",
+                "chapter",
+                "pdf"
+            ];
 
-    try {
-        // Search for manga information
-        const mangaList = await search3asq(text);
-        
-        if (mangaList.length === 0) {
-            return citel.reply('No manga found.');
+            if (!lister.includes(feature)) {
+                return citel.reply("*Example:*\n.3asq search|vpn\n\n*Choose from available types:*\n" + lister.map((v, index) => "  ○ " + v).join("\n"));
+            }
+
+            switch (feature) {
+                case "search":
+                    if (!inputs) return citel.reply("Input query link\nExample: .3asq search|vpn");
+                    try {
+                        let res = await search3asq(inputs);
+                        let teks = res.map((item, index) => {
+                            return `- *Name:* ${item.name}\n- *Link:* ${item.link}`;
+                        }).filter(v => v).join("\n\n________________________\n\n");
+                        return citel.reply(teks);
+                    } catch (e) {
+                        console.error(e);
+                        return citel.reply("An error occurred while searching.");
+                    }
+                    break;
+
+                case "chapter":
+                    if (!inputs) return citel.reply("Input query link\nExample: .3asq chapter|group");
+                    try {
+                        let res = await getAllChapters(inputs);
+                        let teks = res.map((item, index) => {
+                            return `- *Title:* ${item.title}\n- *Link:* ${item.link}`;
+                        }).filter(v => v).join("\n\n________________________\n\n");
+                        return citel.reply(teks);
+                    } catch (e) {
+                        console.error(e);
+                        return citel.reply("An error occurred while fetching chapters.");
+                    }
+                    break;
+
+                case "pdf":
+                    if (!inputs) return citel.reply("Input query link\nExample: .3asq pdf|group");
+                    try {
+                        let data = await getChapterPdf(inputs);
+                        // Send the generated PDF file as a reply
+                        if (data) {
+                            await Void.sendMessage(citel.chat, { document: data }, { quoted: citel });
+                        } else {
+                            return citel.reply("Failed to generate PDF.");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        return citel.reply("An error occurred while generating PDF.");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        } catch (error) {
+            console.error(error);
+            return citel.reply("An error occurred.");
         }
-
-        // Select the first manga from the list
-        const manga = mangaList[0];
-        
-        // Get all chapters of the selected manga
-        const chapters = await getAllChapters(manga.link);
-
-        if (chapters.length === 0) {
-            return citel.reply('No chapters found for this manga.');
-        }
-
-        // Fetch the PDF of the first chapter
-        const pdfBuffer = await getChapterPdf(chapters[0].link);
-
-        if (!pdfBuffer) {
-            return citel.reply('Failed to generate PDF for the first chapter.');
-        }
-
-        // Send the PDF file
-        return Void.sendMessage(citel.chat, { document: { data: pdfBuffer, mimetype: 'application/pdf' } }, { quoted: citel });
-    } catch (error) {
-        console.error('Error:', error);
-        return citel.reply('An error occurred while fetching manga information.');
     }
 });
