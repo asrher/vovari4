@@ -17,6 +17,8 @@ filename: __filename,
     caption: alivtxt,
     footer: tlang().footer,
     headerType: 4,
+        mediaUrl: '', 
+sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643' 
   };
    return Void.sendMessage(citel.chat, aliveMessage, {
     quoted: citel,
