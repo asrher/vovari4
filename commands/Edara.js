@@ -72,10 +72,10 @@ cmd({
 cmd({
   on: "text",
   fromMe: false,
-}, async (Void, citel, text) => {
+}, async (Void, citel, message) => {
   if (!deathGame.isGameActive) return;
 
-  const submittedWord = text.trim().toLowerCase();
+  const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
   if (submittedWord === deathGame.chosenWord) {
     citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
     citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
