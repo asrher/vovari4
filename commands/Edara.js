@@ -5,7 +5,7 @@ let deathGame = {
  players: [],
  eliminatedPlayers: [],
  chosenWord: null,
- words: [...], // Add your list of words here
+ words: ['mama', 'baba', 'nana', 'gaga'], // Add your list of words here
 };
 
 let awaitingPlayerNumber = false; // Flag to track if we're waiting for a player number
