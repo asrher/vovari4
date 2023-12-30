@@ -1,4 +1,4 @@
-const { sck, sck1, cmd } = require('../lib');
+const { cmd } = require('../lib');
 
 const deathGame = {
   isGameActive: false,
@@ -37,6 +37,8 @@ function eliminatePlayerByNumber(citel, playerNumber) {
   }
 }
 
+let awaitingPlayerNumber = false; // Flag to track if we're waiting for a player number
+
 cmd({
   pattern: "death",
   category: "games",
@@ -52,25 +54,12 @@ cmd({
       if (deathGame.players.length === 2) {
         chooseWordAndStart(citel);
       }
+    } else if (!awaitingPlayerNumber) {
+      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+      awaitingPlayerNumber = true; // Set the flag to indicate we're waiting for a player number
     }
   }
 });
-
-cmd({
-  pattern: "startdeath",
-  category: "games",
-}, async (Void, citel) => {
-  if (!deathGame.isGameActive) {
-    citel.reply('The game has not started yet. Send ".death" to start.');
-  } else if (deathGame.players.length < 2) {
-    citel.reply('Need at least 2 players to start the game.');
-  } else {
-    chooseWordAndStart(citel);
-  }
-});
-
-
-let awaitingPlayerNumber = false; // Flag to track if we're waiting for a player number
 
 cmd({
   on: "text",
@@ -79,12 +68,7 @@ cmd({
   if (!deathGame.isGameActive) return;
 
   const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
-  if (submittedWord === deathGame.chosenWord) {
-    if (!awaitingPlayerNumber) {
-      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-      awaitingPlayerNumber = true; // Set the flag to indicate we're waiting for a player number
-    }
-  } else if (awaitingPlayerNumber) {
+  if (submittedWord === deathGame.chosenWord && awaitingPlayerNumber) {
     const chosenNumber = parseInt(message);
     if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
       eliminatePlayerByNumber(citel, chosenNumber);
@@ -94,4 +78,3 @@ cmd({
     }
   }
 });
-
