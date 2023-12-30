@@ -40,12 +40,12 @@ function eliminatePlayerByNumber(citel, playerNumber) {
 }
 
 cmd({
-  pattern: "death",
-  category: "games",
+ pattern: "death",
+ category: "games",
 }, async (Void, citel) => {
-  if (!deathGame.isGameActive) {
+ if (!deathGame.isGameActive) {
     startDeathGame(citel);
-  } else {
+ } else {
     if (!deathGame.players.includes(citel.sender)) {
       deathGame.players.push(citel.sender);
       const playerNumber = deathGame.players.length;
@@ -55,28 +55,28 @@ cmd({
         chooseWordAndStart(citel);
       }
     }
-  }
+ }
 });
 
 cmd({
-  pattern: "startdeath",
-  category: "games",
+ pattern: "startdeath",
+ category: "games",
 }, async (Void, citel) => {
-  if (!deathGame.isGameActive) {
+ if (!deathGame.isGameActive) {
     citel.reply('The game has not started yet. Send ".death" to start.');
-  } else if (deathGame.players.length < 2) {
+ } else if (deathGame.players.length < 2) {
     citel.reply('Need at least 2 players to start the game.');
-  } else {
+ } else {
     chooseWordAndStart(citel);
-  }
+ }
 });
 
 // Existing code...
 
 cmd({
-  on: "text",
-  fromMe: false,
-  },async (Void, citel, text) => {
+ on: "text",
+ fromMe: false,
+ },async (Void, citel, text) => {
     if (!deathGame.isGameActive) return;
 
     const submittedWord = text.trim().toLowerCase();
@@ -95,7 +95,7 @@ cmd({
         }
       });
     }
-  }
+ }
 });
 
 // Existing code...
