@@ -2,43 +2,100 @@ const { sck, sck1,cmd } = require('../lib')
 
 
 //=====================================================================
+const deathGame = {
+  isGameActive: false,
+  players: [],
+  eliminatedPlayers: [],
+  words: ['mama', 'baba', 'nana', 'gaga'],
+  chosenWord: '',
+};
+
+function getRandomWord() {
+  const randomIndex = Math.floor(Math.random() * deathGame.words.length);
+  return deathGame.words[randomIndex];
+}
+
+function startDeathGame(citel) {
+  deathGame.isGameActive = true;
+  deathGame.players = [];
+  deathGame.eliminatedPlayers = [];
+
+  citel.reply(`👾 Death game started! Send ".join" to participate.`);
+}
+
+function chooseWordAndStart(citel) {
+  deathGame.chosenWord = getRandomWord();
+  citel.reply(`The chosen word is: *${deathGame.chosenWord.toUpperCase()}*.\nSend this word to eliminate a player.`);
+}
+
+function eliminatePlayerByNumber(citel, playerNumber) {
+  const playerIndex = playerNumber - 1;
+  if (playerIndex >= 0 && playerIndex < deathGame.players.length) {
+    const eliminatedPlayer = deathGame.players[playerIndex];
+    deathGame.eliminatedPlayers.push(eliminatedPlayer);
+    deathGame.players.splice(playerIndex, 1);
+
+    citel.reply(`Player ${playerNumber} (@${eliminatedPlayer}) has been eliminated.`);
+  }
+}
 
 cmd({
-pattern: "حسبة",
-desc: "",
-use: '',
-category: "",
-filename: __filename,
-  }, async (Void, citel, text) => {
-
-    let zerogroup = (await sck.findOne({
-        id: citel.chat,
-    })) || (await new sck({
-            id: citel.chat,
-        })
-        .save());
-    let mongoschemas = zerogroup.istimara || "false";
-    if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الاستمارات فـالـمـجـمـوعـة");
-    const args = text.trim();
-  
-    if (!/^\d+$/.test(args)) {
-      return await citel.reply('مثال : .حسبة 100');
+  pattern: "death",
+  category: "games",
+}, async (Void, citel) => {
+  if (!deathGame.isGameActive) {
+    startDeathGame(citel);
+  } else {
+    if (!deathGame.players.includes(citel.sender)) {
+      deathGame.players.push(citel.sender);
+      const playerNumber = deathGame.players.length;
+      citel.reply(`You've joined the Death game as Player ${playerNumber}.`);
+      
+      if (deathGame.players.length === 2) {
+        chooseWordAndStart(citel);
+      }
     }
-  
-    const questions = parseInt(args);
-    const resultcal = questions * 400;
-    const resultcal2 = questions * 400 - 5000;
-    const resultcal3 = questions * 400 - 10000;
-    const resultcal4 = questions * 400 + 10000;
-    const resultcal5 = questions * 400 / 2;
-  
-    let response = `حسبة ${questions} سؤال هي  :\n`;
-    response += `المقدم: ${resultcal4}\n`;
-    response += `المركز 1: ${resultcal}\n`;
-    response += `المركز 2: ${resultcal2}\n`;
-    response += `المركز 3: ${resultcal3}\n`;
-    response += `الباقي: ${resultcal5}`;
-  
-    return await citel.reply(response);
-  });
-  //=====================================================================
+  }
+});
+
+cmd({
+  pattern: "startdeath",
+  category: "games",
+}, async (Void, citel) => {
+  if (!deathGame.isGameActive) {
+    citel.reply('The game has not started yet. Send ".death" to start.');
+  } else if (deathGame.players.length < 2) {
+    citel.reply('Need at least 2 players to start the game.');
+  } else {
+    chooseWordAndStart(citel);
+  }
+});
+
+// Existing code...
+
+cmd({
+  on: "text",
+  fromMe: false,
+  async (Void, citel, text) => {
+    if (!deathGame.isGameActive) return;
+
+    const submittedWord = text.trim().toLowerCase();
+    if (submittedWord === deathGame.chosenWord) {
+      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+      // Here, prompt the user to choose a number and call eliminatePlayerByNumber
+      citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
+
+      // Listen for the reply with the player number to eliminate
+      citel.onReplyMessage(citel.chatId, async (reply) => {
+        const chosenNumber = parseInt(reply.body);
+        if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
+          eliminatePlayerByNumber(citel, chosenNumber);
+        } else {
+          citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+        }
+      });
+    }
+  }
+});
+
+// Existing code...
