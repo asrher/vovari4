@@ -1,102 +1,84 @@
 const { cmd } = require('../lib');
 
-const deathGame = {
-  isGameActive: false,
-  players: [],
-  words: ['mama', 'baba', 'nana', 'gaga'],
-  chosenWord: '',
-  currentPlayerIndex: 0,
+let deathGame = {
+ isGameActive: false,
+ players: [],
+ eliminatedPlayers: [],
+ chosenWord: null,
+ words: [...], // Add your list of words here
 };
 
+let awaitingPlayerNumber = false; // Flag to track if we're waiting for a player number
+
+cmd({
+ pattern: "death",
+ category: "games",
+}, async (Void, citel) => {
+ if (!deathGame.isGameActive) {
+    startDeathGame(citel);
+ } else {
+    if (!deathGame.players.includes(citel.sender)) {
+      deathGame.players.push(citel.sender);
+      const playerNumber = deathGame.players.length;
+      citel.reply(`You've joined the Death game as Player ${playerNumber}.`);
+      
+      if (deathGame.players.length === 2) {
+        chooseWordAndStart(citel);
+      }
+    } else if (!awaitingPlayerNumber) {
+      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+      awaitingPlayerNumber = true; // Set the flag to indicate we're waiting for a player number
+    }
+ }
+});
+
+cmd({
+ on: "text",
+ fromMe: false,
+}, async (Void, citel, message) => {
+ if (!deathGame.isGameActive) return;
+
+ const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
+ if (submittedWord === deathGame.chosenWord && awaitingPlayerNumber) {
+    const chosenNumber = parseInt(message);
+    if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
+      eliminatePlayerByNumber(citel, chosenNumber);
+      awaitingPlayerNumber = false; // Reset the flag after processing the input
+    } else {
+      citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+    }
+ }
+});
+
 function getRandomWord() {
-  const randomIndex = Math.floor(Math.random() * deathGame.words.length);
-  return deathGame.words[randomIndex];
+ const randomIndex = Math.floor(Math.random() * deathGame.words.length);
+ return deathGame.words[randomIndex];
 }
 
 function startDeathGame(citel) {
-  deathGame.isGameActive = true;
-  deathGame.players = [];
-  deathGame.chosenWord = getRandomWord();
+ deathGame.isGameActive = true;
+ deathGame.players = [];
+ deathGame.eliminatedPlayers = [];
 
-  // Announce the chosen word to all players
-  citel.reply(`👾 Death game started! Send ".join" to participate.`);
-  setTimeout(() => {
-    citel.reply(`The chosen word is: *${deathGame.chosenWord.toUpperCase()}*.\nSend this word to eliminate a player.`);
-  }, 1000); // Delay added for better message sequence
+ citel.reply(`👾 Death game started! Send ".join" to participate.`);
 }
 
-function assignPlayerNumbers() {
-  deathGame.players.forEach((player, index) => {
-    player.number = index + 1;
-  });
+function chooseWordAndStart(citel) {
+ deathGame.chosenWord = getRandomWord();
+ citel.reply(`The chosen word is: *${deathGame.chosenWord.toUpperCase()}*.\nSend this word to eliminate a player.`);
 }
 
-cmd({
-  pattern: "death",
-  category: "games",
-}, async (Void, citel) => {
-  if (!deathGame.isGameActive) {
-    deathGame.players.push({ sender: citel.sender, number: 0 });
-    citel.reply(`You've joined the Death game. Waiting for more players...`);
+function eliminatePlayerByNumber(citel, playerNumber) {
+ const playerIndex = playerNumber - 1;
+ if (playerIndex >= 0 && playerIndex < deathGame.players.length) {
+    const eliminatedPlayer = deathGame.players[playerIndex];
+    deathGame.eliminatedPlayers.push(eliminatedPlayer);
+    deathGame.players.splice(playerIndex, 1);
 
-    if (deathGame.players.length >= 2) {
-      startDeathGame(citel);
-      assignPlayerNumbers();
-      deathGame.players.forEach(player => {
-        citel.reply(`You're Player ${player.number}.`);
-      });
+    if (deathGame.players.length > 1) {
+      chooseWordAndStart(citel);
+    } else {
+      citel.reply(`Player ${playerNumber} (@${eliminatedPlayer}) has been eliminated. Player ${deathGame.players[0]} has won the Death game.`);
     }
-  }
-});
-
-cmd({
-  on: "text",
-  fromMe: false,
-}, async (Void, citel, message) => {
-  if (!deathGame.isGameActive || message !== deathGame.chosenWord) return;
-
-  const currentPlayer = deathGame.players[deathGame.currentPlayerIndex];
-  if (currentPlayer && currentPlayer.sender === citel.sender) {
-    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
-
-cmd({
-  on: "text",
-  fromMe: false,
-}, async (Void, citel, message) => {
-  if (!deathGame.isGameActive) return;
-
-  const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
-  const sender = citel.sender;
-  
-  if (submittedWord === deathGame.chosenWord) {
-    if (!deathGame.players.includes(sender)) {
-      citel.reply(`You're not part of the game. Send ".join" to participate.`);
-      return;
-    }
-
-    if (deathGame.eliminatedPlayers.includes(sender)) {
-      citel.reply(`You've already been eliminated.`);
-      return;
-    }
-
-    const playerNumber = deathGame.players.indexOf(sender) + 1;
-    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
-
-    citel.onReplyMessage(citel.chatId, async (reply) => {
-      const chosenNumber = parseInt(reply.body);
-      if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
-        const eliminatedPlayerIndex = chosenNumber - 1;
-        const eliminatedPlayer = deathGame.players[eliminatedPlayerIndex];
-
-        deathGame.eliminatedPlayers.push(eliminatedPlayer);
-        deathGame.players.splice(eliminatedPlayerIndex, 1);
-
-        citel.reply(`Player ${chosenNumber} (@${eliminatedPlayer}) has been eliminated.`);
-      } else {
-        citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
-      }
-    });
-  }
-});
+ }
+}
