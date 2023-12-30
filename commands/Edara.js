@@ -69,6 +69,7 @@ cmd({
   }
 });
 
+
 cmd({
   on: "text",
   fromMe: false,
@@ -78,15 +79,19 @@ cmd({
   const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
   if (submittedWord === deathGame.chosenWord) {
     citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
-
-    citel.onReplyMessage(citel.chatId, async (reply) => {
-      const chosenNumber = parseInt(reply.body);
-      if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
-        eliminatePlayerByNumber(citel, chosenNumber);
-      } else {
-        citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+    
+    // Listen for incoming messages to get the player number
+    const listener = Void.addMessageListener((receivedMessage) => {
+      if (receivedMessage.body && receivedMessage.from === citel.chatId) {
+        const chosenNumber = parseInt(receivedMessage.body);
+        if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
+          eliminatePlayerByNumber(citel, chosenNumber);
+          Void.removeMessageListener(listener); // Remove the listener after processing the input
+        } else {
+          citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+        }
       }
     });
   }
 });
+
