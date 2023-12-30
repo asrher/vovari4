@@ -15,9 +15,14 @@ function getRandomWord() {
 
 function startDeathGame(citel) {
   deathGame.isGameActive = true;
-  deathGame.players = []; // Reset players
+  deathGame.players = [];
   deathGame.chosenWord = getRandomWord();
+
+  // Announce the chosen word to all players
   citel.reply(`👾 Death game started! Send ".join" to participate.`);
+  setTimeout(() => {
+    citel.reply(`The chosen word is: *${deathGame.chosenWord.toUpperCase()}*.\nSend this word to eliminate a player.`);
+  }, 1000); // Delay added for better message sequence
 }
 
 function assignPlayerNumbers() {
