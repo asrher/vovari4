@@ -54,7 +54,7 @@ async function getChapterPdf(url) {
 
 // Process the command
 cmd({
-    pattern: /^\.nor (.*)/i,
+    pattern: "nor",
     desc: "Fetch data from 3asq",
     category: "utility",
     handler: async (Void, citel, match) => {
