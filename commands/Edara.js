@@ -70,6 +70,8 @@ cmd({
 });
 
 
+let awaitingPlayerNumber = false; // Flag to track if we're waiting for a player number
+
 cmd({
   on: "text",
   fromMe: false,
@@ -78,20 +80,18 @@ cmd({
 
   const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
   if (submittedWord === deathGame.chosenWord) {
-    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-    
-    // Listen for incoming messages to get the player number
-    const listener = Void.addMessageListener((receivedMessage) => {
-      if (receivedMessage.body && receivedMessage.from === citel.chatId) {
-        const chosenNumber = parseInt(receivedMessage.body);
-        if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
-          eliminatePlayerByNumber(citel, chosenNumber);
-          Void.removeMessageListener(listener); // Remove the listener after processing the input
-        } else {
-          citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
-        }
-      }
-    });
+    if (!awaitingPlayerNumber) {
+      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+      awaitingPlayerNumber = true; // Set the flag to indicate we're waiting for a player number
+    }
+  } else if (awaitingPlayerNumber) {
+    const chosenNumber = parseInt(message);
+    if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
+      eliminatePlayerByNumber(citel, chosenNumber);
+      awaitingPlayerNumber = false; // Reset the flag after processing the input
+    } else {
+      citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+    }
   }
 });
 
