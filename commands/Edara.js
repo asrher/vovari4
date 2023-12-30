@@ -68,7 +68,7 @@ cmd({
   if (!deathGame.isGameActive) return;
 
   const submittedWord = typeof message === 'string' ? message.trim().toLowerCase() : '';
-  if (submittedWord === deathGame.chosenWord && awaitingPlayerNumber) {
+  if (awaitingPlayerNumber) {
     const chosenNumber = parseInt(message);
     if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
       eliminatePlayerByNumber(citel, chosenNumber);
@@ -76,5 +76,10 @@ cmd({
     } else {
       citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
     }
+  } else if (submittedWord === deathGame.chosenWord.toLowerCase()) {
+    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
+    awaitingPlayerNumber = true; // Set the flag to indicate we're waiting for a player number
   }
 });
+
