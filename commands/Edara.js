@@ -76,7 +76,7 @@ cmd({
 cmd({
   on: "text",
   fromMe: false,
-  async (Void, citel, text) => {
+  },async (Void, citel, text) => {
     if (!deathGame.isGameActive) return;
 
     const submittedWord = text.trim().toLowerCase();
