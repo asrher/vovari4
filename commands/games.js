@@ -21,7 +21,7 @@ filename: __filename,
         if (
        Object.values(this.game).find(
          (room) =>
-           room.id.startsWith("tictactoe")
+           room.id.startsWith("اكس او")
        )
      ) {
        delete this.game
