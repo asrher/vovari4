@@ -1,4 +1,5 @@
 // Import necessary libraries and functions
+const { cmd,Config  } = require('../lib')
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { PassThrough } = require('stream');
@@ -47,7 +48,7 @@ async function getChapterPdf(url) {
 
 // Command to search for manga information and fetch chapters
 cmd({
-    pattern: "manga",
+    pattern: "nor",
     desc: "Search for manga and fetch chapters",
     category: "entertainment",
     filename: __filename,
