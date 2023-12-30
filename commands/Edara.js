@@ -1,7 +1,5 @@
-const { sck, sck1,cmd } = require('../lib')
+const { sck, sck1, cmd } = require('../lib');
 
-
-//=====================================================================
 const deathGame = {
   isGameActive: false,
   players: [],
@@ -40,12 +38,12 @@ function eliminatePlayerByNumber(citel, playerNumber) {
 }
 
 cmd({
- pattern: "death",
- category: "games",
+  pattern: "death",
+  category: "games",
 }, async (Void, citel) => {
- if (!deathGame.isGameActive) {
+  if (!deathGame.isGameActive) {
     startDeathGame(citel);
- } else {
+  } else {
     if (!deathGame.players.includes(citel.sender)) {
       deathGame.players.push(citel.sender);
       const playerNumber = deathGame.players.length;
@@ -55,47 +53,40 @@ cmd({
         chooseWordAndStart(citel);
       }
     }
- }
+  }
 });
 
 cmd({
- pattern: "startdeath",
- category: "games",
+  pattern: "startdeath",
+  category: "games",
 }, async (Void, citel) => {
- if (!deathGame.isGameActive) {
+  if (!deathGame.isGameActive) {
     citel.reply('The game has not started yet. Send ".death" to start.');
- } else if (deathGame.players.length < 2) {
+  } else if (deathGame.players.length < 2) {
     citel.reply('Need at least 2 players to start the game.');
- } else {
+  } else {
     chooseWordAndStart(citel);
- }
+  }
 });
-
-// Existing code...
 
 cmd({
- on: "text",
- fromMe: false,
- },async (Void, citel, text) => {
-    if (!deathGame.isGameActive) return;
+  on: "text",
+  fromMe: false,
+}, async (Void, citel, text) => {
+  if (!deathGame.isGameActive) return;
 
-    const submittedWord = text.trim().toLowerCase();
-    if (submittedWord === deathGame.chosenWord) {
-      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
-      // Here, prompt the user to choose a number and call eliminatePlayerByNumber
-      citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
+  const submittedWord = text.trim().toLowerCase();
+  if (submittedWord === deathGame.chosenWord) {
+    citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+    citel.reply(`Enter the number of the player you want to eliminate (1 - ${deathGame.players.length}):`);
 
-      // Listen for the reply with the player number to eliminate
-      citel.onReplyMessage(citel.chatId, async (reply) => {
-        const chosenNumber = parseInt(reply.body);
-        if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
-          eliminatePlayerByNumber(citel, chosenNumber);
-        } else {
-          citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
-        }
-      });
-    }
- }
+    citel.onReplyMessage(citel.chatId, async (reply) => {
+      const chosenNumber = parseInt(reply.body);
+      if (!isNaN(chosenNumber) && chosenNumber > 0 && chosenNumber <= deathGame.players.length) {
+        eliminatePlayerByNumber(citel, chosenNumber);
+      } else {
+        citel.reply(`Invalid input. Enter a valid player number (1 - ${deathGame.players.length}):`);
+      }
+    });
+  }
 });
-
-// Existing code...
