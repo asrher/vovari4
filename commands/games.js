@@ -81,12 +81,12 @@ filename: __filename,
        });
        let str = `
 ${room.id}
+
 ${arr.slice(0, 3).join("  ")}
 ${arr.slice(3, 6).join("  ")}
 ${arr.slice(6).join("  ")}
 
 دورك @${room.game.currentTurn.split("@")[0]}
-
 `;
 
        return await Void.sendMessage(citel.chat, {
@@ -95,7 +95,7 @@ ${arr.slice(6).join("  ")}
        });
      } else {
        room = {
-         id: "اكس او-" + +new Date(),
+         id: "اكس او- " + +new Date(),
          x: citel.chat,
          o: "",
          game: new TicTacToe(citel.sender, "o"),
