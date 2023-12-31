@@ -221,7 +221,7 @@ filename: __filename,
                type: text.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
                categories: ["🤩", "🎉"], // The sticker category
                id: "12345", // The sticker id
-               quality: 75, // The quality of the output file
+               quality: 20, // The quality of the output file
                background: "transparent", // The sticker background color (only for full stickers)
            });
            const buffer = await sticker.toBuffer();
