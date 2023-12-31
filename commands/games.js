@@ -80,11 +80,13 @@ filename: __filename,
          }[v];
        });
        let str = `
-       دورك @${room.game.currentTurn.split("@")[0]}
 ${room.id}
 ${arr.slice(0, 3).join("  ")}
 ${arr.slice(3, 6).join("  ")}
 ${arr.slice(6).join("  ")}
+
+دورك @${room.game.currentTurn.split("@")[0]}
+
 `;
 
        return await Void.sendMessage(citel.chat, {
