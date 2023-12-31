@@ -26,7 +26,7 @@ cmd({
   //let durationInSeconds = 60; // Set the initial duration
   deathGame[id].join = true
   m.reply("game started, type 'Join' to enter in game")
-  startTimer(m,id, 60);
+  startTimer(m,id, 20);
   
   
   
@@ -66,7 +66,7 @@ cmd({
     deathGame[id].joined.push(citel.sender)
     deathGame[id].available.push(citel.sender)
     deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-    return await citel.reply(`Player @${citel.senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+    return await citel.reply(`Player @${citel.sender} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
   } 
   
   if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
