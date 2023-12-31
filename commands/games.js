@@ -4,7 +4,7 @@ const eco = require('siraj-bank')
 //=====================================================================
 
 cmd({
-  pattern: "death",
+  pattern: "de",
   category: "games",
 }, async (Void , m,text) => { // Use async (Void , m,text) => {
 let id = m.chat.split("@")[0]
@@ -57,7 +57,7 @@ startTimer(m,id, 60);
 
 
 
-smd({ on: "text" } , async (Void , citel,text) => {  // Use  async (Void , citel,text) => {
+cmd({ on: "text" } , async (Void , citel,text) => {  // Use  async (Void , citel,text) => {
 if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
