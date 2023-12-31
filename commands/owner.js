@@ -4,6 +4,28 @@ const Levels = require("discord-xp");
 
 //=====================================================================
 
+
+cmd({
+  pattern: "--صلاحيات",
+  desc: "Remove 'alow' from all users",
+  use: '',
+  category: "admine",
+  filename: __filename,
+}, async (Void, citel) => {
+  if (!citel.isGroup) return citel.reply(tlang().group);
+  const groupAdmins = await getAdmin(Void, citel);
+  const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
+  if (!isAdmins) return citel.reply(tlang().admin);
+
+  try {
+    await sck1.updateMany({ alow: "true" }, { $set: { alow: "false" } });
+    return citel.reply("تم إزالة الصلاحيات من جميع المستخدمين الذين لديهم الصلاحيات.");
+  } catch {
+    return citel.reply("حدث خطأ أثناء محاولة إزالة الصلاحيات.");
+  }
+});
+
+
 cmd({
 pattern: "ادخل",
 desc: "",
