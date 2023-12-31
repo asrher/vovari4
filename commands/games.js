@@ -58,15 +58,11 @@ cmd({
   
   
   cmd({ on: "text" } , async (Void , citel,text) => { // Use  async (Void , citel,text) => {
-  if(citel.isBot) 
-     if (typeof text !== 'string') {
-    // Handle cases where 'text' is not a string (e.g., unexpected input)
-    return;
-  }
+  if(citel.isBot) return
   
     let id = citel.chat.split("@")[0] 
   // ============== / Joinening people in game
-  if(text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
+  if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
     deathGame[id].joined.push(citel.sender)
     deathGame[id].available.push(citel.sender)
     deathGame[id].players[deathGame[id].joined.length] = citel.sender;
