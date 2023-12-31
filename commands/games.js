@@ -27,7 +27,7 @@ if(!deathGame || !deathGame[id]){
 //let durationInSeconds = 60; // Set the initial duration
 deathGame[id].join = true
 m.reply("game started, type 'Join' to enter in game")
-startTimer(m,id, 60);
+startTimer(m,id, 20);
 
 
 
