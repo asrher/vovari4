@@ -1,4 +1,4 @@
-const { cmd, getAdmin, tlang } = require("../lib/");
+const { cmd, getAdmin, tlang, sleep } = require("../lib/");
 const eco = require('siraj-bank')
 
 //=====================================================================
