@@ -10,6 +10,7 @@ cmd({
 }, async (Void , m,text) => { // Use async (Void , m,text) => {
 let id = m.chat.split("@")[0]
 
+
 if(!deathGame || !deathGame[id]){
   deathGame[id] = {    
   join :true,
@@ -62,6 +63,7 @@ cmd({ on: "text" } , async (Void , citel,text) => {  // Use  async (Void , citel
 if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
+  let senderNum = citel.sender.split("@")[0];
 // ============== / Joinening people in game
 if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
   deathGame[id].joined.push(citel.sender)
@@ -95,11 +97,11 @@ ${str.trim()}
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
   let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(`Hey @${citel.sender.split("@")[0]} you're Killed by @${citel.senderNum}!`,
+    await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${citel.senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
 
-    let playerIdToRemove = deathGame[id].players[num].id || deathGame[id].players[num].jid; // replace citel.sender with citel.sender.id or citel.sender.jid
+    let playerIdToRemove = deathGame[id].players[num];
     if (deathGame[id].available.includes(playerIdToRemove)) {
       deathGame[id].available = deathGame[id].available.filter(playerId => playerId !== playerIdToRemove);
     }
