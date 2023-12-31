@@ -2,6 +2,7 @@ const { cmd, getAdmin, tlang, sleep } = require("../lib/");
 const eco = require('siraj-bank')
 
 //=====================================================================
+let deathGame = {};
 
 cmd({
   pattern: "de",
