@@ -69,7 +69,7 @@ if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-  return await citel.reply(`Player @${citel.senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+  return await citel.reply(`Player @${senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
 } 
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
@@ -85,7 +85,7 @@ if(deathGame[id].players[index] !== citel.sender){
   str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
 }
   }
- await citel.reply(`Hey @${citel.senderNum} you're now Killer!
+ await citel.reply(`Hey @${senderNum} you're now Killer!
 
 ${str.trim()} 
 
@@ -97,7 +97,7 @@ ${str.trim()}
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
   let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${citel.senderNum}!`,
+    await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
 
@@ -135,7 +135,7 @@ deathGame[id].word = word;
   }
     }
 
-   citel.reply(`Hey @${citel.senderNum}, please enter id of any following player to eleminate from game!
+   citel.reply(`Hey @${senderNum}, please enter id of any following player to eleminate from game!
   
   ${str} `,{mentions:[citel.sender,...mentios]})
   }
