@@ -3,27 +3,21 @@ const fs = require('fs');
 
 //=====================================================================   
 
-
-
- cmd({
+cmd({
   pattern: "bobiz",
   desc: "Send a message with a WhatsApp channel URL",
   category: "whatsapp",
   filename: __filename,
 },
 async (Void, citel, text) => {
-  const thumbnailBuffer = Buffer.from("YOUR_THUMBNAIL_IMAGE_DATA", "base64"); // Replace 'YOUR_THUMBNAIL_IMAGE_DATA' with the actual image data in base64 format
+  const log0 = Buffer.from("YOUR_THUMBNAIL_IMAGE_DATA", "base64"); // Replace 'YOUR_THUMBNAIL_IMAGE_DATA' with the actual image data in base64 format
 
   try {
     await Void.sendMessage(citel.chat, {
       text: "I'm a Whatsapp channel URL",
       contextInfo: {
-        externalAdReply: {
-          mediaType: 2,
-          thumbnail: thumbnailBuffer,
           mediaUrl: '',
           sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643'
-        }
       }
     });
   } catch (error) {
@@ -31,8 +25,6 @@ async (Void, citel, text) => {
     await citel.reply('Failed to send message.');
   }
 });
-
-
 
 cmd({
   pattern: "اوامر",
