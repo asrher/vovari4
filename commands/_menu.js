@@ -31,28 +31,34 @@ async (Void, citel, text) => {
 
 
 cmd({
-pattern: "اوامر",
-filename: __filename,
-      },
-      async(Void, citel, text, isAdmins) => {
-        const message = "› رد على هذه الرسالة برقم اللائحة التي تريدها";
+  pattern: "اوامر",
+  filename: __filename,
+},
+async (Void, citel, text, isAdmins) => {
+  const message = "› رد على هذه الرسالة برقم اللائحة التي تريدها";
   const alivtxt = `› السـلام عـلـيـكـم،\n\n[ إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا. ]\n\n\`\`\`${message}\`\`\`\n\n┐| 1.1 - قـائـمـة_الـمـشـرفـيـن\n│| 1.2 - قـائـمـة_الأعـضـاء\n│| 1.3 - قـائـمـة_الألـعـاب\n│| 1.4 - قـائـمـة_الـمـرح\n│| 1.5 - قـائـمـة_الـصور\n│| 1.6 - قـائـمـة_الـمـيـمـز\n│| 1.7 - قـائـمـة_الـديـن\n│| 1.8 - قـائـمـة_الأدوات\n│| 1.9 - قـائـمـة_الـمـيـزات\n│| 2.1 - قـائـمـة_الـتـحـويـلات\n│| 2.2 - قـائـمـة_الـقـرائـة\n┘| 2.3 - الـقـائـمـة_الـزائـدة\n\n✠ - قناة البوت فيها يتم نشر التحديثات الجديدة وشرحها :\n\nhttps://whatsapp.com/channel/0029VaGPfAx17En4dklujt3n\n\nッ اذا واجهت مشاكل فالبوت اكتب .مساعدة`;
+  
   let aliveMessage = {
     image: {
-  url: await botpic(),
+      url: await botpic(),
     },
     caption: alivtxt,
     footer: tlang().footer,
     headerType: 4,
-        mediaUrl: '', 
-sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643' 
+    contextInfo: {
+      externalAdReply: {
+        mediaType: 2,
+        mediaUrl: '',
+        sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643'
+      }
+    }
   };
-   return Void.sendMessage(citel.chat, aliveMessage, {
+
+  return Void.sendMessage(citel.chat, aliveMessage, {
     quoted: citel,
   });
-  
-      }
-    )
+});
+
 
 cmd({ on: "text" }, async (Void, citel) => {
   if (citel.text && citel.quoted && !citel.key.fromMe && citel.isGroup) {
