@@ -66,26 +66,26 @@ cmd({
   filename: __filename,
 },
 async (Void, citel, text, isAdmins) => {
+  const thumbnailBuffer = await botpic(); // Get the thumbnail buffer
   const message = "› رد على هذه الرسالة برقم اللائحة التي تريدها";
   const alivtxt = `› السـلام عـلـيـكـم،\n\n[ إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ ۚ يَا أَيُّهَا الَّذِينَ آمَنُوا صَلُّوا عَلَيْهِ وَسَلِّمُوا تَسْلِيمًا. ]\n\n\`\`\`${message}\`\`\`\n\n┐| 1.1 - قـائـمـة_الـمـشـرفـيـن\n│| 1.2 - قـائـمـة_الأعـضـاء\n│| 1.3 - قـائـمـة_الألـعـاب\n│| 1.4 - قـائـمـة_الـمـرح\n│| 1.5 - قـائـمـة_الـصور\n│| 1.6 - قـائـمـة_الـمـيـمـز\n│| 1.7 - قـائـمـة_الـديـن\n│| 1.8 - قـائـمـة_الأدوات\n│| 1.9 - قـائـمـة_الـمـيـزات\n│| 2.1 - قـائـمـة_الـتـحـويـلات\n│| 2.2 - قـائـمـة_الـقـرائـة\n┘| 2.3 - الـقـائـمـة_الـزائـدة\n\n✠ - قناة البوت فيها يتم نشر التحديثات الجديدة وشرحها :\n\nhttps://whatsapp.com/channel/0029VaGPfAx17En4dklujt3n\n\nッ اذا واجهت مشاكل فالبوت اكتب .مساعدة`;
   
   try {
     // Fetch the thumbnail image buffer using botpic()
-    const thumbnailBuffer = await botpic();
 
-    let aliveMessage = {
-      text: 'i,m a Whatsapp channel url',
-      contextInfo: {
-        externalAdReply: {
-          title: 'Suhail-md',
-          body: 'WhatsApp Bot',
-          mediaType: 2,
-          thumbnail: thumbnailBuffer, // Buffer of the thumbnail image
-          mediaUrl: '',
-          sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643'
-        }
-      }
-    };
+const aliveMessage = {
+  text: 'I am a Whatsapp channel URL',
+  contextInfo: {
+    externalAdReply: {
+      title: 'Suhail-md',
+      body: 'WhatsApp Bot',
+      mediaType: 2,
+      thumbnail: thumbnailBuffer, // Use the retrieved thumbnail buffer
+      mediaUrl: '', // Your media URL
+      sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643'
+    }
+  }
+};
     
     // Sending the message
     await Void.sendMessage(citel.chat, aliveMessage, {
