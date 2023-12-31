@@ -23,7 +23,7 @@ async (Void, citel, text) => {
           mediaType: 2,
           thumbnail: log0,
           mediaUrl: '',
-          sourceUrl: 'https://whatsapp.com/channel/0029Va9thusJP20yWxQ6N643'
+          sourceUrl: 'https://whatsapp.com/channel/0029VaGPfAx17En4dklujt3n'
         }
       }
     });
