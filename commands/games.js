@@ -124,7 +124,7 @@ deathGame[id].word = word;
 
 }
 
-  }else {
+  }else if (deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender) {
     let str = "",mentios = [];
     for(let index in deathGame[id].players){
   if(deathGame[id].players[index] !== citel.sender){
