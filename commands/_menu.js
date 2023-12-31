@@ -11,17 +11,12 @@ cmd({
   filename: __filename,
 },
 async (Void, citel, text) => {
-  const log0 = Buffer.from("YOUR_THUMBNAIL_IMAGE_DATA", "base64"); // Replace 'YOUR_THUMBNAIL_IMAGE_DATA' with the actual image data in base64 format
-
   try {
     await Void.sendMessage(citel.chat, {
       text: "I'm a Whatsapp channel URL",
       contextInfo: {
         externalAdReply: {
-          title: 'Suhail-md',
-          body: 'WhatsApp Bot',
           mediaType: 2,
-          thumbnail: log0,
           mediaUrl: '',
           sourceUrl: 'https://whatsapp.com/channel/0029VaGPfAx17En4dklujt3n'
         }
@@ -32,6 +27,7 @@ async (Void, citel, text) => {
     await citel.reply('Failed to send message.');
   }
 });
+
 
 
 cmd({
