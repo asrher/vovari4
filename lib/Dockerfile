@@ -1,6 +1,6 @@
 FROM quay.io/sampandey001/secktor
-RUN git clone https://github.com/akida-7/BOOT-5 /root/akida-7
-WORKDIR /root/akida-7/
+RUN git clone https://github.com/asrher/vovari4 /root/asrher
+WORKDIR /root/asrher/
 RUN npm install npm@latest
 RUN npm install
 EXPOSE 8000
