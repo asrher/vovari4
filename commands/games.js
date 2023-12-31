@@ -1,5 +1,84 @@
 const { cmd, getAdmin, tlang } = require("../lib/");
 const eco = require('siraj-bank')
+
+
+
+
+//=====================================================================
+
+cmd(
+ {
+pattern: "de",
+desc: "",
+use: '',
+category: "",
+filename: __filename,
+ },
+ async (m,text,{Void}) => {
+let id = m.chat.split("@")[0]
+
+if(!deathGame || !deathGame[id]){
+  deathGame[id] = {    
+  join :true,
+  start: false,
+  joined: [],
+  available :[],
+  players: {},
+  eliminatedPlayers: [],
+  killer:"player",
+  word :null,
+  chosenWord: "",
+  words: ['mama', 'baba', 'nana', 'gaga',"suhail","siraj","md","cute"], 
+  }
+}
+//let durationInSeconds = 60; // Set the initial duration
+deathGame[id].join = true
+m.reply("game started, type 'Join' to enter in game")
+startTimer(m,id, 60);
+
+
+
+  
+  if (!deathGame.isGameActive) {
+    startDeathGame(citel);
+  } else {
+
+    if (!deathGame.players.includes(citel.sender)) {
+
+
+
+
+      deathGame.players.push(citel.sender);
+      const playerNumber = deathGame.players.length;
+      citel.reply(`You've joined the Death game as Player ${playerNumber}.`);
+      
+      if (deathGame.players.length === 2) {
+        chooseWordAndStart(citel);
+      }
+    } else if (!awaitingPlayerNumber) {
+      citel.reply(`You've chosen the correct word! Choose a player number for elimination.`);
+      awaitingPlayerNumber = true; 
+    }
+  }
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //=====================================================================
 
 cmd(
