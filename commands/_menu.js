@@ -6,6 +6,95 @@ const fs = require('fs');
 
 
 cmd({
+  pattern: 'bomb',
+  desc: "Play Bomb Game",
+  category: "GAMES 3D",
+  filename: __filename,
+}, async (Void, citel, text, isAdmins) => {
+  const id = citel.sender;
+  const timeout = 180000;
+
+  Void.bomb = Void.bomb || {};
+
+  if (id in Void.bomb) {
+    return Void.sendMessage(citel.from, { text: '*This session is not yet finished!*' }, Void.bomb[id][0]);
+  }
+
+  const bom = ['💥', '✅', '✅', '✅', '✅', '✅', '✅', '✅', '✅'].sort(() => Math.random() - 0.5);
+  const number = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣'];
+  const array = bom.map((v, i) => ({
+    emot: v,
+    number: number[i],
+    position: i + 1,
+    state: false
+  }));
+
+  let teks = `乂  *B O M B*\n\nSend numbers *1* - *9* to open *9* number boxes below:\n\n`;
+
+  for (let i = 0; i < array.length; i += 3) {
+    teks += array.slice(i, i + 3).map(v => (v.state ? v.emot : v.number)).join('') + '\n';
+  }
+
+  teks += `\nTimeout: [ *${(timeout / 1000) / 60} minutes* ]\nIf you encounter a box with a bomb, your points will be deducted. Type "givup" to give up.`;
+
+  let msg = await Void.sendMessage(citel.from, {
+    text: teks,
+    contextInfo: {
+      externalAdReply: {
+        title: '',
+        body: 'Bomb',
+        thumbnailUrl: 'https://telegra.ph/file/b3138928493e78b55526f.jpg',
+        sourceUrl: '',
+        mediaType: 1,
+        renderLargerThumbnail: true
+      }
+    }
+  }, { quoted: citel });
+
+  const { key } = msg;
+  let v;
+
+  Void.bomb[id] = [
+    msg,
+    array,
+    setTimeout(() => {
+      v = array.find(v => v.emot === '💥');
+      if (Void.bomb[id]) {
+        Void.sendMessage(citel.from, { text: `*Time's up!*, Bomb is in box number ${v.number}.` }, Void.bomb[id][0].key);
+      }
+      delete Void.bomb[id];
+    }, timeout),
+    key
+  ];
+
+  cmd({
+    on: 'text'
+  }, async (message, match) => {
+    if (message.sender === id && !isNaN(message.text)) {
+      const chosenNumber = parseInt(message.text);
+      const chosenBox = array.find(v => v.position === chosenNumber);
+
+      if (chosenBox && !chosenBox.state) {
+        chosenBox.state = true;
+
+        Void.sendMessage(citel.from, { text: `You chose box number ${chosenNumber}. It's ${chosenBox.emot}` });
+
+        if (chosenBox.emot === '💥') {
+          // Handle when bomb is found
+        } else {
+          // Handle when non-bomb box is opened
+        }
+      } else {
+        Void.sendMessage(citel.from, { text: `Box number ${chosenNumber} is already opened. Please choose another box.` });
+      }
+    }
+  });
+});
+
+
+
+
+cmd({
   pattern: "bobizz",
   desc: "Send a message with a WhatsApp channel URL",
   category: "whatsapp",
