@@ -2,8 +2,8 @@ const { cmd } = require("../lib/");
 
 class HiddenCardGame {
   constructor() {
-    this.column = 4;
-    this.row = 4;
+    this.column = 3;
+    this.row = 3;
     this.player1 = "";
     this.player2 = "";
     this.currentPlayer = "";
@@ -104,17 +104,17 @@ cmd(
       game.player2 = citel.sender;
       game.startGame(game.player1, game.player2);
     }
-    let row = 4 
-    let colume = 4
+    let row = 3 
+    let colume = 3
     if(text)
     {
-      row =  parseInt(text.split(",")[0] ) || 4 ;
-      colume  =  parseInt(text.split(",")[1] ) || 4 ;
+      row =  parseInt(text.split(",")[0] ) || 3 ;
+      colume  =  parseInt(text.split(",")[1] ) || 3 ;
       
     }
     if (game.gameStatus) {
-      game.row = parseInt(row) || 4;
-      game.column = parseInt(colume) ||  4 ;
+      game.row = parseInt(row) || 3;
+      game.column = parseInt(colume) ||  3 ;
       game.hiddenCardIndex = Math.floor(Math.random() *  ( game.row * game.column ));
        return await citel.send(`Game started Now...\n_Turn: @${game.currentPlayer.split("@")[0]}\n_Next Turn : @${(game.currentPlayer === game.player1 ? game.player2 : game.player1).split("@")[0]}\n\n_Board Size : *${game.row}x${game.column}*_\n_Theres a Hidden Queen Card "🃏" in Board_\n_Enter a number to find the Queen Card_\n\n${game.displayBoard()} `,
                                { mentions: [game.player1, game.player2, game.currentPlayer]});
