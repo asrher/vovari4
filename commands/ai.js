@@ -54,7 +54,7 @@ cmd({
 
 
 cmd({
-pattern: "je",
+pattern: "جرجير",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
@@ -81,7 +81,7 @@ headers: {
 },
 body: JSON.stringify({
   model: "gpt-3.5-turbo", // Specify the desired model here
-  messages: [{ role: "system", content: "luffy" }, { role: "user", content: text }],
+  messages: [{ role: "system", content: "Luffy" }, { role: "user", content: text }],
 }),
 });
 
@@ -93,7 +93,7 @@ return await  citel.reply(data.choices[0].message.content)
 
 
 
-/*
+
 const { Configuration, OpenAIApi } = require("openai");
     const configuration = new Configuration
             ({
@@ -115,7 +115,7 @@ const { Configuration, OpenAIApi } = require("openai");
 /////her *
 }
 )
-*/
+
 //=====================================================================
 
 cmd({
