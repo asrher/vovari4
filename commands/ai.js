@@ -24,25 +24,36 @@ async(Void, citel,text) =>
 if (!Config.OPENAI_API_KEY || Config.OPENAI_API_KEY=='' ||  !Config.OPENAI_API_KEY.startsWith('sk') ) return citel.reply('انتهى api')
 if (!text) return citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `); 
 
-const response = await fetch("https://api.openai.com/v1/chat/completions", {
-method: "POST",
-headers: {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${Config.OPENAI_API_KEY}`,
-},
-body: JSON.stringify({
-  model: "gpt-3.5-turbo", // Specify the desired model here
-  messages: [{ role: "system", content: "You are Luffy from One Piece." }, { role: "user", content: text }],
-}),
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${Config.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are Luffy from One Piece." },
+        { role: "user", content: text },
+      ],
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!data.choices || data.choices.length === 0) {
+    citel.reply("No response received from the AI.");
+    return;
+  }
+
+  // Extract the message content from the response and send it to the chat
+  const messageContent = data.choices[0].message.content;
+  if (messageContent) {
+    await citel.reply(messageContent);
+  } else {
+    citel.reply("No valid response received from the AI.");
+  }
 });
-
-const data = await response.json();
-console.log("GPT REPONCE : ",data); 
-if (!data.choices || data.choices.length === 0) {citel.reply("انتهى api"); }
-return await  citel.reply(data.choices[0].message.content)
-
-}
-)
 
 //=====================================================================
 
