@@ -33,7 +33,7 @@ if (!text) return citel.reply(`السلام عليكم ${citel.pushName}كيف �
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "You are Luffy from One Piece." },
+        { role: "system", content: "You are Luffy from One Piece with his stupidity and serious and funny responses" },
         { role: "user", content: text },
       ],
     }),
