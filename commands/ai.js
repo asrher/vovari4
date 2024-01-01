@@ -194,6 +194,11 @@ cmd({
   }
 });
 
+
+
+
+
+
 const translateToEnglish = async (text) => {
   const translateToEnUrl = `https://vihangayt.me/tools/chatgpt4?q=translate%20${encodeURIComponent(text)}%20to%20en`;
   try {
@@ -225,7 +230,7 @@ cmd({
   filename: __filename,
 }, async (Void, citel, text) => {
   if (!text) return await citel.reply(`Please provide a message to ask Luffy.`);
-  
+
   const translatedToEn = await translateToEnglish(text);
   if (!translatedToEn) return await citel.reply("Unable to translate the message to English.");
 
@@ -241,7 +246,7 @@ cmd({
 
       await citel.reply(`${translatedToAr}`);
     } else {
-      await citel.reply("No response from Luffy at the moment.");
+      await citel.reply("No valid response from Luffy at the moment.");
     }
   } catch (error) {
     console.error("An error occurred:", error);
