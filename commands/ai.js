@@ -148,7 +148,7 @@ filename: __filename,
 
 
 cmd({
-pattern: "جرجير",
+pattern: "nami",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
@@ -165,7 +165,7 @@ let mongoschemas = zerogroup.chatt || "false";
 if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
 
   if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
-  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=newton&apikey=caliphkey`;
+  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=nami&apikey=caliphkey`;
   try {
     const response = await fetch(apiUrl);
     const result = await response.json();
