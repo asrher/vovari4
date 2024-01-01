@@ -54,7 +54,7 @@ cmd({
 
 
 cmd({
-pattern: "جرجير",
+pattern: "je",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
