@@ -93,6 +93,8 @@ ${str.trim()}
  `.trim(),{mentions:[citel.sender,...mentios]})
 }
 
+// ... previous code ...
+
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
   let num = parseInt(text) || false
@@ -100,31 +102,31 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
-
+    // Remove the player from the players list
     let playerIdToRemove = deathGame[id].players[num];
+    deathGame[id].players = deathGame[id].players.filter(playerId => playerId !== playerIdToRemove);
+
+    // Remove the player from the available list
     if (deathGame[id].available.includes(playerIdToRemove)) {
       deathGame[id].available = deathGame[id].available.filter(playerId => playerId !== playerIdToRemove);
     }
 
-
     deathGame[id].eliminatedPlayers.push(deathGame[id].players[num])
-    delete deathGame[id].players[num]
 
     sleep(5000)
- if(deathGame[id].available.length <=1 ){
-  let ppp = [...deathGame[id].joined]
-  delete deathGame[id]
-  citel.reply(`Hurray @${citel.sender.split("@")[0]} you're the winner of Game!`,
-  {mentions:[citel.sender,...ppp]})
+    if(deathGame[id].available.length <=1 ){
+      let ppp = [...deathGame[id].joined]
+      delete deathGame[id]
+      citel.reply(`Hurray @${citel.sender.split("@")[0]} you're the winner of Game!`,
+      {mentions:[citel.sender,...ppp]})
 
-}else {
-  let randome = Math.floor(Math.random() * deathGame[id].words.length);
-let word = deathGame[id].words[randome];
-deathGame[id].word = word;
-  citel.send(`Here's the another word :  *${word}* `,{mentions:[...deathGame[id].available]})
+    }else {
+      let randome = Math.floor(Math.random() * deathGame[id].words.length);
+    let word = deathGame[id].words[randome];
+    deathGame[id].word = word;
+    citel.send(`Here's the another word :  *${word}* `,{mentions:[...deathGame[id].available]})
 
-
-}
+    }
 
   }else {
     let str = "",mentios = [];
@@ -141,6 +143,11 @@ deathGame[id].word = word;
   }
  
 
+
+
+}
+
+// ... rest of the code ...
 
 
 }
