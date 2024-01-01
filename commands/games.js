@@ -64,11 +64,10 @@ if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
-  let text = citel.text
 // ============== / Joinening people in game
 
 
-if(text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
+if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
@@ -77,7 +76,7 @@ if(text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !dea
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
 // ============== / first one wjho collect word 
-if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === text.toLowerCase()){
+if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === citel.text.toLowerCase()){
   deathGame[id].killer = citel.sender;
   deathGame[id].word= null
 
