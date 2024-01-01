@@ -144,3 +144,38 @@ filename: __filename,
     }
   });
   //=====================================================================
+
+
+
+cmd({
+pattern: "جرجير",
+desc: "سولف مع الذكاء الاصطناعي",
+use: '',
+category: "spi",
+filename: __filename,
+  },
+async (Void, citel, text) => {
+  let zerogroup = (await sck.findOne({
+    id: citel.chat,
+})) || (await new sck({
+        id: citel.chat,
+    })
+    .save());
+let mongoschemas = zerogroup.chatt || "false";
+if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
+
+  if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
+  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=newton&apikey=caliphkey`;
+  try {
+    const response = await fetch(apiUrl);
+    const result = await response.json();
+    if (result.status && result.response) {
+      await citel.reply(`${result.response}`);
+    } else {
+      await citel.reply("مافي جواب.");
+    }
+  } catch (error) {
+    console.error("حصل خطأ");
+    await citel.reply("حصل خطأ");
+  }
+});
