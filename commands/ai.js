@@ -148,34 +148,27 @@ filename: __filename,
 
 
 cmd({
-pattern: "nami",
-desc: "سولف مع الذكاء الاصطناعي",
-use: '',
-category: "spi",
-filename: __filename,
-  },
-async (Void, citel, text) => {
-  let zerogroup = (await sck.findOne({
-    id: citel.chat,
-})) || (await new sck({
-        id: citel.chat,
-    })
-    .save());
-let mongoschemas = zerogroup.chatt || "false";
-if (mongoschemas == "false") return citel.reply("֎╎لـم يـتـم تـشـغـيـل الـذكـاء الاصـطـنـاعـي فـالـمـجـمـوعـة\n\nادخل قروب البوت كلشي متوفر فيه اكتب .مساعدة");
+  pattern: "luffy",
+  desc: "Talk to an AI with Luffy character",
+  category: "AI",
+  filename: __filename,
+}, async (Void, citel, text) => {
+  if (!text) return await citel.reply(`Please provide a message to ask Luffy.`);
+  
+  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=luffy&apikey=caliphkey`;
 
-  if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
-  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=nami&apikey=caliphkey`;
   try {
     const response = await fetch(apiUrl);
     const result = await response.json();
-    if (result.status && result.response) {
-      await citel.reply(`${result.response}`);
+
+    if (result.status === 200 && result.result && result.result.response) {
+      await citel.reply(`${result.result.response}`);
     } else {
-      await citel.reply("مافي جواب.");
+      await citel.reply("No response from Luffy at the moment.");
     }
   } catch (error) {
-    console.error("حصل خطأ");
-    await citel.reply("حصل خطأ");
+    console.error("An error occurred:", error);
+    await citel.reply("There was an error while communicating with Luffy. Please try again later.");
   }
 });
+
