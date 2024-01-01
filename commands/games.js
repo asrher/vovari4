@@ -69,7 +69,7 @@ if(citel.isBot) return
 let deathGameCounter = {}; // Initialize a counter object to manage player IDs
 
 // Inside your code block where players are being added
-if (text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join && !deathGame[id].available.includes(citel.sender)) {
+if (citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join && !deathGame[id].available.includes(citel.sender)) {
   deathGame[id].joined.push(citel.sender);
   deathGame[id].available.push(citel.sender);
   deathGameCounter[id] = deathGameCounter[id] ? deathGameCounter[id] + 1 : 1; // Increment the counter or set to 1
