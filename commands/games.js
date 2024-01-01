@@ -150,7 +150,7 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
 // ... rest of the code ...
 
 
-}
+
 
 })
 
