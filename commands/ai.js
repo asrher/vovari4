@@ -81,7 +81,7 @@ headers: {
 },
 body: JSON.stringify({
   model: "gpt-3.5-turbo", // Specify the desired model here
-  messages: [{ role: "system", content: "Luffy" }, { role: "user", content: text }],
+  messages: [{ role: "system", content: "You are a character named Newton, a genius physicist and mathematician." }, { role: "user", content: text }],
 }),
 });
 
