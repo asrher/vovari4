@@ -375,7 +375,7 @@ cmd({
     return;
   }
 
-  const submittedWord = text.trim();
+  const submittedWord = citel.text.trim();
 
   if (!isValidWord(submittedWord)) {
     return;
