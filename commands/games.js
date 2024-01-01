@@ -65,12 +65,17 @@ if(citel.isBot) return
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
 // ============== / Joinening people in game
-if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
-  deathGame[id].joined.push(citel.sender)
-  deathGame[id].available.push(citel.sender)
-  deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-  return await citel.reply(`Player @${senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
-} 
+
+let deathGameCounter = {}; // Initialize a counter object to manage player IDs
+
+// Inside your code block where players are being added
+if (text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join && !deathGame[id].available.includes(citel.sender)) {
+  deathGame[id].joined.push(citel.sender);
+  deathGame[id].available.push(citel.sender);
+  deathGameCounter[id] = deathGameCounter[id] ? deathGameCounter[id] + 1 : 1; // Increment the counter or set to 1
+  deathGame[id].players[deathGameCounter[id]] = citel.sender; // Assign the incremented ID to the player
+  return await citel.reply(`Player @${citel.senderNum} joined!\nYour number is *"${deathGameCounter[id]}"*`, { mentions: [citel.sender] });
+}
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
 // ============== / first one wjho collect word 
@@ -93,8 +98,6 @@ ${str.trim()}
  `.trim(),{mentions:[citel.sender,...mentios]})
 }
 
-// ... previous code ...
-
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
   let num = parseInt(text) || false
@@ -102,31 +105,31 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
-    // Remove the player from the players list
-    let playerIdToRemove = deathGame[id].players[num];
-    deathGame[id].players = deathGame[id].players.filter(playerId => playerId !== playerIdToRemove);
 
-    // Remove the player from the available list
+    let playerIdToRemove = deathGame[id].players[num];
     if (deathGame[id].available.includes(playerIdToRemove)) {
       deathGame[id].available = deathGame[id].available.filter(playerId => playerId !== playerIdToRemove);
     }
 
+
     deathGame[id].eliminatedPlayers.push(deathGame[id].players[num])
+    delete deathGame[id].players[num]
 
     sleep(5000)
-    if(deathGame[id].available.length <=1 ){
-      let ppp = [...deathGame[id].joined]
-      delete deathGame[id]
-      citel.reply(`Hurray @${citel.sender.split("@")[0]} you're the winner of Game!`,
-      {mentions:[citel.sender,...ppp]})
+ if(deathGame[id].available.length <=1 ){
+  let ppp = [...deathGame[id].joined]
+  delete deathGame[id]
+  citel.reply(`Hurray @${citel.sender.split("@")[0]} you're the winner of Game!`,
+  {mentions:[citel.sender,...ppp]})
 
-    }else {
-      let randome = Math.floor(Math.random() * deathGame[id].words.length);
-    let word = deathGame[id].words[randome];
-    deathGame[id].word = word;
-    citel.send(`Here's the another word :  *${word}* `,{mentions:[...deathGame[id].available]})
+}else {
+  let randome = Math.floor(Math.random() * deathGame[id].words.length);
+let word = deathGame[id].words[randome];
+deathGame[id].word = word;
+  citel.send(`Here's the another word :  *${word}* `,{mentions:[...deathGame[id].available]})
 
-    }
+
+}
 
   }else {
     let str = "",mentios = [];
@@ -146,11 +149,6 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
 
 
 }
-
-// ... rest of the code ...
-
-
-
 
 })
 
