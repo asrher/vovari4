@@ -33,7 +33,7 @@ if (!text) return citel.reply(`السلام عليكم ${citel.pushName}كيف �
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "انت شخص سعودي مرح يقول ذبات ويتكلم فقط باللهجة السعودية" },
+        { role: "system", content: "انت شخصية سمول كابوتشينو من السعودية" },
         { role: "user", content: text },
       ],
     }),
