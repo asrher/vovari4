@@ -59,7 +59,7 @@ startTimer(m,id, 20);
 
 
 
-cmd({ on: "text" } , async (Void , citel,text) => {  // Use  async (Void , citel,text) => {
+cmd({ on: "text" } , async (Void , citel, match, text) => {  // Use  async (Void , citel,text) => {
 if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
