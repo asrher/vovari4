@@ -53,8 +53,8 @@ cmd({
 });
 
 
-/*cmd({
-pattern: "جرجير",
+cmd({
+pattern: "je",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
@@ -81,7 +81,7 @@ headers: {
 },
 body: JSON.stringify({
   model: "gpt-3.5-turbo", // Specify the desired model here
-  messages: [{ role: "system", content: "You" }, { role: "user", content: text }],
+  messages: [{ role: "system", content: "luffy" }, { role: "user", content: text }],
 }),
 });
 
