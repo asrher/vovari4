@@ -147,22 +147,44 @@ filename: __filename,
 
 
 
+const translatte = require("translatte");
+
+// Function to translate text from one language to another
+async function translateText(text, fromLanguage, toLanguage) {
+  try {
+    const translatedText = await translatte(text, {
+      from: fromLanguage,
+      to: toLanguage,
+    });
+    return translatedText.text;
+  } catch (error) {
+    console.error("Translation error:", error);
+    throw new Error("Translation failed");
+  }
+}
+
+// Command to interact with the AI API
 cmd({
-  pattern: "luffy",
+  pattern: "لوفي",
   desc: "Talk to an AI with Luffy character",
   category: "AI",
   filename: __filename,
 }, async (Void, citel, text) => {
   if (!text) return await citel.reply(`Please provide a message to ask Luffy.`);
-  
-  const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(text)}&char=luffy&apikey=caliphkey`;
 
   try {
+    // Translate the user's message from Arabic to English
+    const translatedText = await translateText(text, "ar", "en");
+    
+    const apiUrl = `https://api.caliph.biz.id/api/ai/c-ai?q=${encodeURIComponent(translatedText)}&char=luffy&apikey=caliphkey`;
+    
     const response = await fetch(apiUrl);
     const result = await response.json();
 
     if (result.status === 200 && result.result && result.result.response) {
-      await citel.reply(`${result.result.response}`);
+      // Translate the response from English to Arabic
+      const translatedResponse = await translateText(result.result.response, "en", "ar");
+      await citel.reply(`${translatedResponse}`);
     } else {
       await citel.reply("No response from Luffy at the moment.");
     }
