@@ -64,10 +64,11 @@ if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
+  let text = citel.text
 // ============== / Joinening people in game
 
 
-if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
+if(text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
@@ -76,17 +77,16 @@ if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
 // ============== / first one wjho collect word 
-if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === citel.text.toLowerCase()){
+if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === text.toLowerCase()){
   deathGame[id].killer = citel.sender;
   deathGame[id].word= null
 
-  let str = "ID:  PLAYER\n", mentios = [];
-  for (let index in deathGame[id].players) {
-      const playerIndex = parseInt(index) + 1; // Adjust index to start from 1
-      if (deathGame[id].players[index] !== citel.sender) {
-          mentios.push(deathGame[id].players[index]);
-          str += `${playerIndex}: @${deathGame[id].players[index].split("@")[0]}\n`; // Use playerIndex for display
-      }
+  let str = "ID:  PLAYER\n",mentios = [];
+  for(let index in deathGame[id].players){
+if(deathGame[id].players[index] !== citel.sender){
+    mentios.push(deathGame[id].players[index])
+  str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
+}
   }
  await citel.reply(`Hey @${senderNum} you're now Killer!
 
