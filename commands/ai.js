@@ -4,6 +4,55 @@ const fetch = require('node-fetch');
 
 //=====================================================================
 
+cmd({
+  pattern: "jeje",
+  desc: "سولف مع الذكاء الاصطناعي",
+  use: '',
+  category: "spi",
+  filename: __filename,
+}, async (Void, citel, text) => {
+  // Ensure the API key is available
+  if (!Config.OPENAI_API_KEY || Config.OPENAI_API_KEY == '' || !Config.OPENAI_API_KEY.startsWith('sk')) {
+    return citel.reply('انتهى api');
+  }
+
+  // Check if there's no text provided
+  if (!text) {
+    return citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
+  }
+
+  // Prepare the prompt with the character's style
+  const prompt = `Character: luffy\n${text}`;
+
+  try {
+    // Make the API call to OpenAI
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${Config.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "system", content: "You" }, { role: "user", content: prompt }],
+      }),
+    });
+
+    // Parse the response
+    const data = await response.json();
+    if (!data.choices || data.choices.length === 0) {
+      return citel.reply("انتهى api");
+    }
+
+    // Respond with the generated text
+    return await citel.reply(data.choices[0].message.content);
+  } catch (error) {
+    console.error("An error occurred:", error);
+    return citel.reply("There was an error while communicating with the AI. Please try again later.");
+  }
+});
+
+
 /*cmd({
 pattern: "جرجير",
 desc: "سولف مع الذكاء الاصطناعي",
