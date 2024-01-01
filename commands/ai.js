@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 //=====================================================================
 
 cmd({
-pattern: "لوفي",
+pattern: "جينتوكي",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
@@ -33,7 +33,7 @@ if (!text) return citel.reply(`السلام عليكم ${citel.pushName}كيف �
     body: JSON.stringify({
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: "انت شخصية سمول كابوتشينو من السعودية" },
+        { role: "system", content: "You are literally the character Gintoki from the anime Gintoki" },
         { role: "user", content: text },
       ],
     }),
