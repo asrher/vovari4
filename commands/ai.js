@@ -54,7 +54,7 @@ cmd({
 
 
 cmd({
-pattern: "je",
+pattern: "لوفي",
 desc: "سولف مع الذكاء الاصطناعي",
 use: '',
 category: "spi",
@@ -81,7 +81,7 @@ headers: {
 },
 body: JSON.stringify({
   model: "gpt-3.5-turbo", // Specify the desired model here
-  messages: [{ role: "system", content: "You are a character named Newton, a genius physicist and mathematician." }, { role: "user", content: text }],
+  messages: [{ role: "system", content: "You are Luffy from One Piece." }, { role: "user", content: text }],
 }),
 });
 
@@ -273,7 +273,7 @@ const translateToArabic = async (text) => {
 };
 
 cmd({
-  pattern: "لوفي",
+  pattern: "luffy",
   desc: "Talk to an AI with Luffy character",
   category: "AI",
   filename: __filename,
