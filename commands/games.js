@@ -66,20 +66,17 @@ if(citel.isBot) return
   let senderNum = citel.sender.split("@")[0];
 // ============== / Joinening people in game
 
-let deathGameCounter = {}; // Initialize a counter object to manage player IDs
 
-// Inside your code block where players are being added
-if (citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join && !deathGame[id].available.includes(citel.sender)) {
-  deathGame[id].joined.push(citel.sender);
-  deathGame[id].available.push(citel.sender);
-  deathGameCounter[id] = deathGameCounter[id] ? deathGameCounter[id] + 1 : 1; // Increment the counter or set to 1
-  deathGame[id].players[deathGameCounter[id]] = citel.sender; // Assign the incremented ID to the player
-  return await citel.reply(`Player @${citel.senderNum} joined!\nYour number is *"${deathGameCounter[id]}"*`, { mentions: [citel.sender] });
-}
+if(match.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
+  deathGame[id].joined.push(citel.sender)
+  deathGame[id].available.push(citel.sender)
+  deathGame[id].players[deathGame[id].joined.length] = citel.sender;
+  return await citel.reply(`Player @${senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+} 
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
 // ============== / first one wjho collect word 
-if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === citel.text.toLowerCase()){
+if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].word === match.text.toLowerCase()){
   deathGame[id].killer = citel.sender;
   deathGame[id].word= null
 
