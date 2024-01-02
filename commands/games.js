@@ -84,7 +84,7 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].killer = citel.sender;
   deathGame[id].word= null
 
-  let str = "رقم : اللاعب\n",mentios = [];
+  let str = "رقم اللاعبين :\n",mentios = [];
   for(let index in deathGame[id].players){
 if(deathGame[id].players[index] !== citel.sender){
     mentios.push(deathGame[id].players[index])
@@ -105,7 +105,7 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     var text = citel.text
     let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${senderNum}!`,
+    await citel.reply(` @${deathGame[id].players[num].split("@")[0]} مطرود من  @${senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
 
@@ -173,7 +173,7 @@ deathGame[id].word = word;
 
 
 
-async function startTimer(m,id="suhail", durationInSeconds=3 , type = "بشارك",pplyers = "1,2") {
+async function startTimer(m,id="siraj", durationInSeconds=3 , type = "بشارك",pplyers = "1,2") {
   let timer = durationInSeconds || 30;
   let intervalId;
 if(type == "بشارك"){
@@ -183,7 +183,7 @@ if(type == "بشارك"){
 
   // Your existing code
   if (deathGame[id] && deathGame[id].join && (timer == 50  || timer == 15 || timer ==30 || timer == 5)) {
-    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي ${timer} ثانية حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
+    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي ${timer} ثواني حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
   }
 
 
@@ -248,7 +248,7 @@ deathGame[id].word = word;
 
   // Your existing code
   if (deathGame[id] && deathGame[id].join && (timer == 50  || timer == 15 || timer ==30 || timer == 5)) {
-    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي  ${timer}ثانية حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
+    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي  ${timer}ثواني حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
   }
 
 
