@@ -108,12 +108,12 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     var text = citel.text
     let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(` ${registeredName1} مطرود من  ${registeredName} !`,
-    {mentions:[citel.sender,deathGame[id].players[num]]})
-    
-    const targetUser = deathGame[id].players[num];
+        const targetUser = deathGame[id].players[num];
     const registeredUser1 = await sck1.findOne({ id: targetUser });
     const registeredName1 = registeredUser ? registeredUser1.name : "دون لقب";
+    await citel.reply(` ${registeredName1} مطرود من  ${registeredName} !`,
+    {mentions:[citel.sender,deathGame[id].players[num]]})
+  
 
     let playerIdToRemove = deathGame[id].players[num];
     if (deathGame[id].available.includes(playerIdToRemove)) {
