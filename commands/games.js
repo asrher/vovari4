@@ -69,13 +69,14 @@ cmd({ on: "text" } , async (Void , citel) => {  // Use  async (Void , citel,text
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
 // ============== / Joinening people in game
-
+const registeredUser = await sck1.findOne({ id: citel.sender });
+let registeredName = registeredUser ? registeredUser.name : "دون لقب";
 
 if(citel.text.toLowerCase() === "بشارك" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-  return await citel.reply(`اللاعب @${senderNum} دخل!\nرقمك هو *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+  return await citel.reply(`اللاعب @${registeredName} دخل!\nرقمك هو *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
 } 
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
@@ -85,25 +86,12 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].word= null
 
 
-  /*
-      let str = "",mentios = [];
-
-      for(let index in deathGame[id].players){
-        mentios.push(deathGame[id].players[index])
-      str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
-    //}
-      }
-   await m.send(`*قائمة المشاركين*
-  
-${str} 
-
-  */
-
   let str = "رقم اللاعبين :\n",mentios = [];
   for(let index in deathGame[id].players){
+if(deathGame[id].players[index] !== citel.sender){
     mentios.push(deathGame[id].players[index])
   str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
-
+}
   }
  await citel.reply(`شسمه @${senderNum} انت الحين قاتل!
 
