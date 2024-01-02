@@ -7,14 +7,14 @@ let deathGame = {};
 cmd({
   pattern: "ديث",
   category: "games",
-}, async (Void , m,citel,text) => { // Use async (Void , m,text) => {
-  if (!citel.isGroup) return citel.reply(tlang().group);
+}, async (Void, m, citel, text) => { // Use async (Void , m,text) => {
+  if (!citel.isGroup) return m.reply(tlang().group);
   const groupAdmins = await getAdmin(Void, citel)
   const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
   const isAllowedUser = await sck1.findOne({ id: citel.sender, alow: "true" });
 
   if (!(isAdmins || isAllowedUser || isCreator)) {
-      return citel.reply(tlang().admin);
+      return m.reply(tlang().admin);
   } 
 let id = m.chat.split("@")[0]
 
