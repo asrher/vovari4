@@ -28,7 +28,7 @@ if(!deathGame || !deathGame[id]){
 //let durationInSeconds = 60; // Set the initial duration
 deathGame[id].join = true
 m.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`)
-startTimer(m,id, 20);
+startTimer(m,id, 60);
 
 
 
