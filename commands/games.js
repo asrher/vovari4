@@ -95,11 +95,11 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
       const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
   
       mentions.push(playerName);
-      str += `${index} : @${playerNameToMention}\n`;
+      str += `${index} : ${playerNameToMention}\n`;
     }
   }
   
-  await citel.reply(`شسمه @${registeredName} انت الحين قاتل!\n\n${str.trim()}\n\n*اكتب رقم اللاعب الذي تريد طرده*`.trim(), { mentions: [citel.sender, ...mentions] }); 
+  await citel.reply(`شسمه ${registeredName} انت الحين قاتل!\n\n${str.trim()}\n\n*اكتب رقم اللاعب الذي تريد طرده*`.trim(), { mentions: [citel.sender, ...mentions] }); 
 }
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
@@ -140,18 +140,21 @@ deathGame[id].word = word;
 }
 
   }else {
-    let str = "",mentios = [];
-    for(let index in deathGame[id].players){
-  if(deathGame[id].players[index] !== citel.sender){
-      mentios.push(deathGame[id].players[index])
-    str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
-  }
-    }
-
-   citel.reply(`تست ${registeredName}, *اكتب رقم اللاعب الي تبغى تطرده*
+    let str = "", mentions = [];
+    for (let index in deathGame[id].players) {
+      if (deathGame[id].players[index] !== citel.sender) {
+        const playerName = deathGame[id].players[index];
+        const registeredUser = await sck1.findOne({ id: playerName });
+        const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
   
-  ${str} `,{mentions:[citel.sender,...mentios]})
+        mentions.push(playerName);
+        str += `${index} : ${playerNameToMention}\n`;
+      }
+    }
+  
+    await citel.reply(`تست ${registeredName}, *اكتب رقم اللاعب الذي ترغب في طرده*\n\n${str}`, { mentions: [citel.sender, ...mentions] });
   }
+  
  
 
 
@@ -201,7 +204,7 @@ if(type == "بشارك"){
       }else if(deathGame[id].joined.length <= 1) {
         let pplayer = deathGame[id].joined[0]
         delete deathGame[id];
-        return await m.send(`*انتهت لعبة! شسمه @${pplayer.split("@")[0]}, صار خطأ في طلبك!*`,{mentions:[pplayer]})
+        return await m.send(`*انتهت لعبة! شسمه ${pplayer.split("@")[0]}, صار خطأ في طلبك!*`,{mentions:[pplayer]})
       }
 
 
@@ -218,7 +221,7 @@ if(type == "بشارك"){
         const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
         
         mentios.push(playerName);
-        str += `${index} : @${playerNameToMention.split("@")[0]}\n`;
+        str += `${index} : ${playerNameToMention.split("@")[0]}\n`;
     //}
       }
    await m.send(`*قائمة المشاركين*
