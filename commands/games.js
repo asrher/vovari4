@@ -26,14 +26,13 @@ if(!deathGame || !deathGame[id]){
   }
 }
 //let durationInSeconds = 60; // Set the initial duration
-if (!deathGame[id].start) {
+if (!deathGame[id].start && !deathGame[id].join) {
   deathGame[id].join = true;
   m.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`);
   startTimer(m, id, 20);
 } else {
-  m.reply('هناك لعبة قائمة بالفعل!');
+  m.reply('هناك لعبة قائمة بالفعل أو مرحلة جمع اللاعبين قد بدأت!');
 }
-
 
 
 
