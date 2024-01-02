@@ -99,8 +99,8 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
     }
   }
   
-  await citel.reply(`شسمه @${registeredName} انت الحين قاتل!\n\n${str.trim()}\n\n*اكتب رقم اللاعب الذي تريد طرده*`.trim(), { mentions: [citel.sender, ...mentions] });
-
+  await citel.reply(`شسمه @${registeredName} انت الحين قاتل!\n\n${str.trim()}\n\n*اكتب رقم اللاعب الذي تريد طرده*`.trim(), { mentions: [citel.sender, ...mentions] }); 
+}
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
  
