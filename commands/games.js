@@ -1,4 +1,4 @@
-const { cmd, sck1, getAdmin, tlang, sleep } = require("../lib/");
+const { cmd, getAdmin, tlang, sleep } = require("../lib/");
 //const eco = require('siraj-bank')
 
 //=====================================================================
@@ -76,7 +76,7 @@ if(citel.text.toLowerCase() === "بشارك" && deathGame[id] && deathGame[id].j
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-  return await citel.reply(`اللاعب @${registeredName} دخل!\nرقمك هو *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+  return await citel.reply(`اللاعب ${registeredName} دخل!\nرقمك هو *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
 } 
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
@@ -93,7 +93,7 @@ if(deathGame[id].players[index] !== citel.sender){
   str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
 }
   }
- await citel.reply(`شسمه @${senderNum} انت الحين قاتل!
+ await citel.reply(`شسمه @${registeredName} انت الحين قاتل!
 
 ${str.trim()} 
 
@@ -107,7 +107,7 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     var text = citel.text
     let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(` @${deathGame[id].players[num].split("@")[0]} مطرود من  @${senderNum}!`,
+    await citel.reply(` @${deathGame[id].players[num].split("@")[0]} مطرود من  ${registeredName} !`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
 
@@ -145,7 +145,7 @@ deathGame[id].word = word;
   }
     }
 
-   citel.reply(`تست @${senderNum}, *اكتب رقم اللاعب الي تبغى تطرده*
+   citel.reply(`تست ${registeredName}, *اكتب رقم اللاعب الي تبغى تطرده*
   
   ${str} `,{mentions:[citel.sender,...mentios]})
   }
