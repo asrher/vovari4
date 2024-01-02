@@ -69,9 +69,6 @@ cmd({ on: "text" } , async (Void , citel) => {  // Use  async (Void , citel,text
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
 // ============== / Joinening people in game
-const targetUser = citel.mentionedJid ? citel.mentionedJid[0] : citel.quoted ? citel.quoted.sender : false;
-const registeredUser1 = await sck1.findOne({ id: targetUser });
-const registeredName1 = registeredUser ? registeredUser1.name : "دون لقب";
 
 const registeredUser = await sck1.findOne({ id: citel.sender });
 let registeredName = registeredUser ? registeredUser.name : "دون لقب";
@@ -111,9 +108,12 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     var text = citel.text
     let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(` @${deathGame[id].players[registeredName].split("@")[0]} مطرود من  ${registeredName} !`,
+    await citel.reply(` ${registeredName1} مطرود من  ${registeredName} !`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
-
+    
+    const targetUser = deathGame[id].players[num];
+    const registeredUser1 = await sck1.findOne({ id: targetUser });
+    const registeredName1 = registeredUser ? registeredUser1.name : "دون لقب";
 
     let playerIdToRemove = deathGame[id].players[num];
     if (deathGame[id].available.includes(playerIdToRemove)) {
