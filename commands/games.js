@@ -1,5 +1,5 @@
 const { cmd, getAdmin, tlang, sleep } = require("../lib/");
-const eco = require('siraj-bank')
+//const eco = require('siraj-bank')
 
 //=====================================================================
 let deathGame = {};
@@ -59,8 +59,12 @@ startTimer(m,id, 20);
 
 
 
-cmd({ on: "text" } , async (Void , citel,text) => {  // Use  async (Void , citel,text) => {
-if(citel.isBot) return
+cmd({ on: "text" } , async (Void , citel) => {  // Use  async (Void , citel,text) => {
+
+
+
+
+    if(citel.isBot) return
 
   let id = citel.chat.split("@")[0] 
   let senderNum = citel.sender.split("@")[0];
@@ -97,7 +101,9 @@ ${str.trim()}
 
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
-  let num = parseInt(text) || false
+ 
+    var text = citel.text
+    let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
     await citel.reply(`Hey @${deathGame[id].players[num].split("@")[0]} you're Killed by @${senderNum}!`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
