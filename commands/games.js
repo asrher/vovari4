@@ -8,6 +8,14 @@ cmd({
   pattern: "ديث",
   category: "games",
 }, async (Void , m,text) => { // Use async (Void , m,text) => {
+  if (!citel.isGroup) return citel.reply(tlang().group);
+  const groupAdmins = await getAdmin(Void, citel)
+  const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
+  const isAllowedUser = await sck1.findOne({ id: citel.sender, alow: "true" });
+
+  if (!(isAdmins || isAllowedUser || isCreator)) {
+      return citel.reply(tlang().admin);
+  } 
 let id = m.chat.split("@")[0]
 
 
@@ -26,13 +34,14 @@ if(!deathGame || !deathGame[id]){
   }
 }
 //let durationInSeconds = 60; // Set the initial duration
-if (!deathGame[id].start && !deathGame[id].join) {
+if (!deathGame[id].start) {
   deathGame[id].join = true;
   m.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`);
   startTimer(m, id, 20);
 } else {
-  m.reply('هناك لعبة قائمة بالفعل أو مرحلة جمع اللاعبين قد بدأت!');
+  m.reply('هناك لعبة قائمة بالفعل!');
 }
+
 
 
 
