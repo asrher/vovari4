@@ -7,7 +7,7 @@ let deathGame = {};
 cmd({
   pattern: "ديث",
   category: "games",
-}, async (Void , m,text) => { // Use async (Void , m,text) => {
+}, async (Void , m,citel,text) => { // Use async (Void , m,text) => {
   if (!citel.isGroup) return citel.reply(tlang().group);
   const groupAdmins = await getAdmin(Void, citel)
   const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
