@@ -8,7 +8,6 @@ cmd({
   pattern: "ديث",
   category: "games",
 }, async (Void, m, citel, text) => { // Use async (Void , m,text) => {
-  if (!citel.isGroup) return m.reply(tlang().group);
   const groupAdmins = await getAdmin(Void, citel)
   const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
   const isAllowedUser = await sck1.findOne({ id: citel.sender, alow: "true" });
