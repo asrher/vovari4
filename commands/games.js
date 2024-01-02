@@ -87,20 +87,19 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].word= null
 
 
-  let str = "رقم اللاعبين :\n",mentios = [];
-  for(let index in deathGame[id].players){
-if(deathGame[id].players[index] !== citel.sender){
-    mentios.push(deathGame[id].players[index])
-  str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
-}
+  let str = "رقم اللاعبين :\n", mentions = [];
+  for (let index in deathGame[id].players) {
+    if (deathGame[id].players[index] !== citel.sender) {
+      const playerName = deathGame[id].players[index];
+      const registeredUser = await sck1.findOne({ id: playerName });
+      const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
+  
+      mentions.push(playerName);
+      str += `${index} : @${playerNameToMention}\n`;
+    }
   }
- await citel.reply(`شسمه @${registeredName} انت الحين قاتل!
-
-${str.trim()} 
-
-*اكتب رقم اللاعب الي تبغى تطرده*
- `.trim(),{mentions:[citel.sender,...mentios]})
-}
+  
+  await citel.reply(`شسمه @${registeredName} انت الحين قاتل!\n\n${str.trim()}\n\n*اكتب رقم اللاعب الذي تريد طرده*`.trim(), { mentions: [citel.sender, ...mentions] });
 
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
