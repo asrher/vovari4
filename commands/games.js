@@ -28,7 +28,7 @@ if(!deathGame || !deathGame[id]){
 //let durationInSeconds = 60; // Set the initial duration
 deathGame[id].join = true
 m.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`)
-startTimer(m,id, 60);
+startTimer(m,id, 20);
 
 
 
@@ -93,7 +93,7 @@ if(deathGame[id].players[index] !== citel.sender){
   }
  await citel.reply(`شسمه @${senderNum} انت الحين قاتل!
 
-${str.trim()} 
+${str} 
 
 *اكتب رقم اللاعب الي تبغى تطرده*
  `.trim(),{mentions:[citel.sender,...mentios]})
