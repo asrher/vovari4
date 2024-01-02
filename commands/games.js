@@ -240,7 +240,28 @@ deathGame[id].word = word;
 
 
   }
-  
+  intervalId = setInterval(updateTimer, 1000);
+}else if (type == "killer"){ /// ignore this code or remove it, coz its unnecesory
+  function setkiller() {
+    if (timer > 0) {
+      timer--;
+
+  // Your existing code
+  if (deathGame[id] && deathGame[id].join && (timer == 50  || timer == 15 || timer ==30 || timer == 5)) {
+    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي  ${timer}ثانية حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
+  }
+
+
+
+    } else {
+      clearInterval(intervalId);
+      deathGame[id].join=false
+      deathGame[id].start= true
+      m.reply("انتهى الوقت");
+    }
+  }
+  intervalId = setInterval(setkiller, 1000);
+
   
 }
 
