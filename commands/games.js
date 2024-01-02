@@ -128,7 +128,7 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
  if(deathGame[id].available.length <=1 ){
   let ppp = [...deathGame[id].joined]
   delete deathGame[id]
-  citel.reply(` @${citel.sender.split("@")[0]} لقد فزت`,
+  citel.reply(` ${registeredName} لقد فزت`,
   {mentions:[citel.sender,...ppp]})
 
 }else {
@@ -211,11 +211,15 @@ if(type == "بشارك"){
       deathGame[id].join=false
       deathGame[id].start= true
 
-      let str = "",mentios = [];
+      let str = "", mentions = [];
 
-      for(let index in deathGame[id].players){
-        mentios.push(deathGame[id].players[index])
-      str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
+      for (let index in deathGame[id].players) {
+        const playerName = deathGame[id].players[index];
+        const registeredUser = await sck1.findOne({ id: playerName });
+        const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
+        
+        mentions.push(playerName);
+        str += `${index} : @${playerNameToMention.split("@")[0]}\n`;
     //}
       }
    await m.send(`*قائمة المشاركين*
