@@ -211,14 +211,14 @@ if(type == "بشارك"){
       deathGame[id].join=false
       deathGame[id].start= true
 
-      let str = "", mentions = [];
+      let str = "", mentios = [];
 
       for (let index in deathGame[id].players) {
         const playerName = deathGame[id].players[index];
         const registeredUser = await sck1.findOne({ id: playerName });
         const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
         
-        mentions.push(playerName);
+        mentios.push(playerName);
         str += `${index} : @${playerNameToMention.split("@")[0]}\n`;
     //}
       }
