@@ -5,7 +5,7 @@ const { cmd, getAdmin, tlang, sleep } = require("../lib/");
 let deathGame = {};
 
 cmd({
-  pattern: "de",
+  pattern: "ديث",
   category: "games",
 }, async (Void , m,text) => { // Use async (Void , m,text) => {
 let id = m.chat.split("@")[0]
@@ -22,12 +22,12 @@ if(!deathGame || !deathGame[id]){
   killer:"player",
   word :null,
   chosenWord: "",
-  words: ['mama', 'baba', 'nana', 'gaga',"suhail","siraj","md","cute"], 
+  words: ['ناروتو', 'تسونادي', 'لوفي', 'زورو',"ناتسو","روميو","انديفار","كورابيكا"], 
   }
 }
 //let durationInSeconds = 60; // Set the initial duration
 deathGame[id].join = true
-m.reply("game started, type 'Join' to enter in game")
+m.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`)
 startTimer(m,id, 20);
 
 
@@ -71,11 +71,11 @@ cmd({ on: "text" } , async (Void , citel) => {  // Use  async (Void , citel,text
 // ============== / Joinening people in game
 
 
-if(citel.text.toLowerCase() === "join" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
+if(citel.text.toLowerCase() === "بشارك" && deathGame[id] && deathGame[id].join &&  !deathGame[id].available.includes(citel.sender)){
   deathGame[id].joined.push(citel.sender)
   deathGame[id].available.push(citel.sender)
   deathGame[id].players[deathGame[id].joined.length] = citel.sender;
-  return await citel.reply(`Player @${senderNum} Joined!\nYou'r number is *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
+  return await citel.reply(`اللاعب @${senderNum} دخل!\nرقمك هو *"${deathGame[id].joined.length}"*`,{mentions:[citel.sender]})
 } 
 
 if(!deathGame[id] || !deathGame[id].available.includes(citel.sender))return  
@@ -84,18 +84,18 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].killer = citel.sender;
   deathGame[id].word= null
 
-  let str = "ID:  PLAYER\n",mentios = [];
+  let str = "رقم : اللاعب\n",mentios = [];
   for(let index in deathGame[id].players){
 if(deathGame[id].players[index] !== citel.sender){
     mentios.push(deathGame[id].players[index])
   str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
 }
   }
- await citel.reply(`Hey @${senderNum} you're now Killer!
+ await citel.reply(`شسمه @${senderNum} انت الحين قاتل!
 
 ${str.trim()} 
 
-*Enter ID of player to eleminate from game!*
+*اكتب رقم اللاعب الي تبغى تطرده*
  `.trim(),{mentions:[citel.sender,...mentios]})
 }
 
@@ -122,14 +122,14 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
  if(deathGame[id].available.length <=1 ){
   let ppp = [...deathGame[id].joined]
   delete deathGame[id]
-  citel.reply(`Hurray @${citel.sender.split("@")[0]} you're the winner of Game!`,
+  citel.reply(` @${citel.sender.split("@")[0]} لقد فزت`,
   {mentions:[citel.sender,...ppp]})
 
 }else {
   let randome = Math.floor(Math.random() * deathGame[id].words.length);
 let word = deathGame[id].words[randome];
 deathGame[id].word = word;
-  citel.send(`Here's the another word :  *${word}* `,{mentions:[...deathGame[id].available]})
+  citel.send(`تست كتابة :  *${word}* `,{mentions:[...deathGame[id].available]})
 
 
 }
@@ -143,7 +143,7 @@ deathGame[id].word = word;
   }
     }
 
-   citel.reply(`Hey @${senderNum}, please enter id of any following player to eleminate from game!
+   citel.reply(`تست @${senderNum}, *اكتب رقم اللاعب الي تبغى تطرده*
   
   ${str} `,{mentions:[citel.sender,...mentios]})
   }
@@ -173,17 +173,17 @@ deathGame[id].word = word;
 
 
 
-async function startTimer(m,id="suhail", durationInSeconds=3 , type = "join",pplyers = "1,2") {
+async function startTimer(m,id="suhail", durationInSeconds=3 , type = "بشارك",pplyers = "1,2") {
   let timer = durationInSeconds || 30;
   let intervalId;
-if(type == "join"){
+if(type == "بشارك"){
   async function updateTimer() {
     if (timer > 0) {
       timer--;
 
   // Your existing code
   if (deathGame[id] && deathGame[id].join && (timer == 50  || timer == 15 || timer ==30 || timer == 5)) {
-    m.reply(`There are ${deathGame[id].joined.length} joined\nStill have ${timer}s to join in the game!\nType _Join to enter the game_`);
+    m.reply(`لقد دخل ${deathGame[id].joined.length} فاللعبة\nباقي ${timer} ثانية حتى يدخلو اكثر\nاكتب "بشارك" للمشاركة`);
   }
 
 
@@ -192,11 +192,11 @@ if(type == "join"){
       clearInterval(intervalId);
       if( deathGame[id].joined.length <= 0){
         delete deathGame[id];
-        return await m.send(`*Death Game Terminated! There's no player joined in game!*`)
+        return await m.send(`*ديث نوت تكنسلت لان مافي لاعبين*`)
       }else if(deathGame[id].joined.length <= 1) {
         let pplayer = deathGame[id].joined[0]
         delete deathGame[id];
-        return await m.send(`*Death Game Terminated! Hey @${pplayer.split("@")[0]}, player requirement not be fullfilled!*`,{mentions:[pplayer]})
+        return await m.send(`*انتهت لعبة! شسمه @${pplayer.split("@")[0]}, صار خطأ في طلبك!*`,{mentions:[pplayer]})
       }
 
 
@@ -212,17 +212,14 @@ if(type == "join"){
       str += `${index} : @${deathGame[id].players[index].split("@")[0]}\n` 
     //}
       }
-   await m.send(`*LIST OF PLAYERS WHO JOINED GAME!*
+   await m.send(`*قائمة المشاركين*
   
 ${str} 
   
-*TASK?:*
-  Bot sends a randome word in chat!
-  and player needs to copy and sent the word in chat at first!
-  then he/she is a killer and able to eleminate a player from game!
+ديث معروفة
   
-*WINNER?:*
-  player who stays till end of game is a winner!
+*الفائز؟:*
+الي يبقى للأخير بيفوز!
   `,{mentions:[...mentios]})
 
   let randome = Math.floor(Math.random() * deathGame[id].words.length);
@@ -231,7 +228,7 @@ await sleep(5000)
 
 let word = deathGame[id].words[randome];
 deathGame[id].word = word;
-  m.send(`Here's the word :  *${word}* `,{mentions:[...mentios]})
+  m.send(`كتابة :  *${word}* `,{mentions:[...mentios]})
 
 
 
@@ -243,28 +240,7 @@ deathGame[id].word = word;
 
 
   }
-  intervalId = setInterval(updateTimer, 1000);
-}else if (type == "killer"){ /// ignore this code or remove it, coz its unnecesory
-  function setkiller() {
-    if (timer > 0) {
-      timer--;
-
-  // Your existing code
-  if (deathGame[id] && deathGame[id].join && (timer == 50  || timer == 15 || timer ==30 || timer == 5)) {
-    m.reply(`There are ${deathGame[id].joined.length} joined\nStill have ${timer}s to join in the game!\nType _Join to enter the game_`);
-  }
-
-
-
-    } else {
-      clearInterval(intervalId);
-      deathGame[id].join=false
-      deathGame[id].start= true
-      m.reply("Timer reached 0. Do something here.");
-    }
-  }
-  intervalId = setInterval(setkiller, 1000);
-
+  
   
 }
 
