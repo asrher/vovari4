@@ -107,7 +107,7 @@ else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.s
     var text = citel.text
     let num = parseInt(text) || false
   if(num && !isNaN(num) && deathGame[id].players[num] && deathGame[id].players[num]!==citel.sender  ){
-    await citel.reply(` ${registeredName} مطرود من  ${registeredName} !`,
+    await citel.reply(` @${deathGame[id].players[num].split("@")[0]} مطرود من  ${registeredName} !`,
     {mentions:[citel.sender,deathGame[id].players[num]]})
 
 
