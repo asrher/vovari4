@@ -100,7 +100,7 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].word= null
 
 
-  let str = "⊹⊱≼━━━⌬〔الــديـــث 📓 نــــــوت〕⌬━━━≽⊰⊹\n\nشسمه انجلو انت الحين قاتل!\n*اكتب رقم اللاعب الذي تريد طرده*\n\n֎╎الـمــشـــاركــيـن 🤺\n\n", mentions = [];
+  let str = `⊹⊱≼━━━⌬〔الــديـــث 📓 نــــــوت〕⌬━━━≽⊰⊹\n\nشسمه ${registeredName} انت الحين قاتل!\n*اكتب رقم اللاعب الذي تريد طرده*\n\n֎╎الـمــشـــاركــيـن 🤺\n\n`, mentions = [];
   for (let index in deathGame[id].players) {
     if (deathGame[id].players[index] !== citel.sender) {
       const playerName = deathGame[id].players[index];
@@ -112,7 +112,7 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
     }
   }
   
-  await citel.reply(`شسمه ${registeredName} انت الحين قاتل!\n*اكتب رقم اللاعب الذي تريد طرده*\n\n${str.trim()}\n\n⊹⊱≼━━━⌬〔🌗〕⌬━━━≽⊰`.trim(), { mentions: [citel.sender, ...mentions] }); 
+  await citel.reply(`${str.trim()}\n\n⊹⊱≼━━━⌬〔🌗〕⌬━━━≽⊰`.trim(), { mentions: [citel.sender, ...mentions] }); 
 }
 // ============== / action for killer 
 else if(deathGame[id] && deathGame[id].start && deathGame[id].killer === citel.sender){
