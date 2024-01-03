@@ -31,17 +31,15 @@ if(!deathGame || !deathGame[id]){
   word :null,
   chosenWord: "",
   words: ['ناروتو', 'تسونادي', 'لوفي', 'زورو',"ناتسو","روميو","انديفار","كورابيكا"], 
-  gameInitiated: false, // New flag to track if the game is initiated
+  }
 }
-}
-
-if (!deathGame[id].start && !deathGame[id].join && !deathGame[id].gameInitiated) {
-deathGame[id].gameInitiated = true; // Mark the game as initiated
-deathGame[id].join = true;
-citel.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`);
-startTimer(m, id, 20);
+//let durationInSeconds = 60; // Set the initial duration
+if (!deathGame[id].start) {
+  deathGame[id].join = true;
+  citel.reply(`لعبة ديث نوت بدأت اكتب "بشارك" للمشاركة`);
+  startTimer(citel, id, 20);
 } else {
-citel.reply('هناك لعبة قائمة بالفعل أو مرحلة جمع اللاعبين قد بدأت!');
+  citel.reply('هناك لعبة قائمة بالفعل!');
 }
 
 
