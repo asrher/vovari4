@@ -4,6 +4,22 @@ const { cmd, sck1, getAdmin, tlang, sleep } = require("../lib/");
 //=====================================================================
 let deathGame = {};
 
+
+cmd({
+  pattern: "حذف_ديث",
+  category: "games",
+}, async (Void, m, text) => {
+  let id = m.chat.split("@")[0];
+
+  if (deathGame && deathGame[id]) {
+    delete deathGame[id];
+    m.reply('تم حذف لعبة ديث نوت الحالية في هذه المجموعة.');
+  } else {
+    m.reply('لا يوجد لعبة ديث نوت قائمة في هذه المجموعة.');
+  }
+});
+
+
 cmd({
   pattern: "ديث",
   category: "games",
