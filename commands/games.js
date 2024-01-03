@@ -153,7 +153,7 @@ deathGame[id].word = word;
 }
 
   }else {
-    let str = "", mentions = [];
+    let str = `⊹⊱≼━━━⌬〔الــديـــث 📓 نــــــوت〕⌬━━━≽⊰⊹\n\nشسمه ${registeredName} انت الحين قاتل!\n*اكتب رقم اللاعب الذي تريد طرده*\n\n֎╎الـمــشـــاركــيـن 🤺\n\n`, mentions = [];
     for (let index in deathGame[id].players) {
       if (deathGame[id].players[index] !== citel.sender) {
         const playerName = deathGame[id].players[index];
@@ -161,11 +161,11 @@ deathGame[id].word = word;
         const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
   
         mentions.push(playerName);
-        str += `${index} : ${playerNameToMention}\n`;
+        str += `${index} - ⊑ ${playerNameToMention} ⊒\n`;
       }
     }
   
-    await citel.reply(`تست ${registeredName}, *اكتب رقم اللاعب الذي ترغب في طرده*\n\n${str}`, { mentions: [citel.sender, ...mentions] });
+    await citel.reply(`${str}\n\n⊹⊱≼━━━⌬〔🌗〕⌬━━━≽⊰`, { mentions: [citel.sender, ...mentions] });
   }
   
  
