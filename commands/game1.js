@@ -1,291 +1,63 @@
-const {cmd,parseJid,getAdmin,tlang,prefix} = require("../lib/");
-const Siraj_numGuess = {};
-const Siraj_cfg = {};
+const { cmd, sck1, sleep } = require("../lib");
 
-////// ------------------- Number guess Game  
-const _0x447b6f = _0x38f2;
-(function(_0x313d58, _0x400e1a) {
-    const _0x2073d4 = _0x38f2,
-        _0xc32a26 = _0x313d58();
-    while (!![]) {
-        try {
-            const _0x57d6b7 = parseInt(_0x2073d4(0xbb)) / 0x1 + -parseInt(_0x2073d4(0xaa)) / 0x2 + -parseInt(_0x2073d4(0xb4)) / 0x3 + -parseInt(_0x2073d4(0x94)) / 0x4 * (parseInt(_0x2073d4(0xba)) / 0x5) + parseInt(_0x2073d4(0xb2)) / 0x6 + parseInt(_0x2073d4(0x92)) / 0x7 * (-parseInt(_0x2073d4(0xc3)) / 0x8) + parseInt(_0x2073d4(0xad)) / 0x9 * (parseInt(_0x2073d4(0xcb)) / 0xa);
-            if (_0x57d6b7 === _0x400e1a) break;
-            else _0xc32a26['push'](_0xc32a26['shift']());
-        } catch (_0x2235ef) {
-            _0xc32a26['push'](_0xc32a26['shift']());
-        }
-    }
-}(_0x1c10, 0x42781));
-class GuessingGame {
-    constructor() {
-        const _0x120e1f = _0x38f2;
-        this[_0x120e1f(0xbf)] = 0x0, this[_0x120e1f(0xa5)] = '', this['id'] = '', this[_0x120e1f(0xb1)] = ![], this[_0x120e1f(0xa2)] = _0x120e1f(0xa8), this[_0x120e1f(0x97)] = 0x0, this['guessedNumber'] = 0x0;
-    }
-}
+let wordGame = {};
 
-function _0x1c10() {
-    const _0x38578c = ['24579cEhAdG', 'تخمين سهل\x0a\x0a*المستويات المتاحة :*\x0a\x0a  ▢ سهل   ( من 0 ل 100 )\x0a  ▢ متوسط ( من 0 ل 1000 )\x0a  ▢ صعب   ( من 0 ل 10000 )\x0a  ▢ انهاء  (  انهاء اللعبة )\x0a', '\x0a  الرقم الذي كتبته اصغر   \x0a\x0aاللاععب : @', 'حصل خطأ في تخمين الرقم : ', 'status', '2420892cLkCby', ' لقد فزت 🏅. \x0a\x0a    ▢ لقد خمنت الرقم الصحيح ', '462822qebdia', 'اللعبة جارية بالفعل.\x0a لانهاء اللعبة اكتب :  .تخمين_انهاء', 'split', '', 'floor', 'chat', '5ocsiTm', '74251JBsawb', 'game', 'toLowerCase', '', 'attempts', ' \x0a  ▢ تاكد ان الرقم الي تختاره محصور بين ', 'متوسط', '', '8DXyZgy', 'guessedNumber', '  \x0aمحاولات :', 'صعب', 'send', 'isGroup', 'اختر مستوى', '\x0a    ▢ لقد حاولت ', '1150yQNZlp', '1 و 1000', '400141GfkQjt', 'sender', '824344xKNqZO', 'null', '1 و 10000', 'randomNumber', '  معين ، مثال :  ', ' مرات للفوز باللعبة.\x09\x0a', 'انهاء', 'reply', '\x0a ', 'text', 'متوسط', 'includes', ' .\x0a\x0a*تلميحات:*\x0a  ▢ الرقم اكبر من الذي يفكر فيه البوت.\x0a  ▢ حاول تختار رقم اصغر من  ', '', 'mode', ' \x0aأحسنت @', ' .\x0a\x0a*تلميحات:*\x0a  ▢ الرقم اصغر من الذي يفكر فيه البوت.\x0a  ▢ حاول تختار رقم اكبر من  ', 'player', '\x0a', 'random', 'low', 'صعب', '204036qwjyjN', '1 و 100', '\x0a\x0a*الشرح :*\x0a   ▢ لازم تخمن الرقم الي يفكر فيه البوت.\x0a   ▢ حاول تخمن الرقم فأقل عدد محاولات.\x0a   ▢ ممنوع  يساعدك احد.'];
-
-    _0x1c10 = function() {
-        return _0x38578c;
-    };
-    return _0x1c10();
-}
-
-function _0x38f2(_0x42dc29, _0x553e9e) {
-    const _0x1c10d0 = _0x1c10();
-    return _0x38f2 = function(_0x38f24d, _0x42e562) {
-        _0x38f24d = _0x38f24d - 0x92;
-        let _0xcd9474 = _0x1c10d0[_0x38f24d];
-        return _0xcd9474;
-    }, _0x38f2(_0x42dc29, _0x553e9e);
-}
 cmd({
-'pattern': 'تخمين',
-'desc': "تخمين رقم البوت",
-'use': '',
-'category': "game",
-'filename': __filename,
-}, async (_0x2dff45, _0x1fda8a, _0x1386e7) => {
-    const _0x4ba254 = _0x447b6f;
-    try {
-        const _0x51df81 = _0x1fda8a[_0x4ba254(0xb9)];
-        let _0x2acaae = Siraj_numGuess[_0x51df81];
-        _0x1386e7 = _0x1386e7[_0x4ba254(0xbd)]();
-        if (_0x2acaae && _0x2acaae['status']) return await _0x1fda8a[_0x4ba254(0x9b)](_0x4ba254(0xb5));
-        let _0x3e8bb0 = '',
-            _0x3ee9d5 = 0x0;
-        if (_0x1386e7[_0x4ba254(0x9f)]('سهل')) _0x3ee9d5 = Math[_0x4ba254(0xb8)](Math[_0x4ba254(0xa7)]() * 0x64), _0x3e8bb0 = _0x4ba254(0xa1);
-        else {
-            if (_0x1386e7[_0x4ba254(0x9f)](_0x4ba254(0xc1))) _0x3ee9d5 = Math[_0x4ba254(0xb8)](Math[_0x4ba254(0xa7)]() * 0x3e8), _0x3e8bb0 = _0x4ba254(0x9e);
-            else {
-                if (_0x1386e7[_0x4ba254(0x9f)](_0x4ba254(0xa9))) _0x3ee9d5 = Math[_0x4ba254(0xb8)](Math[_0x4ba254(0xa7)]() * 0x2710), _0x3e8bb0 = _0x4ba254(0xc6);
-                else return await _0x1fda8a[_0x4ba254(0xc7)](  (_0x1386e7 ? '' : _0x4ba254(0xc9)) + _0x4ba254(0x98) + prefix + _0x4ba254(0xae));
-            }
-        }
-        return !_0x2acaae && (Siraj_numGuess[_0x51df81] = new GuessingGame()), _0x2acaae = Siraj_numGuess[_0x51df81], _0x2acaae[_0x4ba254(0xb1)] = !![], _0x2acaae[_0x4ba254(0x97)] = _0x3ee9d5, _0x2acaae[_0x4ba254(0xa2)] = _0x3e8bb0, _0x2acaae[_0x4ba254(0xa5)] = _0x1fda8a[_0x4ba254(0x93)], _0x2acaae['id'] = _0x1fda8a[_0x4ba254(0xb9)], await _0x1fda8a[_0x4ba254(0x9b)]('\x20\x0a\x20\x20\x20▢ اممم، انا افكر فرقم موجود بين ' + (_0x2acaae[_0x4ba254(0xa2)] === _0x4ba254(0xa1) ? _0x4ba254(0xab) : _0x2acaae[_0x4ba254(0xa2)] === _0x4ba254(0x9e) ? _0x4ba254(0xcc) : _0x4ba254(0x96)) + _0x4ba254(0xac));
-    } catch (_0x2d1ac1) {
-        return await console['log'](_0x4ba254(0xb0), _0x2d1ac1);
-    }
-}),cmd({
-    'on': _0x447b6f(0x9d)
-}, async (_0x42123f, _0x58897c, _0x412706) => {
-    const _0x3df3a3 = _0x447b6f;
-    if (!_0x58897c[_0x3df3a3(0xc8)]) return;
-    const _0x558d38 = _0x58897c[_0x3df3a3(0xb9)],
-        _0x29f910 = Siraj_numGuess[_0x558d38];
-    if (!_0x29f910) return;
-    const _0x5846d6 = parseInt(_0x58897c[_0x3df3a3(0x9d)] ? _0x58897c[_0x3df3a3(0x9d)][_0x3df3a3(0xb6)]('\x20')[0x0] : _0x3df3a3(0x95));
-    if (_0x29f910['id'] === _0x58897c[_0x3df3a3(0xb9)] && _0x29f910[_0x3df3a3(0xa5)] === _0x58897c['sender'] && !isNaN(_0x5846d6)) {
-        _0x29f910[_0x3df3a3(0xc4)] = _0x5846d6, _0x29f910[_0x3df3a3(0xbf)]++;
-        if (_0x29f910[_0x3df3a3(0xc4)] < _0x29f910[_0x3df3a3(0x97)]) return await _0x58897c['send']( 'اللاعب\x20:\x20@' + _0x29f910['player'][_0x3df3a3(0xb6)]('@')[0x0] + _0x3df3a3(0xc5) + _0x29f910[_0x3df3a3(0xbf)] + _0x3df3a3(0xa4) + _0x29f910['guessedNumber'] + _0x3df3a3(0xc0) + (_0x29f910[_0x3df3a3(0xa2)] === _0x3df3a3(0xa1) ? _0x3df3a3(0xab) : _0x29f910[_0x3df3a3(0xa2)] === _0x3df3a3(0x9e) ? _0x3df3a3(0xcc) : '1\x20و\x2010000') + _0x3df3a3(0xa6), {
-            'mentions': [_0x29f910['player']]
-        });
-        else {
-            if (_0x29f910[_0x3df3a3(0xc4)] > _0x29f910['randomNumber']) return await _0x58897c['send']('اللاعب\x20:\x20@' + _0x29f910['player'][_0x3df3a3(0xb6)]('@')[0x0] + _0x3df3a3(0xc5) + _0x29f910[_0x3df3a3(0xbf)] + _0x3df3a3(0xa0) + _0x29f910[_0x3df3a3(0xc4)] + _0x3df3a3(0xc0) + (_0x29f910[_0x3df3a3(0xa2)] === _0x3df3a3(0xa1) ? _0x3df3a3(0xab) : _0x29f910['mode'] === 'متوسط' ? '1\x20و\x201000' : '1\x20و\x2010000') + _0x3df3a3(0xa6), {
-                'mentions': [_0x29f910[_0x3df3a3(0xa5)]]
-            });
-            else await _0x58897c[_0x3df3a3(0xc7)](_0x3df3a3(0xa3) + _0x29f910[_0x3df3a3(0xa5)][_0x3df3a3(0xb6)]('@')[0x0] + _0x3df3a3(0xb3) + _0x29f910[_0x3df3a3(0x97)] + _0x3df3a3(0xca) + _0x29f910[_0x3df3a3(0xbf)] + _0x3df3a3(0x99), {
-                'mentions': [_0x29f910[_0x3df3a3(0xa5)]]
-            }), delete Siraj_numGuess[_0x558d38];
-        }
-        return;
-    }
+  pattern: "word",
+  category: "games",
+}, async (Void, m) => {
+  let id = m.chat.split("@")[0];
+
+  if (wordGame[id]) {
+    return m.reply('A word game is already in progress in this group.');
+  } else {
+    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+    let randomIndex = Math.floor(Math.random() * words.length);
+    let chosenWord = words[randomIndex];
+
+    wordGame[id] = {
+      started: true,
+      participants: {},
+      word: chosenWord,
+      points: {},
+      stopped: false
+    };
+    return m.reply(`Word game has started! Send the word *${chosenWord}* to earn points.`);
+  }
 });
-/////// ----------------- Connect Four Game
-
-const _0x2dcdaa = _0x1b6b;
-
-function _0x3732() {
-    const _0x820118 = ['errors\x20:\x20', 'currentPlayer', 'reply', 'player1', 'log', '45617pIYdRs', '\x20|\x20', '', 'send', '505232sbQyJx', '1761012dOBNYZ', 'updateLastIndex', 'تم الحذف.', '4192810ietkSO', '\x20\x20\x0aلقد حاولت\x20\x27', 'isDone', '\x20دخل\x0aننتضر يدخل لاعب اخر لبدء اللعبة.\x0aاكتب .كرات من اجل اللاعب. ', 'player2', 'includes', '\x0aالتالي\x20:\x20\x20@', '\x0aالخاسر فاللعبة هو  :\x20@', 'printMatrix', '\x0a', '\x0aالتالي\x20\x20', 'random', '733998EeFOBo', 'rowsMatrix', '\x20:\x20@', '', '\x27\x20مرات للفوز\x0a\x20', 'checkWin', '3456584vsIAGv', '\x0a|\x20', 'mentionedJid', 'حركة خاطئة\x20@', '593922pSXVSG', '', 'columnsMatrix', 'chat', '', 'sender', '*اللعبة جارية بالفعل.*\x20@', '\x20\x0a◣━━━━━━━━━━\x20━━━━━━━━━━◢\x0a\n*تم انشاء الطاولة ، يمكنكم البدأ فاللعب*\x20', 'text', '5sdzsui', '9PWNiLN', '', 'quoted', 'cfg', 'gameStatus', 'split', 'تم الحذف.', '\x0a\nدورك:\x20@', 'matrix', '\x0aاللاعب\x201:\x20@', 'length', '\x0a◣━━━━━━━━━━\x20━━━━━━━━━━◢\x0a\x20\x20\x20\x20\x20\x20\x0aدورك\x20', '\x0aالفائز فاللعبة هو :\x20@', '\x20لم يتم  بدأ اللعب بعد.', 'floor', '49DdukUp', 'attempts', '', 'game', '\x0a◣━━━━━━━━━━\x20━━━━━━━━━━◢\x20\x20\x20\x20\x20\x0a لقد فزت 🏅\x20@', '\x20تم انشاء الطاولة ، يمكنكم البدأ فاللعب ッ\x20\x0a', 'sendMessage', ''];
-    _0x3732 = function() {
-        return _0x820118;
-    };
-    return _0x3732();
-}(function(_0x1e83b9, _0x5bea2b) {
-    const _0x23f28b = _0x1b6b,
-        _0x282cef = _0x1e83b9();
-    while (!![]) {
-        try {
-            const _0x107f64 = parseInt(_0x23f28b(0xcc)) / 0x1 + -parseInt(_0x23f28b(0xe0)) / 0x2 + parseInt(_0x23f28b(0xd1)) / 0x3 + parseInt(_0x23f28b(0xe6)) / 0x4 * (-parseInt(_0x23f28b(0xaf)) / 0x5) + -parseInt(_0x23f28b(0xa6)) / 0x6 * (-parseInt(_0x23f28b(0xbf)) / 0x7) + -parseInt(_0x23f28b(0xd0)) / 0x8 + parseInt(_0x23f28b(0xb0)) / 0x9 * (parseInt(_0x23f28b(0xd4)) / 0xa);
-            if (_0x107f64 === _0x5bea2b) break;
-            else _0x282cef['push'](_0x282cef['shift']());
-        } catch (_0x54231d) {
-            _0x282cef['push'](_0x282cef['shift']());
-        }
-    }
-}(_0x3732, 0x6dfd0));
-class ConnectFourGame {
-    constructor() {
-        const _0x5f952 = _0x1b6b;
-        this[_0x5f952(0xca)] = '', this[_0x5f952(0xd8)] = '', this[_0x5f952(0xe1)] = 0x6, this[_0x5f952(0xa8)] = 0x7, this[_0x5f952(0xc8)] = '', this[_0x5f952(0xb4)] = ![], this[_0x5f952(0xc0)] = {}, this['matrix'] = [
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['⚪', '⚪', '⚪', '⚪', '⚪', '⚪', '⚪'],
-            ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣']
-        ];
-    }
-    async [_0x2dcdaa(0xd2)](_0x589639) {
-        const _0x5cec13 = _0x2dcdaa;
-        let _0x2e2d4e = this['currentPlayer'] === this[_0x5cec13(0xca)] ? '🔵' : '🔴',
-            _0x5049ec = this[_0x5cec13(0xb8)][_0x5cec13(0xba)] - 0x1;
-        while (_0x5049ec > 0x0 && this[_0x5cec13(0xb8)][_0x5049ec][_0x589639] !== '⚪') {
-            _0x5049ec--;
-        }
-        return this[_0x5cec13(0xb8)][_0x5049ec][_0x589639] == '⚪' ? (this[_0x5cec13(0xb8)][_0x5049ec][_0x589639] = _0x2e2d4e, !![]) : ![];
-    }
-    async [_0x2dcdaa(0xdc)]() {
-        const _0x15801d = _0x2dcdaa;
-        let _0x5af145 = '';
-        for (let _0x590bb8 = 0x0; _0x590bb8 < this[_0x15801d(0xb8)][_0x15801d(0xba)]; _0x590bb8++) {
-            _0x5af145 += _0x15801d(0xe7);
-            for (let _0x27f46f = 0x0; _0x27f46f < this['matrix'][_0x590bb8][_0x15801d(0xba)]; _0x27f46f++) {
-                _0x5af145 += this[_0x15801d(0xb8)][_0x590bb8][_0x27f46f] + _0x15801d(0xcd);
-            }
-        }
-        return _0x5af145;
-    }
-    async [_0x2dcdaa(0xe5)]() {
-        const _0x31d9ed = _0x2dcdaa;
-        let _0x4405a9 = this[_0x31d9ed(0xc8)] === this[_0x31d9ed(0xca)] ? '🔵' : '🔴';
-        for (let _0x31a01b = 0x0; _0x31a01b < this[_0x31d9ed(0xb8)][_0x31d9ed(0xba)]; _0x31a01b++) {
-            for (let _0x222af8 = 0x0; _0x222af8 <= this[_0x31d9ed(0xb8)][_0x31a01b][_0x31d9ed(0xba)] - 0x4; _0x222af8++) {
-                if (this[_0x31d9ed(0xb8)][_0x31a01b][_0x222af8] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x31a01b][_0x222af8 + 0x1] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x31a01b][_0x222af8 + 0x2] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x31a01b][_0x222af8 + 0x3] === _0x4405a9) return this['currentPlayer'];
-            }
-        }
-        for (let _0x4f8252 = 0x0; _0x4f8252 <= this[_0x31d9ed(0xb8)][_0x31d9ed(0xba)] - 0x4; _0x4f8252++) {
-            for (let _0x4aed47 = 0x0; _0x4aed47 < this['matrix'][_0x4f8252][_0x31d9ed(0xba)]; _0x4aed47++) {
-                if (this[_0x31d9ed(0xb8)][_0x4f8252][_0x4aed47] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x4f8252 + 0x1][_0x4aed47] === _0x4405a9 && this['matrix'][_0x4f8252 + 0x2][_0x4aed47] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x4f8252 + 0x3][_0x4aed47] === _0x4405a9) return this[_0x31d9ed(0xc8)];
-            }
-        }
-        for (let _0x3dfd9a = 0x0; _0x3dfd9a <= this[_0x31d9ed(0xb8)][_0x31d9ed(0xba)] - 0x4; _0x3dfd9a++) {
-            for (let _0x529268 = 0x0; _0x529268 <= this[_0x31d9ed(0xb8)][_0x3dfd9a][_0x31d9ed(0xba)] - 0x4; _0x529268++) {
-                if (this[_0x31d9ed(0xb8)][_0x3dfd9a][_0x529268] === _0x4405a9 && this['matrix'][_0x3dfd9a + 0x1][_0x529268 + 0x1] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x3dfd9a + 0x2][_0x529268 + 0x2] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x3dfd9a + 0x3][_0x529268 + 0x3] === _0x4405a9) return this[_0x31d9ed(0xc8)];
-            }
-        }
-        for (let _0x11e08c = 0x0; _0x11e08c <= this[_0x31d9ed(0xb8)][_0x31d9ed(0xba)] - 0x4; _0x11e08c++) {
-            for (let _0x47bb05 = this[_0x31d9ed(0xb8)][_0x11e08c][_0x31d9ed(0xba)] - 0x1; _0x47bb05 >= 0x3; _0x47bb05--) {
-                if (this[_0x31d9ed(0xb8)][_0x11e08c][_0x47bb05] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x11e08c + 0x1][_0x47bb05 - 0x1] === _0x4405a9 && this['matrix'][_0x11e08c + 0x2][_0x47bb05 - 0x2] === _0x4405a9 && this[_0x31d9ed(0xb8)][_0x11e08c + 0x3][_0x47bb05 - 0x3] === _0x4405a9) return this[_0x31d9ed(0xc8)];
-            }
-        }
-        return null;
-    }
-}
-
-function _0x1b6b(_0x3d742b, _0x1be960) {
-    const _0x3732b8 = _0x3732();
-    return _0x1b6b = function(_0x1b6be3, _0x39f3a6) {
-        _0x1b6be3 = _0x1b6be3 - 0xa4;
-        let _0xbec226 = _0x3732b8[_0x1b6be3];
-        return _0xbec226;
-    }, _0x1b6b(_0x3d742b, _0x1be960);
-}
-cmd({
-'pattern': 'كرات',
-'desc': "لعبة ثنائية",
-'use': '',
-'category': "game",
-'filename': __filename,
-}, async (_0x135624, _0x25e922, _0x3d09f2) => {
-    const _0x56574c = _0x2dcdaa,
-        _0x377c47 = _0x25e922['chat'];
-    let _0xe4f6b = Siraj_cfg[_0x377c47];
-    if (_0xe4f6b && _0xe4f6b[_0x56574c(0xb4)]) return await _0x25e922[_0x56574c(0xcf)](_0x56574c(0xac) + _0xe4f6b['player1']['split']('@')[0x0] + '\x20ضد\x20@' + _0xe4f6b[_0x56574c(0xd8)][_0x56574c(0xb5)]('@')[0x0], {
-        'mentions': [_0xe4f6b[_0x56574c(0xca)], _0xe4f6b[_0x56574c(0xd8)]]
-    });
-    !_0xe4f6b && (_0xe4f6b = new ConnectFourGame(), Siraj_cfg[_0x377c47] = _0xe4f6b);
-    try {
-        let _0x326aed = '';
-        _0x25e922[_0x56574c(0xb2)] && (_0x326aed = _0x25e922[_0x56574c(0xb2)][_0x56574c(0xab)]);
-        let _0x146aeb = _0x25e922[_0x56574c(0xb2)] ? _0x25e922[_0x56574c(0xb2)][_0x56574c(0xab)] : _0x25e922[_0x56574c(0xa4)] ? _0x25e922['mentionedJid'][0x0] : '-';
-        _0x146aeb = _0x146aeb === _0x25e922[_0x56574c(0xab)] ? '-' : '' + _0x146aeb;
-        if (_0x146aeb[_0x56574c(0xd9)]('@')) _0xe4f6b[_0x56574c(0xca)] = _0x25e922[_0x56574c(0xab)], _0xe4f6b[_0x56574c(0xd8)] = _0x146aeb, _0xe4f6b[_0x56574c(0xb4)] = !![];
-        else {
-            if (!_0xe4f6b[_0x56574c(0xca)] || _0xe4f6b[_0x56574c(0xca)] === _0x25e922['sender']) return _0xe4f6b[_0x56574c(0xca)] = _0x25e922[_0x56574c(0xab)], await _0x25e922[_0x56574c(0xcf)]('*تم انشاء طاولة اللعب،*\x0a' + _0x56574c(0xb9) + _0xe4f6b[_0x56574c(0xca)]['split']('@')[0x0] + _0x56574c(0xd7), {
-                'mentions': [_0xe4f6b['player1']]
-            });
-            else _0x25e922[_0x56574c(0xab)] != _0xe4f6b['player1'] && (_0xe4f6b['player2'] = _0x25e922[_0x56574c(0xab)], _0xe4f6b[_0x56574c(0xb4)] = !![]);
-        }
-    } catch (_0xe65ea7) {
-        await _0x25e922[_0x56574c(0xc9)];
-    }
-    if (_0xe4f6b[_0x56574c(0xb4)]) {
-        _0xe4f6b[_0x56574c(0xc8)] = _0xe4f6b[_0x56574c(0xca)], _0xe4f6b[_0x56574c(0xc0)][_0xe4f6b['player1']] = 0x0, _0xe4f6b['attempts'][_0xe4f6b[_0x56574c(0xd8)]] = 0x0;
-        let _0x5407ac = await _0xe4f6b[_0x56574c(0xdc)](),
-            _0x15290d = _0x56574c(0xc4) + _0x5407ac + _0x56574c(0xb7) + _0xe4f6b[_0x56574c(0xca)][_0x56574c(0xb5)]('@')[0x0] + _0x56574c(0xda) + _0xe4f6b[_0x56574c(0xd8)][_0x56574c(0xb5)]('@')[0x0] ;
-        return await _0x25e922[_0x56574c(0xcf)](_0x15290d, {
-            'mentions': [_0xe4f6b['player1'], _0xe4f6b[_0x56574c(0xd8)], _0xe4f6b['currentPlayer']]
-        });
-    }
-}), 
 
 cmd({
-    'pattern': 'حذف_كرات',
-    'filename': __filename,
-}, async (Void, citel, _0x317f5a, _0x2ba9b5, _0x21e97b) => {
-    const groupAdmins = await getAdmin(Void, citel)
-    const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
-    if (!isAdmins) return citel.reply(tlang().admin);
-  
-    const _0x2b9610 = _0x2dcdaa,
-        _0xe7a512 = citel[_0x2b9610(0xa9)];
-    let _0x366664 = Siraj_cfg[_0xe7a512];
-    if (_0x366664) return delete Siraj_cfg[_0xe7a512], await citel[_0x2b9610(0xc9)]('تم حذف اللعبة.');
-    else return await citel.reply(_0x2b9610(0xbd));
-}),
-    
-cmd({
-    'pattern': 'تخمين_انهاء',
-    'filename': __filename,
-}, async (Void, citel, _0x317f5a, _0x2ba9b5, _0x21e97b) => {
-    const groupAdmins = await getAdmin(Void, citel)
-    const isAdmins = citel.isGroup ? groupAdmins.includes(citel.sender) : false;
-    if (!isAdmins) return citel.reply(tlang().admin);
-  
-    const _0x2b9610 = _0x2dcdaa,
-        _0xe7a512 = citel[_0x2b9610(0xa9)];
-    let _0x366664 = Siraj_numGuess[_0xe7a512];
-    if (_0x366664) return delete Siraj_numGuess[_0xe7a512], await citel[_0x2b9610(0xc9)]('تم حذف اللعبة.');
-    else return await citel.reply(_0x2b9610(0xbd));
-}),
+  pattern: "stop",
+  category: "games",
+}, async (Void, m) => {
+  let id = m.chat.split("@")[0];
 
-cmd({
-    'on': _0x2dcdaa(0xae)
-}, async (_0x56e801, _0x5e02e7, _0x823010, {
-    isCreator: _0x216180
-}) => {
-    const _0x5cc5ce = _0x2dcdaa,
-        _0x156449 = _0x5e02e7[_0x5cc5ce(0xa9)],
-        _0x38a990 = Siraj_cfg[_0x156449];
-    if (!_0x38a990) return;
-    let _0x2ab18c = parseInt(_0x5e02e7[_0x5cc5ce(0xae)] ? _0x5e02e7[_0x5cc5ce(0xae)][_0x5cc5ce(0xb5)]('\x20')[0x0] : 0x7d0);
-    if (_0x38a990[_0x5cc5ce(0xb4)] && _0x38a990[_0x5cc5ce(0xc8)] === _0x5e02e7[_0x5cc5ce(0xab)] && !isNaN(_0x2ab18c)) try {
-        let _0x401003 = _0x2ab18c - 0x1;
-        if (_0x401003 < 0x0 || _0x401003 >= _0x38a990['columnsMatrix']) return;
-        let _0x4b2be9 = await _0x38a990['updateLastIndex'](_0x401003);
-        if (!_0x4b2be9) return console['log'](_0x5cc5ce(0xd6), _0x4b2be9), await _0x56e801[_0x5cc5ce(0xc5)](_0x5e02e7[_0x5cc5ce(0xa9)], {
-            'text': _0x5cc5ce(0xa5) + _0x38a990['currentPlayer'][_0x5cc5ce(0xb5)]('@')[0x0] + '',
-            'mentions': [_0x38a990[_0x5cc5ce(0xc8)]]
-        }, {
-            'quoted': _0x5e02e7
-        });
-        let _0x53c2e7 = await _0x38a990[_0x5cc5ce(0xe5)]() || ![];
-        _0x38a990['attempts'][_0x38a990[_0x5cc5ce(0xc8)]]++;
-        let _0x515a4d = await _0x38a990[_0x5cc5ce(0xdc)]();
-        _0x38a990[_0x5cc5ce(0xc8)] = _0x38a990['currentPlayer'] === _0x38a990[_0x5cc5ce(0xca)] ? _0x38a990['player2'] : _0x38a990['player1'];
-        if (!_0x53c2e7) {
-            let _0x4f46a5 = _0x5cc5ce(0xa7) + _0x515a4d + _0x5cc5ce(0xbb) + (_0x38a990[_0x5cc5ce(0xc8)] === _0x38a990[_0x5cc5ce(0xca)] ? '🔵' : '🔴') + _0x5cc5ce(0xe2) + _0x38a990[_0x5cc5ce(0xc8)]['split']('@')[0x0] + _0x5cc5ce(0xde) + (_0x38a990[_0x5cc5ce(0xc8)] === _0x38a990[_0x5cc5ce(0xca)] ? '🔴' : '🔵') + _0x5cc5ce(0xe2) + (_0x38a990[_0x5cc5ce(0xc8)] === _0x38a990[_0x5cc5ce(0xca)] ? _0x38a990['player2'] : _0x38a990[_0x5cc5ce(0xca)])['split']('@')[0x0] ;
-            return await _0x5e02e7['send'](_0x4f46a5, {
-                'mentions': [_0x38a990['player1'], _0x38a990[_0x5cc5ce(0xd8)]]
-            });
-        } else return delete Siraj_cfg[_0x156449], await _0x5e02e7['send'](_0x5cc5ce(0xbc) + _0x53c2e7[_0x5cc5ce(0xb5)]('@')[0x0] + _0x5cc5ce(0xdb) + _0x38a990[_0x5cc5ce(0xc8)][_0x5cc5ce(0xb5)]('@')[0x0] + _0x5cc5ce(0xdd) + _0x515a4d + _0x5cc5ce(0xc3) + _0x53c2e7[_0x5cc5ce(0xb5)]('@')[0x0] + _0x5cc5ce(0xd5) + _0x38a990[_0x5cc5ce(0xc0)][_0x53c2e7] + _0x5cc5ce(0xe4), {
-            'mentions': [_0x38a990['player1'], _0x38a990['player2']]
-        });
-    } catch (_0x44a3e3) {
-        return await console[_0x5cc5ce(0xcb)](_0x5cc5ce(0xaa), _0x44a3e3);
+  if (!wordGame[id] || wordGame[id].stopped) {
+    return m.reply('No active word game in this group.');
+  } else {
+    let pointsList = "Points:\n";
+    for (const participant in wordGame[id].points) {
+      pointsList += `${participant}: ${wordGame[id].points[participant]}\n`;
     }
+    delete wordGame[id];
+    return m.reply(pointsList);
+  }
+});
+
+cmd({ on: "text" }, async (Void, m) => {
+  if (m.isBot || !m.text || !m.isGroup) return;
+
+  let id = m.chat.split("@")[0];
+  let word = m.text.toLowerCase();
+
+  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word) {
+    let sender = m.sender.split("@")[0];
+
+    if (!wordGame[id].participants[sender]) {
+      wordGame[id].participants[sender] = true;
+      if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
+      wordGame[id].points[sender]++;
+    }
+    return m.reply(`Correct word! You got a point.`);
+  }
 });
