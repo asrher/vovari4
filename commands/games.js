@@ -4,22 +4,6 @@ const { cmd, sck1, getAdmin, tlang, sleep } = require("../lib/");
 //=====================================================================
 let deathGame = {};
 
-
-cmd({
-  pattern: "حذف_ديث",
-  category: "games",
-}, async (Void, m, text) => {
-  let id = m.chat.split("@")[0];
-
-  if (deathGame && deathGame[id]) {
-    delete deathGame[id];
-    m.reply('تم حذف لعبة ديث نوت الحالية في هذه المجموعة.');
-  } else {
-    m.reply('لا يوجد لعبة ديث نوت قائمة في هذه المجموعة.');
-  }
-});
-
-
 cmd({
   pattern: "ديث",
   category: "games",
@@ -116,7 +100,7 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
   deathGame[id].word= null
 
 
-  let str = "رقم اللاعبين :\n", mentions = [];
+  let str = "✠═ • ═  •༺⊱╠🌗╣⊰༻• ═ • ═✠\n↫ ⟦  الــديـــث 📓 نــــــوت ⟧\n⊹⊱≼━━━⌬〔🌗〕⌬━━━≽⊰⊹\n\n֎╎الـمــشـــاركــيـن 🤺\n\n\\n", mentions = [];
   for (let index in deathGame[id].players) {
     if (deathGame[id].players[index] !== citel.sender) {
       const playerName = deathGame[id].players[index];
@@ -124,7 +108,8 @@ if(deathGame[id] && deathGame[id].start && deathGame[id].word && deathGame[id].w
       const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
   
       mentions.push(playerName);
-      str += `${index} : ${playerNameToMention}\n`;
+      str += `${index} - ⊑ ${playerNameToMention} ⊒ \n`;
+      str += `\n\n⊹⊱≼━━━⌬〔🌗〕⌬━━━≽⊰⊹`;
     }
   }
   
@@ -210,7 +195,7 @@ deathGame[id].word = word;
 
 
 
-async function startTimer(m,id="siraj", durationInSeconds=3 , type = "بشارك",pplyers = "1,2") {
+async function startTimer(m,id="ناروتو", durationInSeconds=3 , type = "بشارك",pplyers = "1,2") {
   let timer = durationInSeconds || 30;
   let intervalId;
 if(type == "بشارك"){
@@ -233,7 +218,7 @@ if(type == "بشارك"){
       }else if(deathGame[id].joined.length <= 1) {
         let pplayer = deathGame[id].joined[0]
         delete deathGame[id];
-        return await m.send(`*انتهت لعبة! شسمه ${pplayer.split("@")[0]}, صار خطأ في طلبك!*`,{mentions:[pplayer]})
+        return await m.send(`*انتهت لعبة! شسمه ${pplayer.split("@")[0]}, مفي لاعبين*`,{mentions:[pplayer]})
       }
 
 
