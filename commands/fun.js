@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const { sck, cmd } = require('../lib')
 const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
 cmd({
