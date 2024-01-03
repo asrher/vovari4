@@ -58,6 +58,12 @@ cmd({ on: "text" }, async (Void, m) => {
       if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
       wordGame[id].points[sender]++;
     }
-    return m.reply(`Correct word! You got a point.`);
+
+    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+    let randomIndex = Math.floor(Math.random() * words.length);
+    let nextWord = words[randomIndex];
+
+    wordGame[id].word = nextWord;
+    return m.send(`Next word: *${nextWord}*`);
   }
 });
