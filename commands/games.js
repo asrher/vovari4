@@ -234,17 +234,17 @@ if(type == "بشارك"){
         const playerNameToMention = registeredUser ? registeredUser.name : "دون لقب";
         
         mentios.push(playerName);
-        str += `${index} : ${playerNameToMention.split("@")[0]}\n`;
+        str += `${index} - ⊑ ${playerNameToMention.split("@")[0]} ⊒\n`;
     //}
       }
-   await m.send(`*قائمة المشاركين*
+   await m.send(`*֎╎الـمــشـــاركــيـن 🤺*
   
 ${str} 
   
-ديث معروفة
+- ديث توت معروفة، اول من يكتب الكلمة الي يرسلها البوت يقدر يقتل احد المشاركين.
   
-*الفائز؟:*
-الي يبقى للأخير بيفوز!
+*الفائز ؟:*
+الي يبقى للأخير بيفوز !
   `,{mentions:[...mentios]})
 
   let randome = Math.floor(Math.random() * deathGame[id].words.length);
