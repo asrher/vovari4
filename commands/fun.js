@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { sck, cmd } = require('../lib')
+const { cmd } = require('../lib');
 const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
 cmd({
@@ -7,19 +7,19 @@ cmd({
   desc: "Send a random sticker",
   category: "sticker",
 }, async (Void, citel, text) => {
+  if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
 
-        if (!text) return await citel.reply(`السلام عليكم ${citel.pushName}كيف اساعدك؟ ( كل ما تكتب شي اكتب قبله .جرجير عشان ارد عليك) `);
-    const apiUrl = 'https://api.lolhuman.xyz/api/stickerwa?apikey=gatadios&query=${encodeURIComponent(text)}'; // Replace with your API link
-   
+  const apiUrl = `https://api.lolhuman.xyz/api/stickerwa?apikey=gatadios&query=${encodeURIComponent(text)}`;
+
   try {
- const response = await fetch(apiUrl);
+    const response = await fetch(apiUrl);
     const data = await response.json();
 
-    if (data.status === 200 && data.result.length > 0) {
+    if (data.status === 200 && data.result && data.result.length > 0) {
       const result = data.result[Math.floor(Math.random() * data.result.length)];
       const stickers = result.stickers;
 
-      if (stickers.length > 0) {
+      if (stickers && stickers.length > 0) {
         const randomSticker = stickers[Math.floor(Math.random() * stickers.length)];
 
         const stickerMess = new Sticker(randomSticker, {
