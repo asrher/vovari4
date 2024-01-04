@@ -53,8 +53,6 @@ cmd({ on: "text" }, async (Void, citel) => {
 
     wordGame[id].participants[participantId]++;
 
-    await citel.reply(`Congratulations! You earned a point for typing the word correctly. The game continues!`);
-
     startGame(citel, id);
   }
 });
@@ -64,7 +62,7 @@ function startGame(citel, id) {
   const randomIndex = Math.floor(Math.random() * randomWords.length);
   wordGame[id].currentWord = randomWords[randomIndex];
 
-  citel.send(`The word is: ${wordGame[id].currentWord}. Type this word to earn a point!`);
+  citel.send(`${wordGame[id].currentWord}`);
 }
 
 function getGameResults(id) {
