@@ -64,6 +64,7 @@ cmd({ on: "text" }, async (Void, m) => {
     let nextWord = words[randomIndex];
 
     wordGame[id].word = nextWord;
+    wordGame[id].started = false; // Reset flag to allow next word to earn a point
     return m.send(`Next word: *${nextWord}*`);
   }
 });
