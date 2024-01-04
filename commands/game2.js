@@ -85,12 +85,26 @@ cmd({ on: "text" }, async (Void, citel) => {
   }
 });
 
-async function startImageQuiz(citel, match) {
+async function startImageQuiz(Void,citel, match) {
   const footbalKeys = Object.keys(footbal);
+  if (footbalKeys.length === 0) {
+    // Handle the case where the footbal object is empty
+    await sck1.sendMessage(citel.chat, {
+      text: "لا توجد صور لعبة الصور!",
+    });
+    return;
+  }
   const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
   const correctAnswers = footbal[randomImageURL];
+  if (!correctAnswers) {
+    // Handle the case where the correct answers are undefined
+    await Void.sendMessage(citel.chat, {
+      text: "لا يمكن العثور على الإجابات الصحيحة!",
+    });
+    return;
+  }
 
-  await sck1.sendMessage(citel.chat, {
+  await Void.sendMessage(citel.chat, {
     image: { url: randomImageURL },
     caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
   });
