@@ -69,4 +69,7 @@ async function addPointToParticipant(message, match, gameData, participantId) {
     text: `*إجابة صحيحة!*\n\n@${participantId.split('@')[0]} حصلت على نقطة جديدة`,
     mentions: [participantId],
   });
+
+    const newGameData = await startImageQuiz(message, match);
+  ImageQuizGameData[match.sender] = newGameData;
 }
