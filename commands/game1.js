@@ -81,8 +81,6 @@ cmd({ on: "text" }, async (Void, m) => {
         if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
         wordGame[id].points[participant]++;
       }
-
-      return m.send(`Next word: *${nextWord}*`);
     }
   }
 });
