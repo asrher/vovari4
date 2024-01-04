@@ -52,7 +52,7 @@ cmd({
   return await citel.reply(results);
 });
 
-cmd({ on: "text" }, async (Void, citel) => {
+cmd({ on: "photo" }, async (Void, citel) => {
   let id = citel.chat.split("@")[0];
 
   if (imageGame[id] && imageGame[id].isActive) {
