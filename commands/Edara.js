@@ -1,6 +1,6 @@
 const { cmd } = require('../lib');
-const { createCanvas, loadImage } = require('canvas');
 const fs = require('fs');
+const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
 
 cmd({
@@ -8,29 +8,24 @@ cmd({
   category: 'image',
 }, async (Void, message) => {
   try {
-    const canvas = createCanvas(500, 500);
-    const ctx = canvas.getContext('2d');
+    const text0 = 'Top Text';
+    const text1 = 'Bottom Text';
 
-    // Load the base image
-    const baseImage = await loadImage('Siraj/meme/zoro.jpg');
-    ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    const response = await axios.post('https://api.imgflip.com/caption_image', {
+      template_id: "121580608", // ID of the "One Does Not Simply" meme template
+      text0: text0,
+      text1: text1,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      }
+    });
 
-    // Set the text properties
-    ctx.font = '30px Arial';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
+    const dataURL = response.data.data.url;
 
-    // Add text to the image
-    const text = 'Your text here';
-    ctx.fillText(text, canvas.width / 2, canvas.height - 20);
-
-    // Convert the canvas to a data URL
-    const dataURL = canvas.toDataURL('image/jpeg');
-
-    // Send the meme as an image URL
     await Void.sendMessage(message.chat, { image: { url: dataURL } }, { quoted: message });
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
     await message.send(`خطأ`);
   }
 });
