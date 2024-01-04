@@ -65,9 +65,7 @@ cmd({ on: "text" }, async (Void, m) => {
 
     for (const participant in wordGame[id].participants) {
       if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
-      if (wordGame[id].participants[participant] && participant !== sender) {
-        wordGame[id].points[participant]++;
-      }
+      wordGame[id].points[participant]++;
     }
     
     wordGame[id].word = nextWord;
