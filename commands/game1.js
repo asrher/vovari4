@@ -54,13 +54,6 @@ cmd({ on: "text" }, async (Void, m) => {
   if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word && !wordGame[id].participants[sender]) {
     if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
     wordGame[id].points[sender]++;
-
-    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
-    let randomIndex = Math.floor(Math.random() * words.length);
-    let nextWord = words[randomIndex];
-
-    wordGame[id].participants[sender] = true;
-    wordGame[id].word = nextWord;
-    return m.send(`Next word: *${nextWord}*`);
+    return m.send(`Next word: *${chosenWord}*`);
   }
 });
