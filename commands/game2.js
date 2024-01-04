@@ -33,8 +33,8 @@ cmd({
 
   let results = 'نتائج اللعبة :\n\n';
 
-  for (const participantId in wordGame[id].participants) {
-    const points = wordGame[id].participants[participantId];
+  for (const participantId in ImageQuizGameData[id].participants) {
+    const points = ImageQuizGameData[id].participants[participantId];
     const registeredUser = await sck1.findOne({ id: participantId });
     const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
 
