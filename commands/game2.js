@@ -13,28 +13,28 @@ cmd({
   pattern: 'صورة',
   filename: __filename
 }, async (message, match, group) => {
-  let gameData = ImageQuizGameData[match.sender];
+  let gameData = ImageQuizGameData[match.chat];
   if (!gameData) {
     gameData = await startImageQuiz(message, match);
-    ImageQuizGameData[match.sender] = gameData;
+    ImageQuizGameData[match.chat] = gameData;
   }
 });
 
 cmd({
   on: 'text'
 }, async (message, match, group) => {
-  const gameData = ImageQuizGameData[match.sender];
+  const gameData = ImageQuizGameData[match.chat];
 
   if (!gameData) return;
 
-  if (gameData.id === match.chat && gameData.player === match.sender && gameData.preAns !== match.text && !match.isBaileys) {
+  if (gameData.id === match.chat && gameData.preAns !== match.text && !match.isBaileys) {
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
     const userAnswer = match.text.trim();
 
     if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
-      addPointAndStartNextRound(message, match, gameData);
+      addPointToParticipant(message, match, gameData, match.sender);
     }
   }
 });
@@ -46,28 +46,27 @@ async function startImageQuiz(message, match) {
 
   await message.sendMessage(match.chat, {
     image: { url: randomImageURL },
-    caption: `*بدأت لعبة الصور*\n\nاللاعب: @${match.sender.split('@')[0]}\n\nبدأت اللعبة معك 3 فرص و 20 ثانية`,
-    mentions: [match.sender]
+    caption: `*بدأت لعبة الصور*`,
   });
 
   return {
     id: match.chat,
-    player: match.sender,
     question: randomImageURL,
     answers: correctAnswers,
-    points: 0,
+    participants: {}, // Store participants' points
     preAns: '',
   };
 }
 
-async function addPointAndStartNextRound(message, match, gameData) {
-  gameData.points += 1;
+async function addPointToParticipant(message, match, gameData, participantId) {
+  if (!gameData.participants[participantId]) {
+    gameData.participants[participantId] = 0;
+  }
+
+  gameData.participants[participantId] += 1;
 
   await message.sendMessage(match.chat, {
-    text: `*إجابة صحيحة!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nعدد النقاط: ${gameData.points}`,
-    mentions: [gameData.player]
+    text: `*إجابة صحيحة!*\n\n@${participantId.split('@')[0]} حصلت على نقطة جديدة`,
+    mentions: [participantId],
   });
-
-  const newGameData = await startImageQuiz(message, match);
-  ImageQuizGameData[match.sender] = newGameData;
 }
