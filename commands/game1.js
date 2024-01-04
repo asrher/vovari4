@@ -43,7 +43,7 @@ cmd({
     const registeredUser = await sck1.findOne({ id: participantId });
     const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
 
-    results += `${playerName}  برصيد ${points} إجابة\n`;
+    results += `${playerName}  برصيد ${points} إجابات\n`;
   }
 
   wordGame[id].isActive = false;
@@ -72,5 +72,5 @@ function startGame(citel, id) {
   const randomIndex = Math.floor(Math.random() * randomWords.length);
   wordGame[id].currentWord = randomWords[randomIndex];
 
-  citel.send(`${wordGame[id].currentWord}`);
+  citel.send(`*${wordGame[id].currentWord}*`);
 }
