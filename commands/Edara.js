@@ -29,7 +29,8 @@ cmd({
 
     // Send the meme as an image URL
     await Void.sendMessage(message.chat, { image: { url: dataURL } }, { quoted: message });
-  } catch (e) {
+  } catch (error) {
+    console.error(error);
     await message.send(`خطأ`);
   }
 });
