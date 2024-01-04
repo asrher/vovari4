@@ -81,12 +81,12 @@ cmd({ on: "text" }, async (Void, citel) => {
   }
 });
 
-async function startImageQuiz(citel, id) {
+async function startImageQuiz(Void, citel, id) {
   const footbalKeys = Object.keys(footbal);
   const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
   const correctAnswers = footbal[randomImageURL];
 
-  await citel.sendMessage(id + "@c.us", {
+  await Void.sendMessage(id + "@c.us", {
     image: { url: randomImageURL },
     caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
   });
