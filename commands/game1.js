@@ -53,9 +53,17 @@ cmd({ on: "text" }, async (Void, citel) => {
 
     wordGame[id].participants[participantId]++;
 
-    startGame(citel, id);
+    await processGame(citel, id, participantId); // Call the function asynchronously
   }
 });
+
+async function processGame(citel, id, participantId) {
+  const registeredUser = await sck1.findOne({ id: participantId }); // Use await in an async function
+  const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
+
+  startGame(citel, id); // Continue the game after processing
+}
+
 
 function startGame(citel, id) {
   const randomWords = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا']; // List of random words
