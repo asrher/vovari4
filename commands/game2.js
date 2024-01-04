@@ -7,78 +7,94 @@ const footbal = {
   "https://images4.alphacoders.com/474/47438.png": ["bbb", "vvv"],
 };
 
-let ImageQuizGameData = {};
+let imageGame = {};
 
 cmd({
-  pattern: 'صورة',
-  filename: __filename
-}, async (message, match, group) => {
-  let id = message.chat.split("@")[0];
+  pattern: "sora",
+  category: "games",
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  if (!ImageQuizGameData[id]) {
-    ImageQuizGameData[id] = await startImageQuiz(message, match);
+  if (!imageGame || !imageGame[id]) {
+    imageGame[id] = {
+      isActive: false,
+      participants: {},
+      currentimage: '',
+    };
   }
+
+  if (imageGame[id].isActive) {
+    return await citel.reply('اللعبة بدأت بالفعل');
+  }
+
+  imageGame[id].isActive = true;
+  imageGame[id].participants = {};
+  imageGame[id].currentimage = '';
+
+  startImageQuiz(citel, id);
 });
 
 cmd({
-  on: 'text'
-}, async (message, match, group) => {
-  let id = message.chat.split("@")[0];
-  const gameData = ImageQuizGameData[id];
+  pattern: "ssora",
+  category: "games",
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  if (!gameData) return;
+  if (!imageGame[id].isActive) {
+    return await citel.reply('مفيه لعبة');
+  }
 
-  const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
-  const userAnswer = match.text.trim();
+  let results = 'تم انهاء اللعبة هذه هي النتائج :\n';
 
-  if (correctAnswers.includes(userAnswer.toLowerCase())) {
-    addPointAndStartNextRound(message, match, gameData);
+  for (const participantId in imageGame[id].participants) {
+    const points = imageGame[id].participants[participantId];
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
+
+    results += `${playerName}  برصيد ${points} إجابات\n`;
+  }
+
+  imageGame[id].isActive = false;
+
+  return await citel.reply(results);
+});
+
+cmd({ on: "text" }, async (Void, citel) => {
+    let id = message.chat.split("@")[0];
+    const gameData = ImageQuizGameData[id];
+  
+    if (!gameData) return;
+  
+    const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
+    const userAnswer = match.text.trim();
+  
+    if (correctAnswers.includes(userAnswer.toLowerCase())) {
+          let participantId = citel.sender;
+      
+          if (!imageGame[id].participants[participantId]) {
+            imageGame[id].participants[participantId] = 0;
+          }
+      
+          imageGame[id].participants[participantId]++;
+      
+          startImageQuiz(citel, id);
   }
 });
 
 async function startImageQuiz(message, match) {
-  const footbalKeys = Object.keys(footbal);
-  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
-  const correctAnswers = footbal[randomImageURL];
-
-  await message.sendMessage(match.chat, {
-    image: { url: randomImageURL },
-    caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
-  });
-
-  return {
-    id: match.chat.split("@")[0],
-    player: '',
-    question: randomImageURL,
-    answers: correctAnswers,
-  };
-}
-
-async function addPointAndStartNextRound(message, match, gameData) {
-  if (!gameData.player) {
-    gameData.player = match.sender;
-    gameData.attempts = 1;
-  } else {
-    gameData.attempts += 1;
+    const footbalKeys = Object.keys(footbal);
+    const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+    const correctAnswers = footbal[randomImageURL];
+  
+    await message.sendMessage(match.chat, {
+      image: { url: randomImageURL },
+      caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
+    });
+  
+    return {
+      id: match.chat.split("@")[0],
+      player: '',
+      question: randomImageURL,
+      answers: correctAnswers,
+    };
   }
-
-  await message.sendMessage(match.chat, {
-    text: `*إجابة صحيحة!*\n\nاللاعب: ${gameData.player.split('@')[0]}`,
-  });
-
-  ImageQuizGameData[match.chat.split("@")[0]] = await startImageQuiz(message, match);
-}
-
-cmd({
-  pattern: 'stop',
-  filename: __filename
-}, async (message, match, group) => {
-  let results = 'نتائج اللاعبين:\n\n';
-
-  for (const id in ImageQuizGameData) {
-    const gameData = ImageQuizGameData[id];
-    results += `اللاعب: ${gameData.player.split('@')[0]} - عدد النقاط: ${gameData.attempts}\n`;
-  }
-
-  await message.sendMessage(match.chat, results);
-});
