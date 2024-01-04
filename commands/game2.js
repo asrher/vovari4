@@ -18,11 +18,6 @@ cmd({
     gameData = await startImageQuiz(message, match);
     ImageQuizGameData[match.sender] = gameData;
   }
-
-  clearTimeout(gameData.timer);
-  gameData.timer = setTimeout(() => {
-    timeoutFunction(message, match, gameData);
-  }, gameData.waitTime * 1000);
 });
 
 cmd({
@@ -33,7 +28,6 @@ cmd({
   if (!gameData) return;
 
   if (gameData.id === match.chat && gameData.player === match.sender && gameData.preAns !== match.text && !match.isBaileys) {
-    clearTimeout(gameData.timer);
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
@@ -41,8 +35,6 @@ cmd({
 
     if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
       addPointAndStartNextRound(message, match, gameData);
-    } else {
-      handleWrongAnswer(message, match, gameData, correctAnswers);
     }
   }
 });
@@ -63,59 +55,19 @@ async function startImageQuiz(message, match) {
     player: match.sender,
     question: randomImageURL,
     answers: correctAnswers,
-    attempts: 0,
-    waitTime: 20,
+    points: 0,
     preAns: '',
-    timer: ''
   };
 }
 
 async function addPointAndStartNextRound(message, match, gameData) {
-  gameData.attempts += 1;
+  gameData.points += 1;
 
   await message.sendMessage(match.chat, {
-    text: `*إجابة صحيحة!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nعدد المحاولات: ${gameData.attempts}`,
+    text: `*إجابة صحيحة!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nعدد النقاط: ${gameData.points}`,
     mentions: [gameData.player]
   });
 
   const newGameData = await startImageQuiz(message, match);
   ImageQuizGameData[match.sender] = newGameData;
 }
-
-async function handleWrongAnswer(message, match, gameData, correctAnswers) {
-  gameData.attempts += 1;
-
-  if (gameData.attempts < 3) {
-    await message.sendMessage(match.chat, {
-      text: `*الجواب خطأ!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nتبقى لك ${3 - gameData.attempts} فرص`,
-      mentions: [gameData.player]
-    });
-
-    gameData.timer = setTimeout(() => {
-      timeoutFunction(message, match, gameData);
-    }, gameData.waitTime * 1000);
-  } else {
-    await message.sendMessage(match.chat, {
-      text: `*لقد خسرت!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nالإجابة الصحيحة: ${correctAnswers.join(', ')}`,
-      mentions: [gameData.player]
-    });
-
-    delete ImageQuizGameData[match.sender];
-  }
-}
-
-async function timeoutFunction(message, match, gameData) {
-  await message.sendMessage(match.chat, {
-    text: `*لقد انتهى الوقت!*\n\nاللاعب: @${gameData.player.split('@')[0]}\nالإجابة الصحيحة: ${gameData.answers.join(', ')}`,
-    mentions: [gameData.player]
-  });
-
-  delete ImageQuizGameData[match.sender];
-}
-
-
-
-
-
-
-
