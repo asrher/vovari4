@@ -24,6 +24,26 @@ cmd({
 });
 
 cmd({
+  on: 'text'
+}, async (message, match, group) => {
+  const gameData = ImageQuizGameData[match.chat];
+
+  if (!gameData) return;
+
+  if (gameData.id === match.chat && gameData.preAns !== match.text && !match.isBaileys) {
+    gameData.preAns = match.text;
+
+    const correctAnswers = footbal[gameData.question];
+    const userAnswer = match.text.trim();
+
+    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
+      addPointToParticipant(message, match, gameData, match.sender);
+      await sendNewImage(message, match, gameData);
+    }
+  }
+});
+
+cmd({
   pattern: 'stop',
   filename: __filename
 }, async (message, citel, group) => {
@@ -47,26 +67,6 @@ cmd({
   });
 
   delete ImageQuizGameData[match.chat];
-});
-
-cmd({
-  on: 'text'
-}, async (message, match, group) => {
-  const gameData = ImageQuizGameData[match.chat];
-
-  if (!gameData) return;
-
-  if (gameData.id === match.chat && gameData.preAns !== match.text && !match.isBaileys) {
-    gameData.preAns = match.text;
-
-    const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim();
-
-    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
-      addPointToParticipant(message, match, gameData, match.sender);
-      await sendNewImage(message, match, gameData);
-    }
-  }
 });
 
 async function startImageQuiz(message, match) {
