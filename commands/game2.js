@@ -41,16 +41,32 @@ cmd({
 });
 
 cmd({
-  pattern: 'stop',
-  filename: __filename
-}, async (message, match, group) => {
-  const gameData = ImageQuizGameData[match.chat];
+  pattern: "حذف_صورة",
+  category: "games",
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  if (gameData) {
-    await sendPlayerPoints(message, match, gameData);
-    delete ImageQuizGameData[match.chat];
+  const gameData = ImageQuizGameData[id];
+
+  if (!gameData) {
+    return await citel.reply('مفيه لعبة');
   }
+
+  let results = 'تم إنهاء اللعبة. هذه هي النتائج :\n';
+
+  for (const participantId in gameData.participants) {
+    const points = gameData.participants[participantId];
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? `@${participantId.split('@')[0]}` : "دون لقب"; // 
+
+    results += `${playerName} برصيد ${points} نقطة\n`;
+  }
+
+  delete ImageQuizGameData[id];
+
+  return await citel.reply(results);
 });
+
 
 async function startImageQuiz(message, match) {
   const footbalKeys = Object.keys(footbal);
@@ -97,20 +113,4 @@ async function sendNewImage(message, match, gameData) {
   gameData.question = randomImageURL;
   gameData.answers = correctAnswers;
   gameData.preAns = '';
-}
-
-async function sendPlayerPoints(message, match, gameData) {
-  let results = '*نتائج اللاعبين*\n';
-
-  for (const participantId in gameData.participants) {
-    const points = gameData.participants[participantId];
-    const user = await sck1.findOne({ id: participantId });
-    const playerName = user ? `@${user.split('@')[0]}` : `Unknown User`;
-
-    results += `${playerName}: ${points} نقطة\n`;
-  }
-
-  await message.sendMessage(match.chat, {
-    text: results,
-  });
 }
