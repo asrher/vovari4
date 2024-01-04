@@ -61,7 +61,7 @@ cmd({
 
 cmd({ on: "text" }, async (Void, citel) => {
     let id = citel.chat.split("@")[0];
-    const gameData = ImageQuizGameData[id];
+    const gameData = imageGame[id];
   
     if (!gameData) return;
   
