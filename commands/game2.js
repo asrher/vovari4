@@ -8,6 +8,7 @@ const footbal = {
 };
 
 let ImageQuizGameData = {};
+let remainingImages = Object.keys(footbal);
 
 cmd({
   pattern: 'صورة',
@@ -35,19 +36,26 @@ cmd({
 
     if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
       addPointToParticipant(message, match, gameData, match.sender);
+      await startNextRound(message, match, gameData);
     }
   }
 });
 
 async function startImageQuiz(message, match) {
-  const footbalKeys = Object.keys(footbal);
-  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+  if (remainingImages.length === 0) {
+    remainingImages = Object.keys(footbal);
+  }
+
+  const randomImageIndex = Math.floor(Math.random() * remainingImages.length);
+  const randomImageURL = remainingImages[randomImageIndex];
   const correctAnswers = footbal[randomImageURL];
 
   await message.sendMessage(match.chat, {
     image: { url: randomImageURL },
     caption: `*بدأت لعبة الصور*`,
   });
+
+  remainingImages.splice(randomImageIndex, 1); // Remove the used image from remainingImages
 
   return {
     id: match.chat,
@@ -69,7 +77,17 @@ async function addPointToParticipant(message, match, gameData, participantId) {
     text: `*إجابة صحيحة!*\n\n@${participantId.split('@')[0]} حصلت على نقطة جديدة`,
     mentions: [participantId],
   });
+}
 
-    const newGameData = await startImageQuiz(message, match);
-  ImageQuizGameData[match.sender] = newGameData;
+async function startNextRound(message, match, gameData) {
+  if (remainingImages.length === 0) {
+    await message.sendMessage(match.chat, {
+      text: `*لقد انتهت جميع الصور*\n\nتم انهاء اللعبة`,
+    });
+    delete ImageQuizGameData[match.chat];
+    return;
+  }
+
+  const newGameData = await startImageQuiz(message, match);
+  ImageQuizGameData[match.chat] = newGameData;
 }
