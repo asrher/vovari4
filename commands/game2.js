@@ -2,7 +2,14 @@ const { cmd, sck1, getAdmin, tlang, sleep } = require("../lib/");
 //const eco = require('siraj-bank')
 
 //=====================================================================
-
+const footbal = {
+    "https://cdn.galleries.smcloud.net/t/galleries/gf-FKw2-EcYt-DnsC_cristiano-ronaldo-664x442.jpg": ["الدون", "كريستيانو", "كريستيانو رونالدو"],
+    "https://images6.alphacoders.com/596/596848.jpg": ["كانيكي"],
+    "https://images7.alphacoders.com/303/303042.png": ["bb", "vv"],
+    "https://images7.alphacoders.com/611/611138.png": ["b", "v"],
+    "https://images4.alphacoders.com/474/47438.png": ["bbb", "vvv"],
+  };
+  
 //=====================================================================
 let wordGame = {};
 
@@ -58,7 +65,7 @@ cmd({
 
 cmd({ on: "text" }, async (Void, citel) => {
   let id = citel.chat.split("@")[0];
-  let gameData = ImageQuizGameData[id];
+  let gameData = wordGame[id];
   if (!gameData) return;
 
   let correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
