@@ -1,9 +1,9 @@
 const { cmd } = require('../lib');
-
 const { createCanvas, loadImage } = require('canvas');
+const fs = require('fs');
 
 cmd({
-  pattern: 'meme',
+  pattern: 'memegen',
   category: 'image',
 }, async (Void, message) => {
   const canvas = createCanvas(500, 500);
@@ -19,11 +19,19 @@ cmd({
   ctx.textAlign = 'center';
 
   // Add text to the image
-  const text = 'akida';
+  const text = 'Your text here';
   ctx.fillText(text, canvas.width / 2, canvas.height - 20);
 
-  // Convert the canvas to a buffer and send it as an image
+  // Convert the canvas to a buffer
   const buffer = canvas.toBuffer('image/jpeg');
-  await message.sendImage(buffer, 'meme.jpg', 'hi');
-});
 
+  // Save the image buffer to a file
+  fs.writeFileSync('meme.jpg', buffer);
+
+  // Send a message with the generated meme
+  await Void.sendMessage('Here is your meme:', {
+    file: buffer,
+    mimetype: 'image/jpeg',
+    caption: 'Your meme caption',
+  });
+});
