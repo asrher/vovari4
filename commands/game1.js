@@ -49,11 +49,19 @@ cmd({ on: "text" }, async (Void, m) => {
 
   let id = m.chat.split("@")[0];
   let word = m.text.toLowerCase();
-  let sender = m.sender.split("@")[0];
 
-  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word && !wordGame[id].participants[sender]) {
-    if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
-    wordGame[id].points[sender]++;
-    return m.send(`Next word: *${chosenWord}*`);
+  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word) {
+    let sender = m.sender.split("@")[0];
+
+    if (!wordGame[id].participants[sender]) {
+      wordGame[id].participants[sender] = true;
+      if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
+      wordGame[id].points[sender]++;
+    }
+    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+    let randomIndex = Math.floor(Math.random() * words.length);
+    let newWord = words[randomIndex];
+    wordGame[id].word = newWord;
+    return m.send(`New word: *${newWord}*`);
   }
 });
