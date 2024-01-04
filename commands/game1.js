@@ -50,28 +50,27 @@ cmd({ on: "text" }, async (Void, m) => {
   let id = m.chat.split("@")[0];
   let word = m.text.toLowerCase();
 
-  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped) {
+  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word) {
     let sender = m.sender.split("@")[0];
 
-    if (word === wordGame[id].word || word === wordGame[id].points[wordGame[id].word]) {
-      if (!wordGame[id].participants[sender]) {
-        wordGame[id].participants[sender] = true;
-        if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
-        wordGame[id].points[sender]++;
-      }
+    if (!wordGame[id].participants[sender]) {
+      wordGame[id].participants[sender] = true;
+      if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
+      wordGame[id].points[sender]++;
+    }
 
-      let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
-      let randomIndex = Math.floor(Math.random() * words.length);
-      let nextWord = words[randomIndex];
+    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+    let randomIndex = Math.floor(Math.random() * words.length);
+    let nextWord = words[randomIndex];
 
-      wordGame[id].word = nextWord;
-
-      for (const participant in wordGame[id].participants) {
-        if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
+    for (const participant in wordGame[id].participants) {
+      if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
+      if (wordGame[id].participants[participant] && participant !== sender) {
         wordGame[id].points[participant]++;
       }
-
-      return m.send(`Next word: *${nextWord}*`);
     }
+    
+    wordGame[id].word = nextWord;
+    return m.send(`Next word: *${nextWord}*`);
   }
 });
