@@ -1,71 +1,79 @@
-const { cmd } = require("../lib");
-
+const { cmd, sck1 } = require("../lib/");
 let wordGame = {};
-
-function sendWord(chatId) {
-  let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
-  let randomIndex = Math.floor(Math.random() * words.length);
-  let chosenWord = words[randomIndex];
-
-  wordGame[chatId] = {
-    word: chosenWord,
-    participants: {}
-  };
-
-  return chosenWord;
-}
 
 cmd({
   pattern: "word",
   category: "games",
-}, async (Void, m) => {
-  let chatId = m.chat.split("@")[0];
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  if (!wordGame[chatId]) {
-    let word = sendWord(chatId);
-    return m.reply(`Word game started! Send the word *${word}* to earn points. Send '.stop' to end the game.`);
-  } else {
-    return m.reply('A word game is already in progress in this group.');
+  if (!wordGame || !wordGame[id]) {
+    wordGame[id] = {
+      isActive: false,
+      participants: {},
+      currentWord: '',
+    };
   }
+
+  if (wordGame[id].isActive) {
+    return await citel.reply('The game is already in progress!');
+  }
+
+  wordGame[id].isActive = true;
+  wordGame[id].participants = {};
+  wordGame[id].currentWord = '';
+
+  startGame(citel, id);
 });
 
 cmd({
   pattern: "stop",
   category: "games",
-}, async (Void, m) => {
-  let chatId = m.chat.split("@")[0];
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  if (wordGame[chatId]) {
-    if (Object.keys(wordGame[chatId].participants).length > 0) {
-      let pointsList = "Points:\n";
-      for (const participant in wordGame[chatId].participants) {
-        pointsList += `${participant}: ${wordGame[chatId].participants[participant]}\n`;
-      }
-      delete wordGame[chatId];
-      return m.reply(pointsList);
-    } else {
-      delete wordGame[chatId];
-      return m.reply('No participants in the word game.');
+  if (!wordGame[id].isActive) {
+    return await citel.reply('No game in progress to stop!');
+  }
+
+  wordGame[id].isActive = false;
+
+  return await citel.reply(getGameResults(id));
+});
+
+cmd({ on: "text" }, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
+
+  if (wordGame[id] && wordGame[id].isActive && citel.text.toLowerCase() === wordGame[id].currentWord) {
+    let participantId = citel.sender;
+
+    if (!wordGame[id].participants[participantId]) {
+      wordGame[id].participants[participantId] = 0;
     }
-  } else {
-    return m.reply('No active word game in this group.');
+
+    wordGame[id].participants[participantId]++;
+
+    await citel.reply(`Congratulations! You earned a point for typing the word correctly. The game continues!`);
+
+    startGame(citel, id);
   }
 });
 
-cmd({ on: "text" }, async (Void, m) => {
-  if (m.isBot || !m.text || !m.isGroup) return;
+function startGame(citel, id) {
+  const randomWords = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا']; // List of random words
+  const randomIndex = Math.floor(Math.random() * randomWords.length);
+  wordGame[id].currentWord = randomWords[randomIndex];
 
-  let chatId = m.chat.split("@")[0];
-  let word = m.text.toLowerCase();
-  let sender = m.sender.split("@")[0];
+  citel.send(`The word is: ${wordGame[id].currentWord}. Type this word to earn a point!`);
+}
 
-  if (wordGame[chatId] && wordGame[chatId].word === word) {
-    if (!wordGame[chatId].participants[sender]) {
-      wordGame[chatId].participants[sender] = 0;
-    }
-    wordGame[chatId].participants[sender]++;
+function getGameResults(id) {
+  let results = 'Game stopped. Here are the results:\n';
 
-    let newWord = sendWord(chatId);
-    return m.send(`Next word: *${newWord}*`);
+  for (const participantId in wordGame[id].participants) {
+    const points = wordGame[id].participants[participantId];
+    results += `${participantId} got ${points} points.\n`;
   }
-});
+
+  return results;
+}
