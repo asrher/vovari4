@@ -22,7 +22,6 @@ cmd({
       points: {},
       stopped: false
     };
-    return m.reply(`Word game has started! Send the word *${chosenWord}* to earn points.`);
   }
 });
 
