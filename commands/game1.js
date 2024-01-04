@@ -18,7 +18,8 @@ cmd({
     wordGame[id] = {
       started: true,
       participants: {},
-      word: chosenWord,
+      word: null,
+      chosenWord: chosenWord,
       points: {},
       stopped: false
     };
@@ -50,7 +51,7 @@ cmd({ on: "text" }, async (Void, m) => {
   let id = m.chat.split("@")[0];
   let word = m.text.toLowerCase();
 
-  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].word) {
+  if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped && word === wordGame[id].chosenWord) {
     let sender = m.sender.split("@")[0];
 
     if (!wordGame[id].participants[sender]) {
@@ -60,8 +61,9 @@ cmd({ on: "text" }, async (Void, m) => {
     }
     let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
     let randomIndex = Math.floor(Math.random() * words.length);
-    let newWord = words[randomIndex];
-    wordGame[id].word = newWord;
-    return m.send(`New word: *${newWord}*`);
+    let chosenWord = words[randomIndex];
+
+    wordGame[id].chosenWord = chosenWord;
+    m.send(`Next word: *${chosenWord}*`);
   }
 });
