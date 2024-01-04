@@ -52,6 +52,7 @@
            "sms-activate":"^2.0.4",
            "pdfkit": "^0.14.0",   
            "stream": "^0.0.2",   
+           "canvas": "^2.11.2",   
            "wa-sticker-formatter": "^4.3.2"
           },
       "directories": {
