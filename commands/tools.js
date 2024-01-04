@@ -9,7 +9,7 @@ const translatte = require("translatte");
 //=====================================================================
 
 cmd({
-pattern: "كتابة",
+pattern: "زخرفة",
 desc: "زخرفة الكتابة (فقط انجليزي)",
 use: '',
 category: "tools",
