@@ -1,85 +1,99 @@
-const { cmd, sck1 } = require("../lib/");
-const footbal = {
-  "https://cdn.galleries.smcloud.net/t/galleries/gf-FKw2-EcYt-DnsC_cristiano-ronaldo-664x442.jpg": ["الدون", "كريستيانو", "كريستيانو رونالدو"],
-  "https://images6.alphacoders.com/596/596848.jpg": ["كانيكي"],
-  "https://images7.alphacoders.com/303/303042.png": ["bb", "vv"],
-  "https://images7.alphacoders.com/611/611138.png": ["b", "v"],
-  "https://images4.alphacoders.com/474/47438.png": ["bbb", "vvv"],
-};
+const { cmd, sck1, getAdmin, tlang, sleep } = require("../lib/");
+//const eco = require('siraj-bank')
 
-let ImageQuizGameData = {};
+//=====================================================================
+
+//=====================================================================
+let wordGame = {};
 
 cmd({
-  pattern: 'صورة',
-  filename: __filename
-}, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
+  pattern: "fafa",
+  category: "games",
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
-  const gameData = await startImageQuiz(message, match);
+  if (!wordGame || !wordGame[id]) {
+    wordGame[id] = {
+      isActive: false,
+      participants: {},
+      currentWord: '',
+    };
+  }
 
-  ImageQuizGameData[id] = gameData;
+  if (wordGame[id].isActive) {
+    return await citel.reply('اللعبة بدأت بالفعل');
+  }
+
+  wordGame[id].isActive = true;
+  wordGame[id].participants = {};
+  wordGame[id].currentWord = '';
+
+  startGame(citel, id);
 });
 
 cmd({
-  on: 'text'
-}, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
-  const gameData = ImageQuizGameData[id];
+  pattern: "fafas",
+  category: "games",
+}, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
 
+  if (!wordGame[id].isActive) {
+    return await citel.reply('مفيه لعبة');
+  }
+
+  let results = 'تم انهاء اللعبة هذه هي النتائج :\n';
+
+  for (const participantId in wordGame[id].participants) {
+    const points = wordGame[id].participants[participantId];
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
+
+    results += `${playerName}  برصيد ${points} إجابات\n`;
+  }
+
+  wordGame[id].isActive = false;
+
+  return await citel.reply(results);
+});
+
+cmd({ on: "text" }, async (Void, citel) => {
+  let id = citel.chat.split("@")[0];
+  let gameData = ImageQuizGameData[id];
   if (!gameData) return;
 
-  const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
-  const userAnswer = match.text.trim();
+  let correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
+  let userAnswer = match.text.trim();
+
 
   if (correctAnswers.includes(userAnswer.toLowerCase())) {
-    addPointAndStartNextRound(message, match, gameData);
+  let participantId = citel.sender;
+
+    if (!wordGame[id].participants[participantId]) {
+      wordGame[id].participants[participantId] = 0;
+    }
+
+    wordGame[id].participants[participantId]++;
+
+    startGame(citel, id);
   }
 });
 
-async function startImageQuiz(message, match) {
-  const footbalKeys = Object.keys(footbal);
-  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
-  const correctAnswers = footbal[randomImageURL];
 
-  await message.sendMessage(match.chat, {
-    image: { url: randomImageURL },
-    caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
-  });
 
-  return {
-    id: match.chat.split("@")[0],
-    player: '',
-    question: randomImageURL,
-    answers: correctAnswers,
-  };
-}
-
-async function addPointAndStartNextRound(message, match, gameData) {
-  if (!gameData.player) {
-    gameData.player = match.sender;
-    gameData.attempts = 0;
+async function startGame(message, match) {
+    const footbalKeys = Object.keys(footbal);
+    const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+    const correctAnswers = footbal[randomImageURL];
+  
+    await message.sendMessage(match.chat, {
+      image: { url: randomImageURL },
+      caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
+    });
+  
+    return {
+      id: match.chat.split("@")[0],
+      player: '',
+      question: randomImageURL,
+      answers: correctAnswers,
+    };
   }
-
-  gameData.attempts += 1;
-
-  await message.sendMessage(match.chat, {
-    text: `*إجابة صحيحة!*\n\nاللاعب: ${gameData.player.split('@')[0]}`,
-  });
-
-  const newGameData = await startImageQuiz(message, match);
-  ImageQuizGameData[match.chat.split("@")[0]] = newGameData;
-}
-
-cmd({
-  pattern: 'stop',
-  filename: __filename
-}, async (message, match, group) => {
-  let results = 'نتائج اللاعبين:\n\n';
-
-  for (const id in ImageQuizGameData) {
-    const gameData = ImageQuizGameData[id];
-    results += `اللاعب: ${gameData.player.split('@')[0]} - عدد النقاط: ${gameData.attempts || 0}\n`;
-  }
-
-  await message.sendMessage(match.chat, results);
-});
