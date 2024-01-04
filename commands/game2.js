@@ -47,26 +47,30 @@ cmd({
   pattern: 'stop',
   filename: __filename
 }, async (message, citel, group) => {
-    let id = citel.chat.split("@")[0];
+  const id = citel.chat.split("@")[0];
   const gameData = ImageQuizGameData[citel.chat];
 
-  if (!gameData) return;
+  if (!gameData || !gameData.participants) {
+    return await message.sendMessage(citel.chat, {
+      text: `*لا يوجد لعبة جارية حاليا!*`,
+    });
+  }
 
   let results = 'نتائج اللعبة :\n\n';
 
-  for (const participantId in ImageQuizGameData[id].participants) {
-    const points = ImageQuizGameData[id].participants[participantId];
+  for (const participantId in gameData.participants) {
+    const points = gameData.participants[participantId];
     const registeredUser = await sck1.findOne({ id: participantId });
-    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
+    const playerName = registeredUser ? registeredUser.name : "دون لقب";
 
     results += `${playerName}  برصيد ${points} إجابات\n`;
   }
 
-  await message.sendMessage(match.chat, {
+  await message.sendMessage(citel.chat, {
     text: results,
   });
 
-  delete ImageQuizGameData[match.chat];
+  delete ImageQuizGameData[citel.chat];
 });
 
 async function startImageQuiz(message, match) {
