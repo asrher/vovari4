@@ -49,7 +49,7 @@ cmd({
   for (const participantId in imageGame[id].participants) {
     const points = imageGame[id].participants[participantId];
     const registeredUser = await sck1.findOne({ id: participantId });
-    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
+    const playerName = registeredUser ? registeredUser.name : "دون لقب"; 
 
     results += `${playerName}  برصيد ${points} إجابات\n`;
   }
@@ -60,41 +60,41 @@ cmd({
 });
 
 cmd({ on: "text" }, async (Void, citel) => {
-    let id = citel.chat.split("@")[0];
-    const gameData = imageGame[id];
+  let id = citel.chat.split("@")[0];
+  const gameData = imageGame[id];
   
-    if (!gameData) return;
+  if (!gameData || !gameData.answers) return;
+
+  const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
+  const userAnswer = citel.text.trim().toLowerCase();
   
-    const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
-    const userAnswer = match.text.trim();
-  
-    if (correctAnswers.includes(userAnswer.toLowerCase())) {
-          let participantId = citel.sender;
-      
-          if (!imageGame[id].participants[participantId]) {
-            imageGame[id].participants[participantId] = 0;
-          }
-      
-          imageGame[id].participants[participantId]++;
-      
-          startImageQuiz(citel, id);
+  if (correctAnswers.includes(userAnswer)) {
+    let participantId = citel.sender;
+
+    if (!imageGame[id].participants[participantId]) {
+      imageGame[id].participants[participantId] = 0;
+    }
+
+    imageGame[id].participants[participantId]++;
+
+    startImageQuiz(citel, id);
   }
 });
 
-async function startImageQuiz(citel, match) {
-    const footbalKeys = Object.keys(footbal);
-    const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
-    const correctAnswers = footbal[randomImageURL];
-  
-    await citel.sendMessage(match.chat, {
-      image: { url: randomImageURL },
-      caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
-    });
-  
-    return {
-      id: match.chat.split("@")[0],
-      player: '',
-      question: randomImageURL,
-      answers: correctAnswers,
-    };
-  }
+async function startImageQuiz(citel, id) {
+  const footbalKeys = Object.keys(footbal);
+  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+  const correctAnswers = footbal[randomImageURL];
+
+  await citel.sendMessage(id + "@c.us", {
+    image: { url: randomImageURL },
+    caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
+  });
+
+  imageGame[id] = {
+    isActive: true,
+    participants: {},
+    currentimage: randomImageURL,
+    answers: correctAnswers,
+  };
+}
