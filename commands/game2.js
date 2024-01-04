@@ -13,27 +13,10 @@ cmd({
   pattern: 'صورة',
   filename: __filename
 }, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
-  let gameData = ImageQuizGameData[id];
-
-  if (!gameData) {
-    const imageKeys = Object.keys(footbal);
-    const randomImageUrl = imageKeys[Math.floor(Math.random() * imageKeys.length)];
-    const correctAnswers = footbal[randomImageUrl];
-
-    await message.sendMessage(match.chat, {
-      image: { url: randomImageUrl },
-      caption: `*بدأت لعبة الصور*\n\nاللاعب: @${match.sender.split('@')[0]}\n\nقم بتخمين الإجابة!`,
-      mentions: [match.sender]
-    });
-
-    gameData = {
-      id: id,
-      player: match.sender,
-      question: randomImageUrl,
-      answers: correctAnswers,
-    };
-    ImageQuizGameData[id] = gameData;
+  let gameData = ImageQuizGameData[match.chat.split('@')[0]];
+  if (!gameData || !gameData.isActive) {
+    gameData = await startImageQuiz(message, match.chat.split('@')[0]);
+    ImageQuizGameData[match.chat.split('@')[0]] = gameData;
   }
 });
 
@@ -41,54 +24,71 @@ cmd({
   pattern: 'stop',
   filename: __filename
 }, async (message, match, group) => {
-  let results = 'نتائج اللعبة:\n';
+  const id = match.chat.split('@')[0];
+  const gameData = ImageQuizGameData[id];
 
-  for (const playerId in ImageQuizGameData) {
-    const gameData = ImageQuizGameData[playerId];
-    const registeredUser = await sck1.findOne({ id: gameData.player });
-    const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
+  if (gameData && gameData.isActive) {
+    gameData.isActive = false;
 
-    results += `${playerName} (@${gameData.player.split('@')[0]}): ${gameData.points} points\n`;
+    let results = 'Game stopped. Here are the results:\n';
+    for (const participantId in gameData.participants) {
+      const points = gameData.participants[participantId];
+      const registeredUser = await sck1.findOne({ id: participantId });
+      const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
+
+      results += `${playerName} (${participantId}) got ${points} points.\n`;
+    }
+
+    return await message.sendMessage(match.chat, results);
   }
-
-  await message.sendMessage(match.chat, results);
 });
 
 cmd({
   on: 'text'
 }, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
+  const id = match.chat.split('@')[0];
   const gameData = ImageQuizGameData[id];
 
-  if (!gameData || gameData.question !== match.text) return;
+  if (!gameData || !gameData.isActive) return;
 
-  const answer = match.text.trim().toLowerCase();
   const correctAnswers = gameData.answers.map(ans => ans.toLowerCase());
+  const userAnswer = match.text.trim();
 
-  if (correctAnswers.includes(answer)) {
-    gameData.points = (gameData.points || 0) + 1;
+  if (correctAnswers.includes(userAnswer.toLowerCase())) {
+    if (!gameData.participants[match.sender]) {
+      gameData.participants[match.sender] = 0;
+    }
 
-    const registeredUser = await sck1.findOne({ id: match.sender });
-    const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
-
-    await message.sendMessage(match.chat, `🎉 الإجابة الصحيحة! ${playerName} تم إضافة نقطة إليك.`);
-
-    const imageKeys = Object.keys(footbal);
-    const randomImageUrl = imageKeys[Math.floor(Math.random() * imageKeys.length)];
-    const newCorrectAnswers = footbal[randomImageUrl];
-
-    await message.sendMessage(match.chat, {
-      image: { url: randomImageUrl },
-      caption: `*لعبة الصور بدأت*\n\nاللاعب: @${match.sender.split('@')[0]}\n\nقم بتخمين الإجابة!`,
-      mentions: [match.sender]
-    });
-
-    ImageQuizGameData[id] = {
-      id: id,
-      player: match.sender,
-      question: randomImageUrl,
-      answers: newCorrectAnswers,
-      points: gameData.points,
-    };
+    gameData.participants[match.sender]++;
+    addPointAndStartNextRound(message, id);
   }
 });
+
+async function startImageQuiz(message, id) {
+  const footbalKeys = Object.keys(footbal);
+  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+  const correctAnswers = footbal[randomImageURL];
+
+  await message.sendMessage(id, {
+    image: { url: randomImageURL },
+    caption: `*بدأت لعبة الصور*\n\nبدأت اللعبة، يمكن للجميع الإجابة!`,
+  });
+
+  return {
+    isActive: true,
+    participants: {},
+    currentimage: randomImageURL,
+    answers: correctAnswers,
+  };
+}
+
+async function addPointAndStartNextRound(message, id) {
+  const gameData = ImageQuizGameData[id];
+
+  await message.sendMessage(id, {
+    text: `*إجابة صحيحة!* لقد تم إضافة نقطة لك.`,
+  });
+
+  const newGameData = await startImageQuiz(message, id);
+  ImageQuizGameData[id] = newGameData;
+}
