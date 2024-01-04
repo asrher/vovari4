@@ -69,7 +69,7 @@ cmd({ on: "text" }, async (Void, citel) => {
   }
 });
 
-function startGame(citel, id) {
+function startGame(Void, citel, id) {
   const images = {
   "https://cdn.galleries.smcloud.net/t/galleries/gf-FKw2-EcYt-DnsC_cristiano-ronaldo-664x442.jpg": ["الدون", "كريستيانو", "كريستيانو رونالدو"],
   "https://images6.alphacoders.com/596/596848.jpg": ["كانيكي"],
@@ -86,7 +86,7 @@ function startGame(citel, id) {
   imageGame[id].currentImage = randomImageUrl;
 
   // Send the image to the chat
-  citel.sendMessage(id, {
+  Void.sendMessage(id, {
     text: `تخمين الصورة!`,
     media: {
       url: randomImageUrl,
