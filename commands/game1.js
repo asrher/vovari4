@@ -1,9 +1,9 @@
-const { cmd, sck1, sleep } = require("../lib");
+const { cmd } = require("../lib");
 
 let wordGame = {};
 
 cmd({
-  pattern: "word",
+  pattern: "startgame",
   category: "games",
 }, async (Void, m) => {
   let id = m.chat.split("@")[0];
@@ -23,12 +23,12 @@ cmd({
       points: {},
       stopped: false
     };
-    return m.reply(`Word game has started! Send the word *${chosenWord}* to earn points.`);
+    return m.reply(`Word game has started! Send the word *${chosenWord}* to earn a point.`);
   }
 });
 
 cmd({
-  pattern: "stop",
+  pattern: "stopgame",
   category: "games",
 }, async (Void, m) => {
   let id = m.chat.split("@")[0];
@@ -58,12 +58,14 @@ cmd({ on: "text" }, async (Void, m) => {
       wordGame[id].participants[sender] = true;
       if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
       wordGame[id].points[sender]++;
-    }
-    let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
-    let randomIndex = Math.floor(Math.random() * words.length);
-    let chosenWord = words[randomIndex];
+      wordGame[id].stopped = false;
 
-    wordGame[id].chosenWord = chosenWord;
-    m.send(`Next word: *${chosenWord}*`);
+      let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+      let randomIndex = Math.floor(Math.random() * words.length);
+      let nextWord = words[randomIndex];
+      wordGame[id].chosenWord = nextWord;
+
+      return m.reply(`Congratulations, ${sender}! You got the word right and earned a point.\nNext word: *${nextWord}*`);
+    }
   }
 });
