@@ -51,6 +51,17 @@ cmd({ on: "text" }, async (Void, m) => {
   let word = m.text.toLowerCase();
 
   if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped) {
+    if (!wordGame[id].wordSent) {
+      let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
+      let randomIndex = Math.floor(Math.random() * words.length);
+      let chosenWord = words[randomIndex];
+
+      wordGame[id].word = chosenWord;
+      wordGame[id].wordSent = true;
+
+      m.reply(`A random word has been sent: *${chosenWord}*`);
+    }
+
     let sender = m.sender.split("@")[0];
 
     if (word === wordGame[id].word || word === wordGame[id].points[wordGame[id].word]) {
@@ -65,6 +76,7 @@ cmd({ on: "text" }, async (Void, m) => {
       let nextWord = words[randomIndex];
 
       wordGame[id].word = nextWord;
+      wordGame[id].wordSent = false;
 
       for (const participant in wordGame[id].participants) {
         if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
