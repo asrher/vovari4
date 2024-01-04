@@ -78,7 +78,9 @@ cmd({
 
   for (const id in ImageQuizGameData) {
     const gameData = ImageQuizGameData[id];
-    results += `اللاعب: ${gameData.player.split('@')[0]} - عدد النقاط: ${gameData.attempts}\n`;
+    const playerName = gameData.player ? gameData.player.split('@')[0] : 'لاعب غير محدد';
+    const points = gameData.attempts !== undefined ? gameData.attempts : 0;
+    results += `اللاعب: ${playerName} - عدد النقاط: ${points}\n`;
   }
 
   await message.sendMessage(match.chat, results);
