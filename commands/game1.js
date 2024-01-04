@@ -70,7 +70,10 @@ function getGameResults(id) {
 
   for (const participantId in wordGame[id].participants) {
     const points = wordGame[id].participants[participantId];
-    results += `${participantId} got ${points} points.\n`;
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
+
+    results += `${playerName} (${participantId}) got ${points} points.\n`;
   }
 
   return results;
