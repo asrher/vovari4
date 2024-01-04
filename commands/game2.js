@@ -60,7 +60,7 @@ cmd({
 });
 
 cmd({ on: "text" }, async (Void, citel) => {
-    let id = message.chat.split("@")[0];
+    let id = citel.chat.split("@")[0];
     const gameData = ImageQuizGameData[id];
   
     if (!gameData) return;
@@ -81,12 +81,12 @@ cmd({ on: "text" }, async (Void, citel) => {
   }
 });
 
-async function startImageQuiz(message, match) {
+async function startImageQuiz(citel, match) {
     const footbalKeys = Object.keys(footbal);
     const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
     const correctAnswers = footbal[randomImageURL];
   
-    await message.sendMessage(match.chat, {
+    await citel.sendMessage(match.chat, {
       image: { url: randomImageURL },
       caption: `*بدأت لعبة الصور*\n\nقم بتخمين الإجابة!`,
     });
