@@ -2,7 +2,7 @@ const { cmd, sck1 } = require("../lib/");
 let wordGame = {};
 
 cmd({
-  pattern: "word",
+  pattern: "كتابة",
   category: "games",
 }, async (Void, citel) => {
   let id = citel.chat.split("@")[0];
@@ -16,7 +16,7 @@ cmd({
   }
 
   if (wordGame[id].isActive) {
-    return await citel.reply('The game is already in progress!');
+    return await citel.reply('اللعبة بدأت بالفعل');
   }
 
   wordGame[id].isActive = true;
@@ -27,23 +27,23 @@ cmd({
 });
 
 cmd({
-  pattern: "stop",
+  pattern: "حذف_كتابة",
   category: "games",
 }, async (Void, citel) => {
   let id = citel.chat.split("@")[0];
 
   if (!wordGame[id].isActive) {
-    return await citel.reply('No game in progress to stop!');
+    return await citel.reply('مفيه لعبة');
   }
 
-  let results = 'Game stopped. Here are the results:\n';
+  let results = 'تم انهاء اللعبة هذه هي النتائج :\n';
 
   for (const participantId in wordGame[id].participants) {
     const points = wordGame[id].participants[participantId];
     const registeredUser = await sck1.findOne({ id: participantId });
-    const playerName = registeredUser ? registeredUser.name : "Unknown"; // Default name if user not found
+    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
 
-    results += `${playerName} (${participantId}) got ${points} points.\n`;
+    results += `${playerName}  برصيد ${points} إجابة\n`;
   }
 
   wordGame[id].isActive = false;
