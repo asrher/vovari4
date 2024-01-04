@@ -59,12 +59,13 @@ cmd({ on: "text" }, async (Void, m) => {
       wordGame[id].points[sender]++;
     }
 
+    wordGame[id].started = false; // Reset flag to allow next word to earn a point
+
     let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
     let randomIndex = Math.floor(Math.random() * words.length);
     let nextWord = words[randomIndex];
 
     wordGame[id].word = nextWord;
-    wordGame[id].started = false; // Reset flag to allow next word to earn a point
     return m.send(`Next word: *${nextWord}*`);
   }
 });
