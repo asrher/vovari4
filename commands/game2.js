@@ -8,7 +8,6 @@ const footbal = {
 };
 
 let ImageQuizGameData = {};
-let remainingImages = Object.keys(footbal);
 
 cmd({
   pattern: 'صورة',
@@ -36,26 +35,20 @@ cmd({
 
     if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
       addPointToParticipant(message, match, gameData, match.sender);
-      await startNextRound(message, match, gameData);
+      await sendNewImage(message, match, gameData);
     }
   }
 });
 
 async function startImageQuiz(message, match) {
-  if (remainingImages.length === 0) {
-    remainingImages = Object.keys(footbal);
-  }
-
-  const randomImageIndex = Math.floor(Math.random() * remainingImages.length);
-  const randomImageURL = remainingImages[randomImageIndex];
+  const footbalKeys = Object.keys(footbal);
+  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
   const correctAnswers = footbal[randomImageURL];
 
   await message.sendMessage(match.chat, {
     image: { url: randomImageURL },
     caption: `*بدأت لعبة الصور*`,
   });
-
-  remainingImages.splice(randomImageIndex, 1); // Remove the used image from remainingImages
 
   return {
     id: match.chat,
@@ -79,15 +72,17 @@ async function addPointToParticipant(message, match, gameData, participantId) {
   });
 }
 
-async function startNextRound(message, match, gameData) {
-  if (remainingImages.length === 0) {
-    await message.sendMessage(match.chat, {
-      text: `*لقد انتهت جميع الصور*\n\nتم انهاء اللعبة`,
-    });
-    delete ImageQuizGameData[match.chat];
-    return;
-  }
+async function sendNewImage(message, match, gameData) {
+  const footbalKeys = Object.keys(footbal).filter(url => url !== gameData.question);
+  const randomImageURL = footbalKeys[Math.floor(Math.random() * footbalKeys.length)];
+  const correctAnswers = footbal[randomImageURL];
 
-  const newGameData = await startImageQuiz(message, match);
-  ImageQuizGameData[match.chat] = newGameData;
+  await message.sendMessage(match.chat, {
+    image: { url: randomImageURL },
+    caption: `*هنا صورة جديدة!*`,
+  });
+
+  gameData.question = randomImageURL;
+  gameData.answers = correctAnswers;
+  gameData.preAns = '';
 }
