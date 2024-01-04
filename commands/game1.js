@@ -1,4 +1,4 @@
-const { cmd, sck1 } = require("../lib");
+const { cmd } = require("../lib");
 
 let wordGame = {};
 
@@ -36,12 +36,17 @@ cmd({
   let chatId = m.chat.split("@")[0];
 
   if (wordGame[chatId]) {
-    let pointsList = "Points:\n";
-    for (const participant in wordGame[chatId].participants) {
-      pointsList += `${participant}: ${wordGame[chatId].participants[participant]}\n`;
+    if (Object.keys(wordGame[chatId].participants).length > 0) {
+      let pointsList = "Points:\n";
+      for (const participant in wordGame[chatId].participants) {
+        pointsList += `${participant}: ${wordGame[chatId].participants[participant]}\n`;
+      }
+      delete wordGame[chatId];
+      return m.reply(pointsList);
+    } else {
+      delete wordGame[chatId];
+      return m.reply('No participants in the word game.');
     }
-    delete wordGame[chatId];
-    return m.reply(pointsList);
   } else {
     return m.reply('No active word game in this group.');
   }
