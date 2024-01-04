@@ -13,17 +13,17 @@ cmd({
   pattern: 'صورة',
   filename: __filename
 }, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
+  let id = message.chat.split("@")[0];
 
-  const gameData = await startImageQuiz(message, match);
-
-  ImageQuizGameData[id] = gameData;
+  if (!ImageQuizGameData[id]) {
+    ImageQuizGameData[id] = await startImageQuiz(message, match);
+  }
 });
 
 cmd({
   on: 'text'
 }, async (message, match, group) => {
-  const id = match.chat.split("@")[0];
+  let id = message.chat.split("@")[0];
   const gameData = ImageQuizGameData[id];
 
   if (!gameData) return;
@@ -57,17 +57,16 @@ async function startImageQuiz(message, match) {
 async function addPointAndStartNextRound(message, match, gameData) {
   if (!gameData.player) {
     gameData.player = match.sender;
-    gameData.attempts = 0;
+    gameData.attempts = 1;
+  } else {
+    gameData.attempts += 1;
   }
-
-  gameData.attempts += 1;
 
   await message.sendMessage(match.chat, {
     text: `*إجابة صحيحة!*\n\nاللاعب: ${gameData.player.split('@')[0]}`,
   });
 
-  const newGameData = await startImageQuiz(message, match);
-  ImageQuizGameData[match.chat.split("@")[0]] = newGameData;
+  ImageQuizGameData[match.chat.split("@")[0]] = await startImageQuiz(message, match);
 }
 
 cmd({
@@ -78,9 +77,7 @@ cmd({
 
   for (const id in ImageQuizGameData) {
     const gameData = ImageQuizGameData[id];
-    const playerName = gameData.player ? gameData.player.split('@')[0] : 'لاعب غير محدد';
-    const points = gameData.attempts !== undefined ? gameData.attempts : 0;
-    results += `اللاعب: ${playerName} - عدد النقاط: ${points}\n`;
+    results += `اللاعب: ${gameData.player.split('@')[0]} - عدد النقاط: ${gameData.attempts}\n`;
   }
 
   await message.sendMessage(match.chat, results);
