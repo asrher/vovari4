@@ -26,9 +26,9 @@ cmd({
 cmd({
   pattern: 'stop',
   filename: __filename
-}, async (message, match, group) => {
+}, async (message, citel, group) => {
     let id = citel.chat.split("@")[0];
-  const gameData = ImageQuizGameData[match.chat];
+  const gameData = ImageQuizGameData[citel.chat];
 
   if (!gameData) return;
 
