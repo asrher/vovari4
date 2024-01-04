@@ -33,9 +33,12 @@ cmd({
 
   let results = 'نتائج اللعبة :\n\n';
 
-  for (const participantId in gameData.participants) {
-    const points = gameData.participants[participantId];
-    results += `@${participantId.split('@')[0]}: ${points} نقاط\n`;
+  for (const participantId in wordGame[id].participants) {
+    const points = wordGame[id].participants[participantId];
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? registeredUser.name : "دون لقب"; // 
+
+    results += `${playerName}  برصيد ${points} إجابات\n`;
   }
 
   await message.sendMessage(match.chat, {
