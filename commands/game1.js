@@ -20,8 +20,11 @@ cmd({
       participants: {},
       word: chosenWord,
       points: {},
-      stopped: false
+      stopped: false,
+      wordSent: false
     };
+    
+    return m.reply(`Word game has started. Send the word: *${chosenWord}*`);
   }
 });
 
@@ -50,25 +53,12 @@ cmd({ on: "text" }, async (Void, m) => {
   let word = m.text.toLowerCase();
 
   if (wordGame[id] && wordGame[id].started && !wordGame[id].stopped) {
-    if (!wordGame[id].wordSent) {
-      let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
-      let randomIndex = Math.floor(Math.random() * words.length);
-      let chosenWord = words[randomIndex];
-
-      wordGame[id].word = chosenWord;
-      wordGame[id].wordSent = true;
-
-      m.reply(`A random word has been sent: *${chosenWord}*`);
-    }
-
     let sender = m.sender.split("@")[0];
 
-    if (word === wordGame[id].word || word === wordGame[id].points[wordGame[id].word]) {
-      if (!wordGame[id].participants[sender]) {
-        wordGame[id].participants[sender] = true;
-        if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
-        wordGame[id].points[sender]++;
-      }
+    if (word === wordGame[id].word && !wordGame[id].participants[sender]) {
+      wordGame[id].participants[sender] = true;
+      if (!wordGame[id].points[sender]) wordGame[id].points[sender] = 0;
+      wordGame[id].points[sender]++;
 
       let words = ['ناروتو', 'تسونادي', 'لوفي', 'زورو', 'ناتسو', 'روميو', 'انديفار', 'كورابيكا'];
       let randomIndex = Math.floor(Math.random() * words.length);
@@ -77,10 +67,7 @@ cmd({ on: "text" }, async (Void, m) => {
       wordGame[id].word = nextWord;
       wordGame[id].wordSent = false;
 
-      for (const participant in wordGame[id].participants) {
-        if (!wordGame[id].points[participant]) wordGame[id].points[participant] = 0;
-        wordGame[id].points[participant]++;
-      }
+      return m.send(`Correct word! You got a point. Next word: *${nextWord}*`);
     }
   }
 });
