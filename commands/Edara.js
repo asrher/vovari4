@@ -22,7 +22,7 @@ async function createDrakeMeme(textTop, textBottom) {
     ctx.textBaseline = 'top';
 
     // Draw top text
-    ctx.fillText(textTop, canvas.width / 2, 10);
+    ctx.fillText(textTop, canvas.width / 2, 50);
 
     // Draw bottom text
     ctx.fillText(textBottom, canvas.width / 2, canvas.height - 30);
