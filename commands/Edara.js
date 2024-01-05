@@ -27,8 +27,8 @@ async function Create_Url(Void, citel)
     let media = await Void.downloadAndSaveMediaMessage(citel.quoted);
     let anu = await TelegraPh(media);
     await  fs.unlink(media, (err) => {
-      if (err) { return console.error('لم يتم حذف الملف');  }
-      else return console.log('تم حذف الملف بنجاح');
+      if (err) { return console.error('The file was not deleted');  }
+      else return console.log('The file has been deleted successfully');
       });
     return util.format(anu)
 } 
@@ -41,14 +41,14 @@ cmd({
   filename: __filename,
 },
 async (Void, citel) => {
-    if (!citel.quoted) return await citel.reply(`رد على صورة`);
-    if(citel.quoted.mtype !='imageMessage') return await citel.reply("رد على صورة");
+    if (!citel.quoted) return await citel.reply(`reply to an image`);
+    if(citel.quoted.mtype !='imageMessage') return await citel.reply("reply to an image");
 
 
     try {
-      let Siraj_md = await Create_Url(Void, citel);
+      let imgg = await Create_Url(Void, citel);
 
-      const memeBuffer = await createMeme(Siraj_md);
+      const memeBuffer = await createMeme(imgg);
       return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
     } catch (error) {
       return await citel.send('Error processing the image');
