@@ -4,59 +4,51 @@ const { TelegraPh } = require('../lib/scraper');
 const util = require('util');
 const fs = require('fs-extra');
 
-async function createMeme(imageUrl) {
+
+async function createDrakeMeme(textTop, textBottom) {
   try {
-    let canvas = createCanvas(347, 426);
+    const canvas = createCanvas(600, 600);
     const ctx = canvas.getContext('2d');
 
-    const image1 = await loadImage(imageUrl);
-    const background = await loadImage('./Siraj/meme/burn.png');
+    // Load the background image (replace 'drake.jpg' with your image path)
+    const background = await loadImage('./Siraj/meme/drake.png');
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(image1, 19, 31, 113, 154);
-    ctx.drawImage(background, 0, 0, 347, 426);
+    // Text properties
+    ctx.font = '30px Impact';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
 
-    return canvas.toBuffer().toString('base64');
+    // Draw text on the canvas
+    ctx.fillText(textTop, canvas.width / 2, 50);
+    ctx.fillText(textBottom, canvas.width / 2, canvas.height - 20);
+
+    return canvas.toBuffer('image/jpeg'); // Return the buffer of the image
   } catch (error) {
     console.error(error); // Log the error for debugging
-    throw new Error('Invalid Image Type or Error processing the image');
-  }
-}
-
-async function Create_Url(Void, citel) {
-  try {
-    let media = await Void.downloadAndSaveMediaMessage(citel.quoted);
-    let anu = await TelegraPh(media);
-    await fs.unlink(media);
-
-    return util.format(anu);
-  } catch (error) {
-    console.error(error); // Log the error for debugging
-    throw new Error('Error fetching the image URL');
+    throw new Error('Error creating the meme');
   }
 }
 
 cmd({
-  pattern: 'mem',
-  desc: '',
-  use: '',
+  pattern: 'drake',
+  desc: 'Create a Drake meme',
+  use: '<textTop>;<textBottom>',
   category: 'maker',
   filename: __filename,
 },
-async (Void, citel) => {
-  if (!citel.quoted) return await citel.reply(`reply to an image`);
-  if (citel.quoted.mtype !== 'videoMessage') return await citel.reply("reply to a video");
+async (Void, citel, text) => {
+  const [textTop, textBottom] = text.split(';');
+  if (!textTop || !textBottom) return await citel.reply('Please provide both top and bottom texts separated by a semicolon.');
 
   try {
-    let videoUrl = await Create_Url(Void, citel);
-    const memeBuffer = Buffer.from(await createMeme(videoUrl), 'base64');
-    return await Void.sendMessage(citel.chat, { video: memeBuffer });
+    const memeBuffer = await createDrakeMeme(textTop, textBottom);
+    return await Void.sendMessage(citel.chat, { image: memeBuffer });
   } catch (error) {
     console.error(error); // Log the error for debugging
-    return await citel.send('Error processing the video');
+    return await citel.send('Error creating the Drake meme');
   }
 });
-
-
 
 
 //===================================================
