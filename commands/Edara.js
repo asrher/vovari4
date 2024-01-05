@@ -1,50 +1,66 @@
 const { cmd } = require('../lib');
-const fs = require('fs');
 const { createCanvas, loadImage } = require('canvas');
-const axios = require('axios');
-const Canvas = require('canvas');
-
-// Make createMeme function async by defining it as an async function
-const createMeme = async (image) => {
-  try {
-    const canvas = Canvas.createCanvas(347, 426);
-    const ctx = canvas.getContext(`2d`);
-    const image1 = await Canvas.loadImage(image);
-    const background = await Canvas.loadImage(`Siraj/meme/burn.png`);
-
-    ctx.drawImage(image1, 19, 31, 113, 154);
-    ctx.drawImage(background, 0, 0, 347, 426);
-
-    const buffer = canvas.toBuffer();
-    fs.writeFileSync(`./siraj/meme.png`, buffer);
-
-    return `./siraj/meme.png`;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Rest of your code remains the same
-
 
 cmd({
-  pattern: 'ميم',
-  desc: '',
+  pattern: "meme",
+  desc: "",
   use: '<text>',
-  category: 'maker',
+  category: "image",
   filename: __filename,
 },
 async (Void, citel, text) => {
-  if (!citel.quoted) return await citel.reply(`رد على صورة`);
-  if (citel.quoted.mtype != 'imageMessage') return await citel.reply("رد على صورة");
+  if (!text) return await citel.reply('Please provide text for the meme.');
 
   try {
-    const media = await Void.downloadAndSaveMediaMessage(citel.quoted);
-    const memePath = await createMeme(media);
-    await Void.sendMessage(citel.chat, { image: { url: `./${memePath}` } }, { quoted: citel });
-    fs.unlinkSync(media);
-    fs.unlinkSync(memePath);
+    const canvas = createCanvas(347, 426);
+    const ctx = canvas.getContext('2d');
+
+    // Load background image
+    const background = await loadImage('./Siraj/meme/burn.png');
+    ctx.drawImage(background, 0, 0, 347, 426);
+
+    // Set font properties for the text
+    ctx.font = '20px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+
+    // Split the text into multiple lines if needed
+    const lines = splitTextIntoLines(ctx, text, 300);
+
+    // Draw text on the canvas
+    const lineHeight = 25; // Adjust line height as needed
+    const textY = canvas.height / 2 - ((lines.length / 2) * lineHeight);
+
+    lines.forEach((line, index) => {
+      ctx.fillText(line, canvas.width / 2, textY + index * lineHeight);
+    });
+
+    // Send the image as a reply
+    const buffer = canvas.toBuffer('image/png');
+    await Void.sendMessage(citel.chat, { image: { data: buffer }, caption: "Meme created!" }, { quoted: citel });
   } catch (e) {
-    return await citel.send(`خطأ`);
+    console.error(e);
+    return await citel.send('Error creating meme.');
   }
 });
+
+// Function to split text into multiple lines to fit the canvas width
+function splitTextIntoLines(ctx, text, maxWidth) {
+  let words = text.split(' ');
+  let lines = [];
+  let line = '';
+
+  for (let i = 0; i < words.length; i++) {
+    let testLine = line + words[i] + ' ';
+    let metrics = ctx.measureText(testLine);
+    let testWidth = metrics.width;
+    if (testWidth > maxWidth && i > 0) {
+      lines.push(line);
+      line = words[i] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+  return lines;
+}
