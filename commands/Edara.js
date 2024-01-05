@@ -4,26 +4,28 @@ const { createCanvas, loadImage } = require('canvas');
 const axios = require('axios');
 const Canvas = require('canvas');
 
+// Make createMeme function async by defining it as an async function
 const createMeme = async (image) => {
-  return new Promise(async (resolve, reject => {
-    try {
-      const canvas = Canvas.createCanvas(347, 426);
-      const ctx = canvas.getContext(`2d`);
-      const image1 = await Canvas.loadImage(image);
-      const background = await Canvas.loadImage(`Siraj/meme/burn.png`);
+  try {
+    const canvas = Canvas.createCanvas(347, 426);
+    const ctx = canvas.getContext(`2d`);
+    const image1 = await Canvas.loadImage(image);
+    const background = await Canvas.loadImage(`Siraj/meme/burn.png`);
 
-      ctx.drawImage(image1, 19, 31, 113, 154);
-      ctx.drawImage(background, 0, 0, 347, 426);
+    ctx.drawImage(image1, 19, 31, 113, 154);
+    ctx.drawImage(background, 0, 0, 347, 426);
 
-      const buffer = canvas.toBuffer();
-      fs.writeFileSync(`./siraj/meme.png`, buffer);
+    const buffer = canvas.toBuffer();
+    fs.writeFileSync(`./siraj/meme.png`, buffer);
 
-      resolve(`./siraj/meme.png`);
-    } catch (error) {
-      reject(error);
-    }
-  });
+    return `./siraj/meme.png`;
+  } catch (error) {
+    throw error;
+  }
 };
+
+// Rest of your code remains the same
+
 
 cmd({
   pattern: 'ميم',
