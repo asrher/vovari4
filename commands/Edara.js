@@ -24,20 +24,22 @@ async (Void, citel, text) => {
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
 
-    // Split the text into multiple lines if needed
+    // Split the text into multiple lines to fit canvas width
     const lines = splitTextIntoLines(ctx, text, 300);
 
     // Draw text on the canvas
-    const lineHeight = 25; // Adjust line height as needed
+    const lineHeight = 25;
     const textY = canvas.height / 2 - ((lines.length / 2) * lineHeight);
 
     lines.forEach((line, index) => {
       ctx.fillText(line, canvas.width / 2, textY + index * lineHeight);
     });
 
-    // Send the image as a reply
+    // Convert canvas to an image buffer
     const buffer = canvas.toBuffer('image/png');
-    await Void.sendMessage(citel.chat, { image: { data: buffer }, caption: "Meme created!" }, { quoted: citel });
+
+    // Send the image as a reply
+    await Void.sendMessage(citel.chat, { image: { data: buffer, mimetype: 'image/png' }, caption: "Meme created!" }, { quoted: citel });
   } catch (e) {
     console.error(e);
     return await citel.send('Error creating meme.');
