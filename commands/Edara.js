@@ -1,5 +1,5 @@
 const { cmd } = require('../lib');
- const { Canvas, loadImage } = require('canvas');
+const { Canvas, loadImage } = require('canvas');
 
 async function createMeme(imageUrl) {
   try {
@@ -28,12 +28,14 @@ cmd({
 async (Void, citel) => {
     if (!citel.quoted) return await citel.reply(`رد على صورة`);
     if(citel.quoted.mtype !='imageMessage') return await citel.reply("رد على صورة");
-  }
 
-  try {
-    const memeBuffer = await createMeme(imageUrl);
-    return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
-  } catch (error) {
-    return await citel.send('Error processing the image');
+    const imageUrl = citel.quoted.imageMessage.url;
+
+    try {
+      const memeBuffer = await createMeme(imageUrl);
+      return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
+    } catch (error) {
+      return await citel.send('Error processing the image');
+    }
   }
-});
+);
