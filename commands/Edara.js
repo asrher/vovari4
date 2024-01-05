@@ -18,8 +18,6 @@ async function createMeme(imageUrl) {
   }
 }
 
-// Example of using the createMeme function when a user replies with an image
-// Assuming citel.quoted contains the image
 cmd({
   pattern: 'meme',
   desc: '',
@@ -28,12 +26,10 @@ cmd({
   filename: __filename,
 },
 async (Void, citel) => {
-  if (!citel.quoted) return await citel.reply('Please reply to an image');
-
-  if (citel.quoted.mtype !== 'imageMessage') return await citel.reply('Reply to an image');
+  if (!citel.quoted || !citel.quoted.image) return await citel.reply('Please reply to an image');
 
   try {
-    const imageUrl = citel.quoted.url;
+    const imageUrl = citel.quoted.image.url;
     const memeBuffer = await createMeme(imageUrl);
     return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
   } catch (error) {
