@@ -1,6 +1,8 @@
 const { cmd } = require('../lib');
  const { Canvas, loadImage } = require('canvas');
 
+   const { cmd, Canvas, loadImage } = require('../lib');
+
 async function createMeme(imageUrl) {
   try {
     const canvas = Canvas.createCanvas(347, 426);
@@ -26,10 +28,18 @@ cmd({
   filename: __filename,
 },
 async (Void, citel) => {
-  if (!citel.quoted || !citel.quoted.image) return await citel.reply('Please reply to an image');
+  if (!citel.quoted) return await citel.reply('Please reply to a message');
+
+  let imageUrl;
+  if (citel.quoted.image && citel.quoted.image.url) {
+    imageUrl = citel.quoted.image.url;
+  } else if (citel.quoted.message && citel.quoted.message.image && citel.quoted.message.image.url) {
+    imageUrl = citel.quoted.message.image.url;
+  } else {
+    return await citel.reply('Please reply to an image');
+  }
 
   try {
-    const imageUrl = citel.quoted.image.url;
     const memeBuffer = await createMeme(imageUrl);
     return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
   } catch (error) {
