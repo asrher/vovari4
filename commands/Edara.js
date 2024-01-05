@@ -1,12 +1,12 @@
 const { cmd } = require('../lib');
-const { Canvas, loadImage } = require('canvas');
+const { Canvas,createCanvas, loadImage } = require('canvas');
 const { TelegraPh } = require('../lib/scraper');
 const util = require('util');
 const fs = require('fs-extra');
 
 async function createMeme(imageUrl) {
   try {
-    const canvas = Canvas.createCanvas(347, 426);
+let canvas = createCanvas(347,426)
     const ctx = canvas.getContext('2d');
 
     const image1 = await loadImage(imageUrl);
