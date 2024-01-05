@@ -21,7 +21,7 @@ async (Void, citel, text) => {
     const canvas = new Canvas(670, 435);
     const ctx = canvas.getContext('2d');
 
-    const img = await Canvas.loadImage('./assets/drake.png');
+    const img = await loadImage('./Siraj/meme/drake.png');
     ctx.drawImage(img, 0, 0, 670, 435);
 
     ctx.font = '30px Noto';
