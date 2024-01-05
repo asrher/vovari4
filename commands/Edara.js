@@ -5,6 +5,7 @@ const util = require('util');
 const fs = require('fs-extra');
 
 
+
 async function createDrakeMeme(textTop, textBottom) {
   try {
     const canvas = createCanvas(600, 600);
@@ -18,10 +19,13 @@ async function createDrakeMeme(textTop, textBottom) {
     ctx.font = '30px Impact';
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
 
-    // Draw text on the canvas
-    ctx.fillText(textTop, canvas.width / 2, 50);
-    ctx.fillText(textBottom, canvas.width / 2, canvas.height - 20);
+    // Draw top text
+    ctx.fillText(textTop, canvas.width / 2, 10);
+
+    // Draw bottom text
+    ctx.fillText(textBottom, canvas.width / 2, canvas.height - 30);
 
     return canvas.toBuffer('image/jpeg'); // Return the buffer of the image
   } catch (error) {
