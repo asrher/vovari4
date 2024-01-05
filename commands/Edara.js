@@ -1,6 +1,6 @@
 const { cmd } = require('../lib');
 const { Canvas, loadImage } = require('canvas');
-const {TelegraPh} = require('../lib/scraper')
+const { TelegraPh } = require('../lib/scraper');
 const util = require('util');
 const fs = require('fs-extra');
 
@@ -17,21 +17,23 @@ async function createMeme(imageUrl) {
 
     return canvas.toBuffer();
   } catch (error) {
+    console.error(error); // Log the error for debugging
     throw new Error('Invalid Image Type or Error processing the image');
   }
 }
 
-
-async function Create_Url(Void, citel)
-{
+async function Create_Url(Void, citel) {
+  try {
     let media = await Void.downloadAndSaveMediaMessage(citel.quoted);
     let anu = await TelegraPh(media);
-    await  fs.unlink(media, (err) => {
-      if (err) { return console.error('The file was not deleted');  }
-      else return console.log('The file has been deleted successfully');
-      });
-    return util.format(anu)
-} 
+    await fs.unlink(media);
+
+    return util.format(anu);
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    throw new Error('Error fetching the image URL');
+  }
+}
 
 cmd({
   pattern: 'meme',
@@ -41,17 +43,15 @@ cmd({
   filename: __filename,
 },
 async (Void, citel) => {
-    if (!citel.quoted) return await citel.reply(`reply to an image`);
-    if(citel.quoted.mtype !='imageMessage') return await citel.reply("reply to an image");
+  if (!citel.quoted) return await citel.reply(`reply to an image`);
+  if (citel.quoted.mtype !== 'imageMessage') return await citel.reply("reply to an image");
 
-
-    try {
-      let imgg = await Create_Url(Void, citel);
-
-      const memeBuffer = await createMeme(imgg);
-      return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
-    } catch (error) {
-      return await citel.send('Error processing the image');
-    }
+  try {
+    let imgg = await Create_Url(Void, citel);
+    const memeBuffer = await createMeme(imgg);
+    return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return await citel.send('Error processing the image');
   }
-);
+});
