@@ -6,7 +6,7 @@ const fs = require('fs-extra');
 
 async function createMeme(imageUrl) {
   try {
-let canvas = createCanvas(347,426)
+    let canvas = createCanvas(347,426)
     const ctx = canvas.getContext('2d');
 
     const image1 = await loadImage(imageUrl);
@@ -15,7 +15,7 @@ let canvas = createCanvas(347,426)
     ctx.drawImage(image1, 19, 31, 113, 154);
     ctx.drawImage(background, 0, 0, 347, 426);
 
-    return canvas.toBuffer();
+    return canvas.toBuffer().toString('base64');
   } catch (error) {
     console.error(error); // Log the error for debugging
     throw new Error('Invalid Image Type or Error processing the image');
@@ -48,8 +48,8 @@ async (Void, citel) => {
 
   try {
     let imgg = await Create_Url(Void, citel);
-    const memeBuffer = await createMeme(imgg);
-    return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
+    const memeBuffer = Buffer.from(await createMeme(imgg), 'base64');
+return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
   } catch (error) {
     console.error(error); // Log the error for debugging
     return await citel.send('Error processing the image');
