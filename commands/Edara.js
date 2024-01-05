@@ -1,5 +1,8 @@
 const { cmd } = require('../lib');
 const { Canvas, loadImage } = require('canvas');
+const {TelegraPh} = require('../lib/scraper')
+const util = require('util');
+const fs = require('fs-extra');
 
 async function createMeme(imageUrl) {
   try {
@@ -18,6 +21,18 @@ async function createMeme(imageUrl) {
   }
 }
 
+
+async function Create_Url(Void, citel)
+{
+    let media = await Void.downloadAndSaveMediaMessage(citel.quoted);
+    let anu = await TelegraPh(media);
+    await  fs.unlink(media, (err) => {
+      if (err) { return console.error('لم يتم حذف الملف');  }
+      else return console.log('تم حذف الملف بنجاح');
+      });
+    return util.format(anu)
+} 
+
 cmd({
   pattern: 'meme',
   desc: '',
@@ -29,10 +44,11 @@ async (Void, citel) => {
     if (!citel.quoted) return await citel.reply(`رد على صورة`);
     if(citel.quoted.mtype !='imageMessage') return await citel.reply("رد على صورة");
 
-    const imageUrl = citel.quoted.imageMessage.url;
 
     try {
-      const memeBuffer = await createMeme(imageUrl);
+      let Siraj_md = await Create_Url(Void, citel);
+
+      const memeBuffer = await createMeme(Siraj_md);
       return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
     } catch (error) {
       return await citel.send('Error processing the image');
