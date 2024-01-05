@@ -1,8 +1,6 @@
 const { cmd } = require('../lib');
  const { Canvas, loadImage } = require('canvas');
 
-   const { cmd, Canvas, loadImage } = require('../lib');
-
 async function createMeme(imageUrl) {
   try {
     const canvas = Canvas.createCanvas(347, 426);
