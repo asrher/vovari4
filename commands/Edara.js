@@ -6,48 +6,31 @@ const fs = require('fs-extra');
 
 
 
-async function createDrakeMeme(textTop, textBottom) {
-  try {
-    const canvas = createCanvas(600, 600);
-    const ctx = canvas.getContext('2d');
-
-    // Load the background image (replace 'drake.jpg' with your image path)
-    const background = await loadImage('./Siraj/meme/drake.png');
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-    // Text properties
-    ctx.font = '30px Impact';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-
-    // Draw top text
-    ctx.fillText(textTop, canvas.width / 2, 50);
-
-    // Draw bottom text
-    ctx.fillText(textBottom, canvas.width / 2, canvas.height - 30);
-
-    return canvas.toBuffer('image/jpeg'); // Return the buffer of the image
-  } catch (error) {
-    console.error(error); // Log the error for debugging
-    throw new Error('Error creating the meme');
-  }
-}
-
 cmd({
-  pattern: 'drake',
+  pattern: 'dra',
   desc: 'Create a Drake meme',
-  use: '<textTop>;<textBottom>',
+  use: '<text1>;<text2>',
   category: 'maker',
   filename: __filename,
 },
 async (Void, citel, text) => {
-  const [textTop, textBottom] = text.split(';');
-  if (!textTop || !textBottom) return await citel.reply('Please provide both top and bottom texts separated by a semicolon.');
+  const [text1, text2] = text.split(';');
+  if (!text1 || !text2) return await citel.reply('Please provide both text1 and text2 separated by a semicolon.');
 
   try {
-    const memeBuffer = await createDrakeMeme(textTop, textBottom);
-    return await Void.sendMessage(citel.chat, { image: memeBuffer });
+    const canvas = new Canvas(670, 435);
+    const ctx = canvas.getContext('2d');
+
+    const img = await Canvas.loadImage('./assets/drake.png');
+    ctx.drawImage(img, 0, 0, 670, 435);
+
+    ctx.font = '30px Noto';
+    ctx.fillStyle = '#000000';
+    ctx.fillText(text1, 252, 36);
+    ctx.fillText(text2, 252, 258);
+
+    const buffer = canvas.toBuffer();
+    return await Void.sendMessage(citel.chat, { image: { buffer } });
   } catch (error) {
     console.error(error); // Log the error for debugging
     return await citel.send('Error creating the Drake meme');
