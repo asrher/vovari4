@@ -26,15 +26,8 @@ cmd({
   filename: __filename,
 },
 async (Void, citel) => {
-  if (!citel.quoted.message) return await citel.reply('Please reply to a message');
-
-  let imageUrl;
-  if (citel.quoted.image && citel.quoted.image.url) {
-    imageUrl = citel.quoted.image.url;
-  } else if (citel.quoted.message.image && citel.quoted.message.image.url) {
-    imageUrl = citel.quoted.message.image.url;
-  } else {
-    return await citel.reply('Please reply to an image');
+    if (!citel.quoted) return await citel.reply(`رد على صورة`);
+    if(citel.quoted.mtype !='imageMessage') return await citel.reply("رد على صورة");
   }
 
   try {
