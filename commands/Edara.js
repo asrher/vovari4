@@ -49,7 +49,7 @@ async (Void, citel) => {
   try {
     let imgg = await Create_Url(Void, citel);
     const memeBuffer = Buffer.from(await createMeme(imgg), 'base64');
-return await Void.sendMessage(citel.chat, { image: { buffer: memeBuffer } });
+return await Void.sendMessage(citel.chat, { image : memeBuffer });
   } catch (error) {
     console.error(error); // Log the error for debugging
     return await citel.send('Error processing the image');
