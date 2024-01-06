@@ -47,14 +47,18 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim();
+    const userAnswer = match.text.trim().toLowerCase();
 
-    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
+    // Check if any correct answer is included in the user's input
+    const isAnswerIncluded = correctAnswers.some(ans => userAnswer.includes(ans.toLowerCase()));
+
+    if (isAnswerIncluded) {
       addPointToParticipant(message, match, gameData, match.sender);
       await sendNewImage(message, match, gameData);
     }
   }
 });
+
 
 cmd({
   pattern: 'stop',
