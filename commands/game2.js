@@ -1,3 +1,5 @@
+i have this cmd :
+
 const { cmd, sck1 } = require("../lib/");
 const footbal = {
   "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
@@ -47,25 +49,14 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim().toLowerCase();
+    const userAnswer =  new RegExp(`match.text.trim().toLowerCase()`, 'igu');
 
-    // Check if any correct answer matches the entire word in the user's input
-    const isAnswerIncluded = correctAnswers.some(ans => {
-      const regex = new RegExp(`\\b${ans.toLowerCase()}\\b`);
-      return regex.test(userAnswer);
-    });
+    // Check if any correct answer is included in the user's input
+    const isAnswerIncluded = correctAnswers.some(ans => userAnswer.includes(ans.toLowerCase()));
 
     if (isAnswerIncluded) {
-      // Split the user's input into words and check for exact matches
-      const userWords = userAnswer.split(/\s+/);
-
-      for (const word of userWords) {
-        if (correctAnswers.includes(word)) {
-          addPointToParticipant(message, match, gameData, match.sender);
-          await sendNewImage(message, match, gameData);
-          return;
-        }
-      }
+      addPointToParticipant(message, match, gameData, match.sender);
+      await sendNewImage(message, match, gameData);
     }
   }
 });
@@ -149,6 +140,8 @@ async function sendNewImage(message, match, gameData) {
   gameData.answers = correctAnswers;
   gameData.preAns = '';
 }
+
+he work but add The word must be alone and not attached to it in a sentence
 
 
 
