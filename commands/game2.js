@@ -1,6 +1,5 @@
-
 const { cmd, sck1 } = require("../lib/");
-const footbal = {
+const footbal = const footbal = {
   "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
   "https://i.ibb.co/R66nbYV/IMG-20230706-WA0526.jpg": ["يور"],
   "https://i.ibb.co/wwDQvdQ/IMG-20230707-WA0138.jpg": ["هيت"],
@@ -48,20 +47,14 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer =  new RegExp(`match.text.trim().toLowerCase()`, 'igu');
+    const userAnswer = match.text.trim();
 
-    // Check if any correct answer is included in the user's input
-    const isAnswerIncluded = correctAnswers.some(ans => userAnswer.includes(ans.toLowerCase()));
-
-    if (isAnswerIncluded) {
+    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
       addPointToParticipant(message, match, gameData, match.sender);
       await sendNewImage(message, match, gameData);
     }
   }
 });
-
-
-
 
 cmd({
   pattern: 'stop',
@@ -139,7 +132,3 @@ async function sendNewImage(message, match, gameData) {
   gameData.answers = correctAnswers;
   gameData.preAns = '';
 }
-
-
-
-
