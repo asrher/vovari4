@@ -1,10 +1,23 @@
 const { cmd, sck1 } = require("../lib/");
 const footbal = {
-  "https://cdn.galleries.smcloud.net/t/galleries/gf-FKw2-EcYt-DnsC_cristiano-ronaldo-664x442.jpg": ["الدون", "كريستيانو", "كريستيانو رونالدو"],
-  "https://images6.alphacoders.com/596/596848.jpg": ["كانيكي"],
-  "https://images7.alphacoders.com/303/303042.png": ["bb", "vv"],
-  "https://images7.alphacoders.com/611/611138.png": ["b", "v"],
-  "https://images4.alphacoders.com/474/47438.png": ["bbb", "vvv"],
+  "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
+  "https://i.ibb.co/R66nbYV/IMG-20230706-WA0526.jpg": ["يور"],
+  "https://i.ibb.co/wwDQvdQ/IMG-20230707-WA0138.jpg": ["هيت"],
+  "https://i.ibb.co/nQTZTQG/IMG-20230707-WA0466.jpg": ["بروك"],
+  "https://i.ibb.co/CWZhLxs/IMG-20230707-WA0467.jpg": ["ياماتو"],
+  "https://i.ibb.co/rpcBFXZ/IMG-20230707-WA0468.jpg": ["نيوغيت", "ادوارد"],
+  "https://i.ibb.co/SvYkhHP/IMG-20230707-WA0469.jpg": ["سابو"],
+  "https://i.ibb.co/X3QqHCN/IMG-20230707-WA0476.jpg": ["زينيتسو"],
+  "https://i.ibb.co/xqx9gBJ/IMG-20230707-WA0478.jpg": ["تانجيرو"],
+  "https://i.ibb.co/Kz6VKH9/IMG-20230707-WA0480.jpg": ["ايتشيغو"],
+  "https://i.ibb.co/5Gxp7XY/IMG-20230707-WA0481.jpg": ["نيزوكو"],
+  "https://i.ibb.co/VWyf3Qk/IMG-20230707-WA0483.jpg": ["ميسا"],
+  "https://i.ibb.co/zJfKhrp/IMG-20230707-WA0485.jpg": ["يوميكو"],
+  "https://i.ibb.co/kQmCnDB/IMG-20230707-WA0495.jpg": ["اكازا"],
+  "https://i.ibb.co/b354773/IMG-20230707-WA0496.jpg": ["تشوبر"],
+  "https://i.ibb.co/CWNrmBK/IMG-20230707-WA0498.jpg": ["غارب"],
+  "https://i.ibb.co/HDGttCs/IMG-20230707-WA0522.jpg": ["شانكس"],
+  "https://i.ibb.co/YLcqgLJ/IMG-20230707-WA0563.jpg": ["غوجو"],
 };
 
 let ImageQuizGameData = {};
