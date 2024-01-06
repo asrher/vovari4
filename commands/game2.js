@@ -49,8 +49,11 @@ cmd({
     const correctAnswers = footbal[gameData.question];
     const userAnswer = match.text.trim().toLowerCase();
 
-    // Check if any correct answer is included in the user's input
-    const isAnswerIncluded = correctAnswers.some(ans => userAnswer.includes(ans.toLowerCase()));
+    // Check if any correct answer matches the entire word in the user's input
+    const isAnswerIncluded = correctAnswers.some(ans => {
+      const regex = new RegExp(`\\b${ans.toLowerCase()}\\b`);
+      return regex.test(userAnswer);
+    });
 
     if (isAnswerIncluded) {
       addPointToParticipant(message, match, gameData, match.sender);
