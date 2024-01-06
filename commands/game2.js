@@ -47,9 +47,9 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim().toLowerCase();
+    const userAnswer = match.text.trim();
 
-    if (correctAnswers.some(ans => ans.toLowerCase().includes(userAnswer))) {
+    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
       addPointToParticipant(message, match, gameData, match.sender);
       await sendNewImage(message, match, gameData);
     }
@@ -132,3 +132,6 @@ async function sendNewImage(message, match, gameData) {
   gameData.answers = correctAnswers;
   gameData.preAns = '';
 }
+
+
+
