@@ -1,5 +1,5 @@
 const { cmd, sck1 } = require("../lib/");
-const footbal = const footbal = {
+ const footbal = {
   "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
   "https://i.ibb.co/R66nbYV/IMG-20230706-WA0526.jpg": ["يور"],
   "https://i.ibb.co/wwDQvdQ/IMG-20230707-WA0138.jpg": ["هيت"],
