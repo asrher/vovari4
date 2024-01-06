@@ -47,9 +47,9 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim();
+    const userAnswer = match.text.trim().toLowerCase();
 
-    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
+    if (correctAnswers.some(ans => ans.toLowerCase().includes(userAnswer))) {
       addPointToParticipant(message, match, gameData, match.sender);
       await sendNewImage(message, match, gameData);
     }
