@@ -53,6 +53,7 @@
            "pdfkit": "^0.14.0",   
            "stream": "^0.0.2",   
            "canvas": "^2.11.2",   
+           "font-list": "^1.5.1",   
            "wa-sticker-formatter": "^4.3.2"
           },
       "directories": {
