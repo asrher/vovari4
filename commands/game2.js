@@ -1,4 +1,3 @@
-i have this cmd :
 
 const { cmd, sck1 } = require("../lib/");
 const footbal = {
@@ -141,7 +140,6 @@ async function sendNewImage(message, match, gameData) {
   gameData.preAns = '';
 }
 
-he work but add The word must be alone and not attached to it in a sentence
 
 
 
