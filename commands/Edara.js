@@ -77,7 +77,7 @@ async function createMeme(imageUrl) {
     const ctx = canvas.getContext('2d');
 
     const image1 = await loadImage(imageUrl);
-    const background = await loadImage('./Siraj/meme/wanted.png');
+    const background = await loadImage('./Siraj/meme/clown.png');
 
     ctx.drawImage(image1, 19, 31, 113, 154);
     ctx.drawImage(background, 0, 0, 347, 426);
