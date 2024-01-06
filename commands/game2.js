@@ -56,8 +56,16 @@ cmd({
     });
 
     if (isAnswerIncluded) {
-      addPointToParticipant(message, match, gameData, match.sender);
-      await sendNewImage(message, match, gameData);
+      // Split the user's input into words and check for exact matches
+      const userWords = userAnswer.split(/\s+/);
+
+      for (const word of userWords) {
+        if (correctAnswers.includes(word)) {
+          addPointToParticipant(message, match, gameData, match.sender);
+          await sendNewImage(message, match, gameData);
+          return;
+        }
+      }
     }
   }
 });
