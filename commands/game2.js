@@ -57,6 +57,45 @@ cmd({
   }
 });
 
+
+
+
+cmd({
+  pattern: 'stopp',
+  filename: __filename
+}, async (message, citel, group) => {
+  const id = citel.chat.split("@")[0];
+  const gameData = ImageQuizGameData[citel.chat];
+
+
+  let results = 'نتائج اللعبة :\n\n';
+
+  for (const participantId in gameData.participants) {
+    const points = gameData.participants[participantId];
+    const registeredUser = await sck1.findOne({ id: participantId });
+    const playerName = registeredUser ? registeredUser.name : "دون لقب";
+
+    results += `${playerName}  برصيد ${points} إجابات\n`;
+
+    // Update MongoDB with points
+    await card.updateOne({ id: participantId }, { count: points }, { upsert: true });
+  }
+
+  await message.sendMessage(citel.chat, {
+    text: results,
+  });
+
+  // Delete ImageQuizGameData and previous game data in MongoDB
+  delete ImageQuizGameData[citel.chat];
+  await card.deleteMany(); // Delete all records in the card collection
+});
+
+
+
+
+
+
+
 cmd({
   pattern: 'stop',
   filename: __filename
