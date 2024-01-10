@@ -1,4 +1,4 @@
-const { cmd, sck1 } = require("../lib/");
+const { cmd, sck1, card } = require("../lib/");
  const footbal = {
   "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
   "https://i.ibb.co/R66nbYV/IMG-20230706-WA0526.jpg": ["يور"],
@@ -26,6 +26,7 @@ cmd({
   pattern: 'صورة',
   filename: __filename
 }, async (message, match, group) => {
+   await card.deleteMany();
   if (ImageQuizGameData[match.chat]) {
     return await message.sendMessage(match.chat, {
       text: `*هناك لعبة جارية بالفعل!*`,
@@ -77,13 +78,18 @@ cmd({
     const playerName = registeredUser ? registeredUser.name : "دون لقب";
 
     results += `${playerName}  برصيد ${points} إجابات\n`;
+
+    // Update MongoDB with points
+    await card.updateOne({ id: participantId }, { count: points }, { upsert: true });
   }
 
   await message.sendMessage(citel.chat, {
     text: results,
   });
 
+  // Delete ImageQuizGameData and previous game data in MongoDB
   delete ImageQuizGameData[citel.chat];
+  await card.deleteMany(); // Delete all records in the card collection
 });
 
 async function startImageQuiz(message, match) {
@@ -116,7 +122,12 @@ async function addPointToParticipant(message, match, gameData, participantId) {
     text: `*إجابة صحيحة!*\n\n@${participantId.split('@')[0]} حصلت على نقطة جديدة`,
     mentions: [participantId],
   });
+
+  // Update MongoDB with points for the participant
+  const updatedCount = gameData.participants[participantId];
+  await card.updateOne({ id: participantId }, { count: updatedCount }, { upsert: true });
 }
+
 
 async function sendNewImage(message, match, gameData) {
   const footbalKeys = Object.keys(footbal).filter(url => url !== gameData.question);
