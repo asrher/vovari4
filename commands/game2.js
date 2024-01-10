@@ -132,3 +132,25 @@ async function sendNewImage(message, match, gameData) {
   gameData.answers = correctAnswers;
   gameData.preAns = '';
 }
+
+
+cmd({
+  pattern: 'who',
+  filename: __filename
+}, async (message, match, group) => {
+  const gameData = ImageQuizGameData[match.chat];
+
+  if (!gameData) {
+    return await message.sendMessage(match.chat, {
+      text: `*لا يوجد لعبة جارية حاليا!*`,
+    });
+  }
+
+  const correctAnswers = footbal[gameData.question];
+  const answersString = `*إجابة الصورة الحالية*: ${correctAnswers.join(', ')}`;
+
+  await message.sendMessage(match.chat, {
+    text: answersString,
+  });
+});
+
