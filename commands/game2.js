@@ -1,4 +1,16 @@
-const { cmd, sck1, card } = require("../lib/");
+const { cmd, sck1 } = require("../lib/");
+
+const mongoose = require('mongoose');
+
+// MongoDB schema and model
+const CardSchema = new mongoose.Schema({
+  id: { type: String, default: "secfork" },
+  count: { type: String, default: "0" },
+});
+
+const card = mongoose.model("card", CardSchema);
+
+// Image quiz data
  const footbal = {
   "https://i.ibb.co/56SsqH9/IMG-20230705-WA0184.jpg": ["غوجو"],
   "https://i.ibb.co/R66nbYV/IMG-20230706-WA0526.jpg": ["يور"],
@@ -20,18 +32,27 @@ const { cmd, sck1, card } = require("../lib/");
   "https://i.ibb.co/YLcqgLJ/IMG-20230707-WA0563.jpg": ["غوجو"],
 };
 
+
 let ImageQuizGameData = {};
+
+// MongoDB connection
+mongoose.connect('mongodb://localhost:27017/your_database', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Error connecting to MongoDB:', err));
 
 cmd({
   pattern: 'صورة',
   filename: __filename
 }, async (message, match, group) => {
-   await card.deleteMany();
   if (ImageQuizGameData[match.chat]) {
     return await message.sendMessage(match.chat, {
       text: `*هناك لعبة جارية بالفعل!*`,
     });
   }
+
+  // Reset participant points in MongoDB when starting a new game
+  const gameId = match.chat.split('@')[0];
+  await card.findOneAndUpdate({ id: gameId }, { id: gameId, count: '0' }, { upsert: true });
 
   let gameData = await startImageQuiz(message, match);
   ImageQuizGameData[match.chat] = gameData;
@@ -48,55 +69,22 @@ cmd({
     gameData.preAns = match.text;
 
     const correctAnswers = footbal[gameData.question];
-    const userAnswer = match.text.trim();
+    const userAnswer = match.text.trim().toLowerCase();
 
-    if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
-      addPointToParticipant(message, match, gameData, match.sender);
+    const isAnswerIncluded = correctAnswers.some(ans => userAnswer.includes(ans.toLowerCase()));
+
+    if (isAnswerIncluded) {
+      await addPointToParticipant(message, match, gameData, match.sender);
       await sendNewImage(message, match, gameData);
     }
   }
 });
 
-
-
-
-cmd({
-  pattern: 'stopp',
-  filename: __filename
-}, async (message, citel, group) => {
-  const id = citel.chat.split("@")[0];
-  const gameData = ImageQuizGameData[citel.chat];
-
-
-  let results = 'نتائج اللعبة :\n\n';
-
-  for (const participantId in gameData.participants) {
-    const points = gameData.participants[participantId];
-    const registeredUser = await sck1.findOne({ id: participantId });
-    const playerName = registeredUser ? registeredUser.name : "دون لقب";
-
-    results += `${playerName}  برصيد ${points} إجابات\n`;
-
-    // Update MongoDB with points
-    await card.updateOne({ id: participantId }, { count: points }, { upsert: true });
-  }
-
-  await message.sendMessage(citel.chat, {
-    text: results,
-  });
-});
-
-
-
-
-
-
-
 cmd({
   pattern: 'stop',
   filename: __filename
 }, async (message, citel, group) => {
-  const id = citel.chat.split("@")[0];
+  const gameId = citel.chat.split('@')[0];
   const gameData = ImageQuizGameData[citel.chat];
 
   if (!gameData || !gameData.participants) {
@@ -108,23 +96,19 @@ cmd({
   let results = 'نتائج اللعبة :\n\n';
 
   for (const participantId in gameData.participants) {
-    const points = gameData.participants[participantId];
+    const playerPoints = await card.findOne({ id: participantId });
+    const points = playerPoints ? playerPoints.count : "0";
     const registeredUser = await sck1.findOne({ id: participantId });
     const playerName = registeredUser ? registeredUser.name : "دون لقب";
 
     results += `${playerName}  برصيد ${points} إجابات\n`;
-
-    // Update MongoDB with points
-    await card.updateOne({ id: participantId }, { count: points }, { upsert: true });
   }
 
   await message.sendMessage(citel.chat, {
     text: results,
   });
 
-  // Delete ImageQuizGameData and previous game data in MongoDB
   delete ImageQuizGameData[citel.chat];
-  await card.deleteMany(); // Delete all records in the card collection
 });
 
 async function startImageQuiz(message, match) {
@@ -153,16 +137,16 @@ async function addPointToParticipant(message, match, gameData, participantId) {
 
   gameData.participants[participantId] += 1;
 
+  const gameId = match.chat.split('@')[0];
+  const points = gameData.participants[participantId];
+
+  await card.findOneAndUpdate({ id: gameId }, { id: gameId, count: points }, { upsert: true });
+
   await message.sendMessage(match.chat, {
     text: `*إجابة صحيحة!*\n\n@${participantId.split('@')[0]} حصلت على نقطة جديدة`,
     mentions: [participantId],
   });
-
-  // Update MongoDB with points for the participant
-  const updatedCount = gameData.participants[participantId];
-  await card.updateOne({ id: participantId }, { count: updatedCount }, { upsert: true });
 }
-
 
 async function sendNewImage(message, match, gameData) {
   const footbalKeys = Object.keys(footbal).filter(url => url !== gameData.question);
@@ -178,6 +162,24 @@ async function sendNewImage(message, match, gameData) {
   gameData.answers = correctAnswers;
   gameData.preAns = '';
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 cmd({
