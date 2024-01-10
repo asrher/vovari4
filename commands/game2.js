@@ -84,10 +84,6 @@ cmd({
   await message.sendMessage(citel.chat, {
     text: results,
   });
-
-  // Delete ImageQuizGameData and previous game data in MongoDB
-  delete ImageQuizGameData[citel.chat];
-  await card.deleteMany(); // Delete all records in the card collection
 });
 
 
